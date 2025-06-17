@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiap.Soat.SmartMechanicalWorkshop.Api", "src\Fiap.Soat.SmartMechanicalWorkshop.Api\Fiap.Soat.SmartMechanicalWorkshop.Api.csproj", "{25494F00-CBCA-4763-944E-39AFE8A81F92}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiap.Soat.SmartMechanicalWorkshop.Domain", "src\Fiap.Soat.SmartMechanicalWorkshop.Domain\Fiap.Soat.SmartMechanicalWorkshop.Domain.csproj", "{3A45BDDB-5333-4393-BFA1-1C1E48EF4B06}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiap.Soat.SmartMechanicalWorkshop.Infrastructure", "src\Fiap.Soat.SmartMechanicalWorkshop.Infrastructure\Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.csproj", "{EA088CDD-F18D-40DB-8F33-469FF29FBB7B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{25494F00-CBCA-4763-944E-39AFE8A81F92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{25494F00-CBCA-4763-944E-39AFE8A81F92}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{25494F00-CBCA-4763-944E-39AFE8A81F92}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{25494F00-CBCA-4763-944E-39AFE8A81F92}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A45BDDB-5333-4393-BFA1-1C1E48EF4B06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A45BDDB-5333-4393-BFA1-1C1E48EF4B06}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A45BDDB-5333-4393-BFA1-1C1E48EF4B06}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A45BDDB-5333-4393-BFA1-1C1E48EF4B06}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA088CDD-F18D-40DB-8F33-469FF29FBB7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA088CDD-F18D-40DB-8F33-469FF29FBB7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA088CDD-F18D-40DB-8F33-469FF29FBB7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA088CDD-F18D-40DB-8F33-469FF29FBB7B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
