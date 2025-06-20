@@ -1,0 +1,29 @@
+services:
+  db:
+    image: mysql:8.4
+    container_name: smart-mechanical-workshop-db
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: workshopdb
+      MYSQL_USER: workshopuser
+      MYSQL_PASSWORD: workshop123
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  api:
+    build:
+      context: ./src/Fiap.Soat.SmartMechanicalWorkshop.Api
+      dockerfile: .dockerfile
+    container_name: smart-mechanical-workshop-api
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__DefaultConnection: "server=mysql-db;port=3306;database=workshopdb;user=workshopuser;password=workshop123"
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+
+volumes:
+  mysql_data:
