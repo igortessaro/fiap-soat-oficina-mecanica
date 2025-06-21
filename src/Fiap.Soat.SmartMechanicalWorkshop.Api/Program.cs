@@ -1,41 +1,77 @@
-var builder = WebApplication.CreateBuilder(args);
+using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared.Extensions;
+using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared.Mappings;
+using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared.Middlewares;
+using Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Data;
+using Serilog;
+using System.Text.Json.Serialization;
+using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+internal class Program
 {
-    app.MapOpenApi();
+    private static void Main(string[] args)
+    {
+        WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
+        Console.WriteLine(JsonSerializer.Serialize($"DbConnectionString: {builder.Configuration.GetConnectionString("DbConnectionString")}, ENVIRONMENT: {builder.Configuration.GetValue<string>("ENVIRONMENT")}"));
+        builder.Host.UseSerilog((context, services, configuration) =>
+            configuration.ReadFrom.Configuration(context.Configuration)
+
+            );
+
+        builder.Logging.ClearProviders();
+
+
+        // Add services to the container.
+        builder.Services.AddControllers();
+        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen(options =>
+        {
+            options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+            {
+                Title = "te",
+                Version = "V1"
+            });
+        });
+
+        builder.Services.AddControllers().AddJsonOptions(options =>
+        {
+            options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+        });
+
+        builder.Services.AddDbContext<AppDbContext>(options =>
+        {
+            options.UseMySql(builder.Configuration.GetConnectionString("DbConnectionString"), new MySqlServerVersion(new Version(8, 4)));
+        }
+          );
+
+        builder.Services.AddServiceExtensions();
+        builder.Services.AddRepositoryExtensions();
+
+        builder.Services.AddLogging();
+        builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
+        builder.Services.AddHttpContextAccessor();
+        builder.Services.AddHealthChecks();
+
+        WebApplication app = builder.Build();
+
+        //using (IServiceScope scope = app.Services.CreateScope())
+        //{
+        //    AppDbContext dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        //    dbContext.Database.Migrate();
+        //}
+
+        app.UseSwagger();
+        app.UseSwaggerUI();
+        app.UseMiddleware<ExceptionMiddleware>();
+        app.UseHttpsRedirection();
+
+        app.UseAuthorization();
+        app.MapControllers();
+
+        app.Run();
+    }
 }
 
-app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
-
-app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}

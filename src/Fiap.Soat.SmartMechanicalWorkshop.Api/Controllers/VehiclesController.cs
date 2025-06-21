@@ -1,5 +1,6 @@
 ﻿using Fiap.Soat.SmartMechanicalWorkshop.Api.DTOs.Vehicles;
 using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;

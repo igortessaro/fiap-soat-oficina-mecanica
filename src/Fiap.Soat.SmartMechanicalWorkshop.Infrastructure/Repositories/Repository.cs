@@ -1,8 +1,9 @@
-﻿using AutoRepairShopManagementSystem.Shared;
+﻿using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
-namespace AutoRepairShopManagementSystem.Repositories
+namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Repositories
 {
     public abstract class Repository<T>(DbContext context) where T : class
     {
@@ -32,10 +33,10 @@ namespace AutoRepairShopManagementSystem.Repositories
                 );
             }
 
-         
+
             List<T> items = await _dbSet
                     .AsNoTracking()
-                    .Skip((paginatedRequest.PageNumber-1) * paginatedRequest.PageSize)
+                    .Skip((paginatedRequest.PageNumber - 1) * paginatedRequest.PageSize)
                     .Take(paginatedRequest.PageSize)
                     .ToListAsync(cancellationToken);
 
@@ -58,23 +59,23 @@ namespace AutoRepairShopManagementSystem.Repositories
         public async Task<T> AddAsync(T entity, CancellationToken cancellationToken)
         {
             Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<T> insertedEntity = await _dbSet.AddAsync(entity, cancellationToken);
-            await _context.SaveChangesAsync(cancellationToken);
+            _ = await _context.SaveChangesAsync(cancellationToken);
 
             return insertedEntity.Entity;
         }
 
         public async Task<T> UpdateAsync(T entity, CancellationToken cancellationToken)
         {
-            _dbSet.Update(entity);
-            await _context.SaveChangesAsync(cancellationToken);
+            _ = _dbSet.Update(entity);
+            _ = await _context.SaveChangesAsync(cancellationToken);
 
             return entity;
         }
 
         public async Task DeleteAsync(T entity, CancellationToken cancellationToken)
         {
-            _dbSet.Remove(entity);
-            await _context.SaveChangesAsync(cancellationToken);
+            _ = _dbSet.Remove(entity);
+            _ = await _context.SaveChangesAsync(cancellationToken);
         }
     }
 }

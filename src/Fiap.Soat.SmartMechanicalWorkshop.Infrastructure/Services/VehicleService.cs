@@ -1,23 +1,23 @@
 ﻿using AutoMapper;
-using AutoRepairShopManagementSystem.Domains.DTOs;
 using AutoRepairShopManagementSystem.Domains.Entities;
-using AutoRepairShopManagementSystem.Domains.Requests.Vehicles;
-using AutoRepairShopManagementSystem.Repositories;
-using AutoRepairShopManagementSystem.Services.Interfaces;
-using AutoRepairShopManagementSystem.Shared;
+using Fiap.Soat.SmartMechanicalWorkshop.Api.DTOs.Vehicles;
+using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
+using Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Repositories;
 using FluentResults;
 
-namespace AutoRepairShopManagementSystem.Services
+namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Services
 {
-    public class VehicleService(VehicleRepository repository, ClientRepository clientRepository, IMapper mapper) : IVehicleService
+    public class VehicleService(VehicleRepository repository, IMapper mapper) : IVehicleService
     {
         public async Task<Result<VehicleDto>> CreateAsync(CreateNewVehicleRequest request, CancellationToken cancellationToken)
         {
-            var foundClient = await clientRepository.GetByIdAsync(request.ClientId, cancellationToken);
-            if (foundClient== null)
-            {
-                return Result.Fail(new Error("Client not found"));
-            }
+            //var foundClient = await clientRepository.GetByIdAsync(request.ClientId, cancellationToken);
+            //if (foundClient == null)
+            //{
+            //    return Result.Fail(new Error("Client not found"));
+            //}
 
             Vehicle mapperEntity = mapper.Map<Vehicle>(request);
             Vehicle? createdEntity = await repository.AddAsync(mapperEntity, cancellationToken);
@@ -88,16 +88,16 @@ namespace AutoRepairShopManagementSystem.Services
                 foundEntity.Model = input.Model;
             }
 
-            if (input.ClientId != null)
-            {
-                Task<Client> foundClient = clientRepository.GetByIdAsync((Guid)input.ClientId, cancellationToken);
+            //if (input.ClientId != null)
+            //{
+            //    Task<Client> foundClient = clientRepository.GetByIdAsync((Guid)input.ClientId, cancellationToken);
 
-                if (foundClient == null)
-                {
-                    return Result.Fail(new Error("Client not found"));
-                }
-                foundEntity.ClientId = (Guid)input.ClientId;
-            }
+            //    if (foundClient == null)
+            //    {
+            //        return Result.Fail(new Error("Client not found"));
+            //    }
+            //    foundEntity.ClientId = (Guid)input.ClientId;
+            //}
 
             Vehicle? updatedEntity = await repository.UpdateAsync(foundEntity, cancellationToken);
 
