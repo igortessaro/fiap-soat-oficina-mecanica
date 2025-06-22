@@ -19,8 +19,8 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Repositories
         {
 
 
-            int totalCount = _dbSet
-                    .AsNoTracking().Count();
+            int totalCount = await _dbSet
+                    .AsNoTracking().CountAsync(cancellationToken);
 
             if (paginatedRequest.PageNumber == 0)
             {

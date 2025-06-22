@@ -68,14 +68,10 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Services
 
         public async Task<Result<VehicleDto>> GetOneAsync(Guid id, CancellationToken cancellationToken)
         {
-            return await repository.GetByIdAsync(id, cancellationToken)
-              .ContinueWith(task =>
-              {
-                  Vehicle? foundEntity = task.Result;
-                  return foundEntity != null
-                      ? Result.Ok<VehicleDto>(mapper.Map<VehicleDto>(foundEntity))
-                      : Result.Fail(new Error("Vehicle Not Found"));
-              }, cancellationToken);
+            Vehicle? foundEntity = await repository.GetByIdAsync(id, cancellationToken);
+            return foundEntity != null
+                ? Result.Ok(mapper.Map<VehicleDto>(foundEntity))
+                : Result.Fail(new Error("Vehicle Not Found"));
         }
 
         public async Task<Result<VehicleDto>> UpdateAsync(UpdateOneVehicleInput input, CancellationToken cancellationToken)
