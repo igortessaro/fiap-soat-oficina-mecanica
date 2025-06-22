@@ -6,72 +6,73 @@ using Serilog;
 using System.Text.Json.Serialization;
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
-internal class Program
+namespace Fiap.Soat.SmartMechanicalWorkshop.Api
 {
-    private static void Main(string[] args)
+    public class Program
     {
-        WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
-
-        Console.WriteLine(JsonSerializer.Serialize($"DbConnectionString: {builder.Configuration.GetConnectionString("DbConnectionString")}, ENVIRONMENT: {builder.Configuration.GetValue<string>("ENVIRONMENT")}"));
-        builder.Host.UseSerilog((context, services, configuration) =>
-            configuration.ReadFrom.Configuration(context.Configuration)
-
-            );
-
-        builder.Logging.ClearProviders();
-
-
-        // Add services to the container.
-        builder.Services.AddControllers();
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-        builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen(options =>
+        private static void Main(string[] args)
         {
-            options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+            WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
+            Console.WriteLine(JsonSerializer.Serialize($"DbConnectionString: {builder.Configuration.GetConnectionString("DbConnectionString")}, ENVIRONMENT: {builder.Configuration.GetValue<string>("ENVIRONMENT")}"));
+            builder.Host.UseSerilog((context, services, configuration) =>
+                configuration.ReadFrom.Configuration(context.Configuration)
+
+                );
+
+            builder.Logging.ClearProviders();
+
+
+            // Add services to the container.
+            builder.Services.AddControllers();
+            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen(options =>
             {
-                Title = "te",
-                Version = "V1"
+                options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+                {
+                    Title = "te",
+                    Version = "V1"
+                });
             });
-        });
 
-        builder.Services.AddControllers().AddJsonOptions(options =>
-        {
-            options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-        });
+            builder.Services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+            });
 
-        builder.Services.AddDbContext<AppDbContext>(options =>
-        {
-            options.UseMySql(builder.Configuration.GetConnectionString("DbConnectionString"), new MySqlServerVersion(new Version(8, 4)));
+            builder.Services.AddDbContext<AppDbContext>(options =>
+            {
+                options.UseMySql(builder.Configuration.GetConnectionString("DbConnectionString"), new MySqlServerVersion(new Version(8, 4, 5)));
+            }
+              );
+
+            builder.Services.AddServiceExtensions();
+            builder.Services.AddRepositoryExtensions();
+            builder.Services.AddLogging();
+            builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
+            builder.Services.AddHttpContextAccessor();
+            builder.Services.AddHealthChecks();
+
+            WebApplication app = builder.Build();
+
+            using (IServiceScope scope = app.Services.CreateScope())
+            {
+                AppDbContext dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                dbContext.Database.Migrate();
+            }
+
+            app.UseSwagger();
+            app.UseSwaggerUI();
+            app.UseMiddleware<ExceptionMiddleware>();
+            app.UseHttpsRedirection();
+
+            app.UseAuthorization();
+            app.MapControllers();
+
+            app.Run();
         }
-          );
-
-        builder.Services.AddServiceExtensions();
-        builder.Services.AddRepositoryExtensions();
-
-        builder.Services.AddLogging();
-        builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
-        builder.Services.AddHttpContextAccessor();
-        builder.Services.AddHealthChecks();
-
-        WebApplication app = builder.Build();
-
-        //using (IServiceScope scope = app.Services.CreateScope())
-        //{
-        //    AppDbContext dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        //    dbContext.Database.Migrate();
-        //}
-
-        app.UseSwagger();
-        app.UseSwaggerUI();
-        app.UseMiddleware<ExceptionMiddleware>();
-        app.UseHttpsRedirection();
-
-        app.UseAuthorization();
-        app.MapControllers();
-
-        app.Run();
     }
 }
-
-

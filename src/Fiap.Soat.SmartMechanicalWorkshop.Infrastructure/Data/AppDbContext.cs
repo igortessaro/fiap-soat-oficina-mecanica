@@ -11,8 +11,6 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Data
         {
             base.OnModelCreating(modelBuilder);
 
-  
-
         }
     }
 }
