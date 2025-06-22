@@ -2,11 +2,12 @@ using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared.Extensions;
 using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared.Mappings;
 using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared.Middlewares;
 using Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Data;
-using Serilog;
-using System.Text.Json.Serialization;
-using System.Text.Json;
+using Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.InputValidators.Vehicles;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+using Serilog;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Api
 {
@@ -33,10 +34,14 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Api
             {
                 options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
                 {
-                    Title = "te",
+
                     Version = "V1"
                 });
             });
+
+
+            builder.Services.AddValidatorsFromAssembly(typeof(CreateVehicleInputValidator).Assembly);
+            builder.Services.AddValidatorsFromAssemblyContaining<CreateVehicleInputValidator>();
 
             builder.Services.AddControllers().AddJsonOptions(options =>
             {

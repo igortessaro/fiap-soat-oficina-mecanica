@@ -6,6 +6,8 @@ using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 using Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Repositories;
 using FluentResults;
+using System.Numerics;
+using System.Text.RegularExpressions;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Services
 {
@@ -18,12 +20,29 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Services
             //{
             //    return Result.Fail(new Error("Client not found"));
             //}
+            if(!IsValidLicensePlate(request.LicensePlate))
+            {
+                return Result.Fail(new Error("Invalid license plate format"));
+            }
 
             Vehicle mapperEntity = mapper.Map<Vehicle>(request);
             Vehicle? createdEntity = await repository.AddAsync(mapperEntity, cancellationToken);
             return createdEntity != null
                 ? Result.Ok(mapper.Map<VehicleDto>(createdEntity))
                 : Result.Fail(new Error("Not Created"));
+        }
+
+        private bool IsValidLicensePlate(string licensePlate)
+        {
+            if (string.IsNullOrWhiteSpace(licensePlate))
+                return false;
+        
+            licensePlate = licensePlate.Trim().ToUpper();
+
+            var regexAntiga = new Regex(@"^[A-Z]{3}-?[0-9]{4}$");
+            var regexMercosul = new Regex(@"^[A-Z]{3}[0-9][A-Z][0-9]{2}$");
+
+            return regexAntiga.IsMatch(licensePlate) || regexMercosul.IsMatch(licensePlate);
         }
 
         public async Task<Result> DeleteAsync(Guid id, CancellationToken cancellationToken)
