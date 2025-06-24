@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using AutoRepairShopManagementSystem.Domains.Entities;
 using Fiap.Soat.SmartMechanicalWorkshop.Api.DTOs.Vehicles;
+using Fiap.Soat.SmartMechanicalWorkshop.Api.DTOs.AvailableServices;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Shared.Mappings
@@ -9,10 +10,15 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Shared.Mappings
     {
         public AutoMapperProfiles()
         {
-             CreateMap<Vehicle, VehicleDto>().ReverseMap();
-             CreateMap<Paginate<Vehicle>, Paginate<VehicleDto>>().ReverseMap();
-             CreateMap<Vehicle, CreateNewVehicleRequest>().ReverseMap();
-             CreateMap<Vehicle, UpdateOneVehicleRequest>().ReverseMap();
+            CreateMap<Vehicle, VehicleDto>().ReverseMap();
+            CreateMap<Paginate<Vehicle>, Paginate<VehicleDto>>().ReverseMap();
+            CreateMap<Vehicle, CreateNewVehicleRequest>().ReverseMap();
+            CreateMap<Vehicle, UpdateOneVehicleRequest>().ReverseMap();
+             
+            CreateMap<AvailableService, AvailableServiceDto>().ReverseMap();
+            CreateMap<Paginate<AvailableService>, Paginate<AvailableServiceDto>>().ReverseMap();
+            CreateMap<AvailableService, CreateAvailableServiceRequest>().ReverseMap();
+            CreateMap<AvailableService, UpdateOneAvailableServiceRequest>().ReverseMap();
 
 
         }
