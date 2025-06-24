@@ -2,8 +2,6 @@ using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared.Extensions;
 using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared.Mappings;
 using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared.Middlewares;
 using Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Data;
-using Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.InputValidators.Vehicles;
-using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using System.Text.Json;
@@ -13,7 +11,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Api
 {
     public class Program
     {
-        private static void Main(string[] args)
+        private static async Task Main(string[] args)
         {
             WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -34,25 +32,23 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Api
             {
                 options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
                 {
-
+                    Title = "SmartMechanicalWorkshop",
                     Version = "V1"
                 });
             });
-
-
-            builder.Services.AddValidatorsFromAssembly(typeof(CreateVehicleInputValidator).Assembly);
-            builder.Services.AddValidatorsFromAssemblyContaining<CreateVehicleInputValidator>();
-
             builder.Services.AddControllers().AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
             });
 
+
             builder.Services.AddDbContext<AppDbContext>(options =>
-            {
-                options.UseMySql(builder.Configuration.GetConnectionString("DbConnectionString"), new MySqlServerVersion(new Version(8, 4, 5)));
-            }
-              );
+    options.UseMySql(
+        builder.Configuration.GetConnectionString("DbConnectionString"),
+        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DbConnectionString")),
+        mySqlOptions =>
+            mySqlOptions.MigrationsAssembly("Fiap.Soat.SmartMechanicalWorkshop.Infrastructure")
+    ));
 
             builder.Services.AddServiceExtensions();
             builder.Services.AddRepositoryExtensions();
@@ -63,11 +59,18 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Api
 
             WebApplication app = builder.Build();
 
-            using (IServiceScope scope = app.Services.CreateScope())
+            if (app.Environment.IsDevelopment())
             {
-                AppDbContext dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-                dbContext.Database.Migrate();
+                using (IServiceScope scope = app.Services.CreateScope())
+                {
+                    AppDbContext dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+                    await dbContext.Database.MigrateAsync();
+                    dbContext.Database.EnsureCreated();
+                }
             }
+
+
 
             app.UseSwagger();
             app.UseSwaggerUI();
