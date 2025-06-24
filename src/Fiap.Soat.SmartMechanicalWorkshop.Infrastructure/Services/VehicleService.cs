@@ -1,12 +1,11 @@
 ﻿using AutoMapper;
-using AutoRepairShopManagementSystem.Domains.Entities;
 using Fiap.Soat.SmartMechanicalWorkshop.Api.DTOs.Vehicles;
 using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.Domains.Entities;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 using Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Repositories;
 using FluentResults;
-using System.Numerics;
 using System.Text.RegularExpressions;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Services
@@ -20,7 +19,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Services
             //{
             //    return Result.Fail(new Error("Client not found"));
             //}
-            if(!IsValidLicensePlate(request.LicensePlate))
+            if (!IsValidLicensePlate(request.LicensePlate))
             {
                 return Result.Fail(new Error("Invalid license plate format"));
             }
@@ -36,7 +35,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Services
         {
             if (string.IsNullOrWhiteSpace(licensePlate))
                 return false;
-        
+
             licensePlate = licensePlate.Trim().ToUpper();
 
             var regexAntiga = new Regex(@"^[A-Z]{3}-?[0-9]{4}$");

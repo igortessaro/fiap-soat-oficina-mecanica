@@ -8,6 +8,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Shared.Extensions
         {
 
             iServiceCollection.AddScoped<VehicleRepository>();
+            iServiceCollection.AddScoped<SupplyRepository>();
 
             return iServiceCollection;
 
