@@ -17,8 +17,6 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Repositories
 
         public async Task<Paginate<T>> GetAllAsync(PaginatedRequest paginatedRequest, CancellationToken cancellationToken)
         {
-
-
             int totalCount = await _dbSet
                     .AsNoTracking().CountAsync(cancellationToken);
 
@@ -32,7 +30,6 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Repositories
                    (int)Math.Ceiling((double)totalCount / paginatedRequest.PageSize)
                 );
             }
-
 
             List<T> items = await _dbSet
                     .AsNoTracking()
@@ -59,23 +56,23 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Repositories
         public async Task<T> AddAsync(T entity, CancellationToken cancellationToken)
         {
             Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<T> insertedEntity = await _dbSet.AddAsync(entity, cancellationToken);
-            _ = await _context.SaveChangesAsync(cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
 
             return insertedEntity.Entity;
         }
 
         public async Task<T> UpdateAsync(T entity, CancellationToken cancellationToken)
         {
-            _ = _dbSet.Update(entity);
-            _ = await _context.SaveChangesAsync(cancellationToken);
+            _dbSet.Update(entity);
+            await _context.SaveChangesAsync(cancellationToken);
 
             return entity;
         }
 
         public async Task DeleteAsync(T entity, CancellationToken cancellationToken)
         {
-            _ = _dbSet.Remove(entity);
-            _ = await _context.SaveChangesAsync(cancellationToken);
+            _dbSet.Remove(entity);
+            await _context.SaveChangesAsync(cancellationToken);
         }
     }
 }
