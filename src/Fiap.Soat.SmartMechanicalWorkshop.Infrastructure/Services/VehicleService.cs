@@ -24,6 +24,8 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Services
             }
 
             Vehicle mapperEntity = mapper.Map<Vehicle>(request);
+            mapperEntity.LicensePlate = request.LicensePlate.Trim().ToUpper();
+
             Vehicle createdEntity = await repository.AddAsync(mapperEntity, cancellationToken);
             return createdEntity != null
                 ? Result<VehicleDto>.Ok(mapper.Map<VehicleDto>(createdEntity), System.Net.HttpStatusCode.Created)
