@@ -9,7 +9,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Shared.Extensions
         {
             iServiceCollection.AddTransient<IVehicleService, VehicleService>();
             iServiceCollection.AddTransient<ISupplyService, SupplyService>();
-
+            iServiceCollection.AddTransient<IAvailableService, AvailableServiceService>();
 
             return iServiceCollection;
 

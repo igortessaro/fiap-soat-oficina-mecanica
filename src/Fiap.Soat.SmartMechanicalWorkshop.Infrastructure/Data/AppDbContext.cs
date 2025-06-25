@@ -7,6 +7,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Data
     {
         public DbSet<Vehicle> Vehicles { get; set; }
         public DbSet<Supply> Supplies { get; set; }
+        public DbSet<AvailableService> AvailableServices { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
