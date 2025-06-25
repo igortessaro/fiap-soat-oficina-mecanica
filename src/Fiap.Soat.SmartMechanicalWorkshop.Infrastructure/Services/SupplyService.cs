@@ -43,7 +43,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Services
 
         public async Task<Result<SupplyDto>> GetOneAsync(Guid id, CancellationToken cancellationToken)
         {
-            Supply? foundEntity = await repository.GetByIdAsync(id, cancellationToken);
+            Supply foundEntity = await repository.GetByIdAsync(id, cancellationToken);
             return foundEntity != null
                 ? Result<SupplyDto>.Ok(mapper.Map<SupplyDto>(foundEntity))
                 : Result<SupplyDto>.Fail(new FluentResults.Error("Supply Not Found"), HttpStatusCode.NotFound);
@@ -73,7 +73,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Services
                 foundEntity.Quantity = input.Quantity.Value;
             }
 
-            Supply? updatedEntity = await repository.UpdateAsync(foundEntity, cancellationToken);
+            Supply updatedEntity = await repository.UpdateAsync(foundEntity, cancellationToken);
 
             return updatedEntity != null
                 ? Result<SupplyDto>.Ok(mapper.Map<SupplyDto>(updatedEntity))

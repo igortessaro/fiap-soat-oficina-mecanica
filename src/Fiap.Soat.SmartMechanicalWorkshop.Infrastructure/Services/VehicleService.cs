@@ -24,7 +24,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Services
             }
 
             Vehicle mapperEntity = mapper.Map<Vehicle>(request);
-            Vehicle? createdEntity = await repository.AddAsync(mapperEntity, cancellationToken);
+            Vehicle createdEntity = await repository.AddAsync(mapperEntity, cancellationToken);
             return createdEntity != null
                 ? Result<VehicleDto>.Ok(mapper.Map<VehicleDto>(createdEntity), System.Net.HttpStatusCode.Created)
                 : Result<VehicleDto>.Fail(new FluentResults.Error("Not Created"));
@@ -66,7 +66,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Services
 
         public async Task<Result<VehicleDto>> GetOneAsync(Guid id, CancellationToken cancellationToken)
         {
-            Vehicle? foundEntity = await repository.GetByIdAsync(id, cancellationToken);
+            Vehicle foundEntity = await repository.GetByIdAsync(id, cancellationToken);
             return foundEntity != null
                 ? Result<VehicleDto>.Ok(mapper.Map<VehicleDto>(foundEntity))
                 : Result<VehicleDto>.Fail(new FluentResults.Error("Vehicle Not Found"), System.Net.HttpStatusCode.NotFound);
@@ -112,7 +112,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Services
             //    foundEntity.ClientId = (Guid)input.ClientId;
             //}
 
-            Vehicle? updatedEntity = await repository.UpdateAsync(foundEntity, cancellationToken);
+            Vehicle updatedEntity = await repository.UpdateAsync(foundEntity, cancellationToken);
 
             return updatedEntity != null
                 ? Result<VehicleDto>.Ok(mapper.Map<VehicleDto>(updatedEntity))
