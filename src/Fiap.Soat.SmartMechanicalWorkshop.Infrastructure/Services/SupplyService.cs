@@ -5,7 +5,7 @@ using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Supplies;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 using Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Repositories;
-using FluentResults;
+using System.Net;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Services
 {
@@ -16,8 +16,8 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Services
             Supply mapperEntity = mapper.Map<Supply>(request);
             Supply? createdEntity = await repository.AddAsync(mapperEntity, cancellationToken);
             return createdEntity != null
-                ? Result.Ok(mapper.Map<SupplyDto>(createdEntity))
-                : Result.Fail(new Error("Not Created"));
+                ? Result<SupplyDto>.Ok(mapper.Map<SupplyDto>(createdEntity), HttpStatusCode.Created)
+                : Result<SupplyDto>.Fail(new FluentResults.Error("Not Created"), HttpStatusCode.InternalServerError);
         }
 
         public async Task<Result> DeleteAsync(Guid id, CancellationToken cancellationToken)
@@ -26,7 +26,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Services
 
             if (foundEntity == null)
             {
-                return Result.Fail(new Error("Supply not found"));
+                return Result.Fail(new FluentResults.Error("Supply not found"), HttpStatusCode.NotFound);
             }
 
             await repository.DeleteAsync(foundEntity, cancellationToken);
@@ -38,15 +38,15 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Services
         {
             Paginate<Supply> response = await repository.GetAllAsync(paginatedRequest, cancellationToken);
             Paginate<SupplyDto> mappedResponse = mapper.Map<Paginate<SupplyDto>>(response);
-            return Result.Ok(mappedResponse);
+            return Result<Paginate<SupplyDto>>.Ok(mappedResponse);
         }
 
         public async Task<Result<SupplyDto>> GetOneAsync(Guid id, CancellationToken cancellationToken)
         {
             Supply? foundEntity = await repository.GetByIdAsync(id, cancellationToken);
             return foundEntity != null
-                ? Result.Ok(mapper.Map<SupplyDto>(foundEntity))
-                : Result.Fail(new Error("Supply Not Found"));
+                ? Result<SupplyDto>.Ok(mapper.Map<SupplyDto>(foundEntity))
+                : Result<SupplyDto>.Fail(new FluentResults.Error("Supply Not Found"), HttpStatusCode.NotFound);
         }
 
         public async Task<Result<SupplyDto>> UpdateAsync(UpdateOneSupplyInput input, CancellationToken cancellationToken)
@@ -55,7 +55,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Services
 
             if (foundEntity == null)
             {
-                return Result.Fail(new Error("Supply not found"));
+                return Result<SupplyDto>.Fail(new FluentResults.Error("Supply not found"), HttpStatusCode.NotFound);
             }
 
             if (input.Name != null)
@@ -76,8 +76,8 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Services
             Supply? updatedEntity = await repository.UpdateAsync(foundEntity, cancellationToken);
 
             return updatedEntity != null
-                ? Result.Ok(mapper.Map<SupplyDto>(updatedEntity))
-                : Result.Fail(new Error("Not Updated"));
+                ? Result<SupplyDto>.Ok(mapper.Map<SupplyDto>(updatedEntity))
+                : Result<SupplyDto>.Fail(new FluentResults.Error("Not Updated"));
         }
     }
 }

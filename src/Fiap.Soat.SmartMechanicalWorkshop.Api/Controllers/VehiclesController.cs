@@ -14,7 +14,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Controllers
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetOneAsync([FromRoute][Required] Guid id, CancellationToken cancellationToken)
         {
-            FluentResults.Result<VehicleDto> result = await vehicleService.GetOneAsync(id, cancellationToken);
+           Result<VehicleDto> result = await vehicleService.GetOneAsync(id, cancellationToken);
 
             return result.ToActionResult();
         }
@@ -22,7 +22,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllAsync([FromQuery][Required] PaginatedRequest paginatedRequest, CancellationToken cancellationToken)
         {
-            FluentResults.Result<Paginate<VehicleDto>> result = await vehicleService.GetAllAsync(paginatedRequest, cancellationToken);
+           Result<Paginate<VehicleDto>> result = await vehicleService.GetAllAsync(paginatedRequest, cancellationToken);
 
             return result.ToActionResult();
         }
@@ -30,7 +30,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateAsync([FromBody][Required] CreateNewVehicleRequest request, CancellationToken cancellationToken)
         {
-            FluentResults.Result<VehicleDto> result = await vehicleService.CreateAsync(request, cancellationToken);
+           Result<VehicleDto> result = await vehicleService.CreateAsync(request, cancellationToken);
 
             return result.ToActionResult();
         }
@@ -38,7 +38,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Controllers
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> DeleteAsync([FromRoute][Required] Guid id, CancellationToken cancellationToken)
         {
-            FluentResults.Result result = await vehicleService.DeleteAsync(id, cancellationToken);
+           Result result = await vehicleService.DeleteAsync(id, cancellationToken);
 
             return result.ToActionResult();
         }
@@ -56,7 +56,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Controllers
                 ManufactureYear = request.ManufactureYear
             };
 
-            FluentResults.Result<VehicleDto> result = await vehicleService.UpdateAsync(updateRequest, cancellationToken);
+           Result<VehicleDto> result = await vehicleService.UpdateAsync(updateRequest, cancellationToken);
 
             return result.ToActionResult();
         }

@@ -5,7 +5,6 @@ using Fiap.Soat.SmartMechanicalWorkshop.Domain.Domains.Entities;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 using Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Repositories;
-using FluentResults;
 using System.Text.RegularExpressions;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Services
@@ -21,14 +20,14 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Services
             //}
             if (!IsValidLicensePlate(request.LicensePlate))
             {
-                return Result.Fail(new Error("Invalid license plate format"));
+                return Result<VehicleDto>.Fail(new FluentResults.Error("Invalid license plate format"), System.Net.HttpStatusCode.BadRequest);
             }
 
             Vehicle mapperEntity = mapper.Map<Vehicle>(request);
             Vehicle? createdEntity = await repository.AddAsync(mapperEntity, cancellationToken);
             return createdEntity != null
-                ? Result.Ok(mapper.Map<VehicleDto>(createdEntity))
-                : Result.Fail(new Error("Not Created"));
+                ? Result<VehicleDto>.Ok(mapper.Map<VehicleDto>(createdEntity), System.Net.HttpStatusCode.Created)
+                : Result<VehicleDto>.Fail(new FluentResults.Error("Not Created"));
         }
 
         private bool IsValidLicensePlate(string licensePlate)
@@ -38,10 +37,10 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Services
 
             licensePlate = licensePlate.Trim().ToUpper();
 
-            var regexAntiga = new Regex(@"^[A-Z]{3}-?[0-9]{4}$");
-            var regexMercosul = new Regex(@"^[A-Z]{3}[0-9][A-Z][0-9]{2}$");
+            var oldPattern = new Regex(@"^[A-Z]{3}-?[0-9]{4}$");
+            var newMercosulPattern = new Regex(@"^[A-Z]{3}[0-9][A-Z][0-9]{2}$");
 
-            return regexAntiga.IsMatch(licensePlate) || regexMercosul.IsMatch(licensePlate);
+            return oldPattern.IsMatch(licensePlate) || newMercosulPattern.IsMatch(licensePlate);
         }
 
         public async Task<Result> DeleteAsync(Guid id, CancellationToken cancellationToken)
@@ -50,7 +49,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Services
 
             if (foundEntity == null)
             {
-                return Result.Fail(new Error("Vehicle not found"));
+                return Result.Fail(new FluentResults.Error("Vehicle not found"), System.Net.HttpStatusCode.NotFound);
             }
 
             await repository.DeleteAsync(foundEntity, cancellationToken);
@@ -62,15 +61,15 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Services
         {
             Paginate<Vehicle> response = await repository.GetAllAsync(paginatedRequest, cancellationToken);
             Paginate<VehicleDto> mappedResponse = mapper.Map<Paginate<VehicleDto>>(response);
-            return Result.Ok(mappedResponse);
+            return Result<Paginate<VehicleDto>>.Ok(mappedResponse);
         }
 
         public async Task<Result<VehicleDto>> GetOneAsync(Guid id, CancellationToken cancellationToken)
         {
             Vehicle? foundEntity = await repository.GetByIdAsync(id, cancellationToken);
             return foundEntity != null
-                ? Result.Ok(mapper.Map<VehicleDto>(foundEntity))
-                : Result.Fail(new Error("Vehicle Not Found"));
+                ? Result<VehicleDto>.Ok(mapper.Map<VehicleDto>(foundEntity))
+                : Result<VehicleDto>.Fail(new FluentResults.Error("Vehicle Not Found"), System.Net.HttpStatusCode.NotFound);
         }
 
         public async Task<Result<VehicleDto>> UpdateAsync(UpdateOneVehicleInput input, CancellationToken cancellationToken)
@@ -79,7 +78,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Services
 
             if (foundEntity == null)
             {
-                return Result.Fail(new Error("Vehicle not found"));
+                return Result<VehicleDto>.Fail(new FluentResults.Error("Vehicle not found"), System.Net.HttpStatusCode.NotFound);
             }
 
             if (input.ManufactureYear != null)
@@ -116,8 +115,8 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Services
             Vehicle? updatedEntity = await repository.UpdateAsync(foundEntity, cancellationToken);
 
             return updatedEntity != null
-                ? Result.Ok(mapper.Map<VehicleDto>(updatedEntity))
-                : Result.Fail(new Error("Not Updated"));
+                ? Result<VehicleDto>.Ok(mapper.Map<VehicleDto>(updatedEntity))
+                : Result<VehicleDto>.Fail(new FluentResults.Error("Not Updated"));
         }
     }
 }

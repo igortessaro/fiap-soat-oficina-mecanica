@@ -14,21 +14,21 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Controllers
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetOneAsync([FromRoute][Required] Guid id, CancellationToken cancellationToken)
         {
-            FluentResults.Result<SupplyDto> result = await supplyService.GetOneAsync(id, cancellationToken);
+            Result<SupplyDto> result = await supplyService.GetOneAsync(id, cancellationToken);
             return result.ToActionResult();
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAllAsync([FromQuery][Required] PaginatedRequest paginatedRequest, CancellationToken cancellationToken)
         {
-            FluentResults.Result<Paginate<SupplyDto>> result = await supplyService.GetAllAsync(paginatedRequest, cancellationToken);
+            Result<Paginate<SupplyDto>> result = await supplyService.GetAllAsync(paginatedRequest, cancellationToken);
             return result.ToActionResult();
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateAsync([FromBody][Required] CreateNewSupplyRequest request, CancellationToken cancellationToken)
         {
-            FluentResults.Result<SupplyDto> result = await supplyService.CreateAsync(request, cancellationToken);
+            Result<SupplyDto> result = await supplyService.CreateAsync(request, cancellationToken);
 
             return result.ToActionResult();
         }
@@ -36,7 +36,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Controllers
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> DeleteAsync([FromRoute][Required] Guid id, CancellationToken cancellationToken)
         {
-            FluentResults.Result result = await supplyService.DeleteAsync(id, cancellationToken);
+            Result result = await supplyService.DeleteAsync(id, cancellationToken);
 
             return result.ToActionResult();
         }
@@ -52,7 +52,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Controllers
                 Name = request.Name
             };
 
-            FluentResults.Result<SupplyDto> result = await supplyService.UpdateAsync(updateRequest, cancellationToken);
+            Result<SupplyDto> result = await supplyService.UpdateAsync(updateRequest, cancellationToken);
 
             return result.ToActionResult();
         }
