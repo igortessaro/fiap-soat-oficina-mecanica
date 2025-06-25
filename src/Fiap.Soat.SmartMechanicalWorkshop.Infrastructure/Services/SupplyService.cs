@@ -11,51 +11,51 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Services
 {
     public class SupplyService(SupplyRepository repository, IMapper mapper) : ISupplyService
     {
-        public async Task<Result<SupplyDto>> CreateAsync(CreateNewSupplyRequest request, CancellationToken cancellationToken)
+        public async Task<Response<SupplyDto>> CreateAsync(CreateNewSupplyRequest request, CancellationToken cancellationToken)
         {
             Supply mapperEntity = mapper.Map<Supply>(request);
             Supply? createdEntity = await repository.AddAsync(mapperEntity, cancellationToken);
             return createdEntity != null
-                ? Result<SupplyDto>.Ok(mapper.Map<SupplyDto>(createdEntity), HttpStatusCode.Created)
-                : Result<SupplyDto>.Fail(new FluentResults.Error("Not Created"), HttpStatusCode.InternalServerError);
+                ? Response<SupplyDto>.Ok(mapper.Map<SupplyDto>(createdEntity), HttpStatusCode.Created)
+                : Response<SupplyDto>.Fail(new FluentResults.Error("Not Created"), HttpStatusCode.InternalServerError);
         }
 
-        public async Task<Result> DeleteAsync(Guid id, CancellationToken cancellationToken)
+        public async Task<Response> DeleteAsync(Guid id, CancellationToken cancellationToken)
         {
             Supply foundEntity = await repository.GetByIdAsync(id, cancellationToken);
 
             if (foundEntity == null)
             {
-                return Result.Fail(new FluentResults.Error("Supply not found"), HttpStatusCode.NotFound);
+                return Response.Fail(new FluentResults.Error("Supply not found"), HttpStatusCode.NotFound);
             }
 
             await repository.DeleteAsync(foundEntity, cancellationToken);
 
-            return Result.Ok();
+            return Response.Ok();
         }
 
-        public async Task<Result<Paginate<SupplyDto>>> GetAllAsync(PaginatedRequest paginatedRequest, CancellationToken cancellationToken)
+        public async Task<Response<Paginate<SupplyDto>>> GetAllAsync(PaginatedRequest paginatedRequest, CancellationToken cancellationToken)
         {
             Paginate<Supply> response = await repository.GetAllAsync(paginatedRequest, cancellationToken);
             Paginate<SupplyDto> mappedResponse = mapper.Map<Paginate<SupplyDto>>(response);
-            return Result<Paginate<SupplyDto>>.Ok(mappedResponse);
+            return Response<Paginate<SupplyDto>>.Ok(mappedResponse);
         }
 
-        public async Task<Result<SupplyDto>> GetOneAsync(Guid id, CancellationToken cancellationToken)
+        public async Task<Response<SupplyDto>> GetOneAsync(Guid id, CancellationToken cancellationToken)
         {
             Supply foundEntity = await repository.GetByIdAsync(id, cancellationToken);
             return foundEntity != null
-                ? Result<SupplyDto>.Ok(mapper.Map<SupplyDto>(foundEntity))
-                : Result<SupplyDto>.Fail(new FluentResults.Error("Supply Not Found"), HttpStatusCode.NotFound);
+                ? Response<SupplyDto>.Ok(mapper.Map<SupplyDto>(foundEntity))
+                : Response<SupplyDto>.Fail(new FluentResults.Error("Supply Not Found"), HttpStatusCode.NotFound);
         }
 
-        public async Task<Result<SupplyDto>> UpdateAsync(UpdateOneSupplyInput input, CancellationToken cancellationToken)
+        public async Task<Response<SupplyDto>> UpdateAsync(UpdateOneSupplyInput input, CancellationToken cancellationToken)
         {
             Supply foundEntity = await repository.GetByIdAsync(input.Id, cancellationToken);
 
             if (foundEntity == null)
             {
-                return Result<SupplyDto>.Fail(new FluentResults.Error("Supply not found"), HttpStatusCode.NotFound);
+                return Response<SupplyDto>.Fail(new FluentResults.Error("Supply not found"), HttpStatusCode.NotFound);
             }
 
             if (input.Name != null)
@@ -76,8 +76,8 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Services
             Supply updatedEntity = await repository.UpdateAsync(foundEntity, cancellationToken);
 
             return updatedEntity != null
-                ? Result<SupplyDto>.Ok(mapper.Map<SupplyDto>(updatedEntity))
-                : Result<SupplyDto>.Fail(new FluentResults.Error("Not Updated"));
+                ? Response<SupplyDto>.Ok(mapper.Map<SupplyDto>(updatedEntity))
+                : Response<SupplyDto>.Fail(new FluentResults.Error("Not Updated"));
         }
     }
 }

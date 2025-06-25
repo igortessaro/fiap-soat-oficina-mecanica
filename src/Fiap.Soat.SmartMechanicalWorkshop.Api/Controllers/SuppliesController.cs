@@ -27,7 +27,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetOneAsync([FromRoute][Required] Guid id, CancellationToken cancellationToken)
         {
-            Result<SupplyDto> result = await supplyService.GetOneAsync(id, cancellationToken);
+            Response<SupplyDto> result = await supplyService.GetOneAsync(id, cancellationToken);
             return result.ToActionResult();
         }
 
@@ -42,7 +42,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Controllers
         [ProducesResponseType(typeof(Paginate<SupplyDto>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAllAsync([FromQuery][Required] PaginatedRequest paginatedRequest, CancellationToken cancellationToken)
         {
-            Result<Paginate<SupplyDto>> result = await supplyService.GetAllAsync(paginatedRequest, cancellationToken);
+            Response<Paginate<SupplyDto>> result = await supplyService.GetAllAsync(paginatedRequest, cancellationToken);
             return result.ToActionResult();
         }
 
@@ -59,7 +59,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> CreateAsync([FromBody][Required] CreateNewSupplyRequest request, CancellationToken cancellationToken)
         {
-            Result<SupplyDto> result = await supplyService.CreateAsync(request, cancellationToken);
+            Response<SupplyDto> result = await supplyService.CreateAsync(request, cancellationToken);
             return result.ToActionResult();
         }
 
@@ -76,7 +76,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteAsync([FromRoute][Required] Guid id, CancellationToken cancellationToken)
         {
-            Result result = await supplyService.DeleteAsync(id, cancellationToken);
+            Response result = await supplyService.DeleteAsync(id, cancellationToken);
             return result.ToActionResult();
         }
 
@@ -102,7 +102,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Controllers
                 Name = request.Name
             };
 
-            Result<SupplyDto> result = await supplyService.UpdateAsync(updateRequest, cancellationToken);
+            Response<SupplyDto> result = await supplyService.UpdateAsync(updateRequest, cancellationToken);
             return result.ToActionResult();
         }
     }

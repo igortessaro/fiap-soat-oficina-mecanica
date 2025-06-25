@@ -1,4 +1,4 @@
-namespace AutoRepairShopManagementSystem.Domains.Entities
+namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Domains.Entities
 {
         public record AvailableService : Entity
     {

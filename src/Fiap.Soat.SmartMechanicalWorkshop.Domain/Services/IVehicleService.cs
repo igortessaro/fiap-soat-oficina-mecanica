@@ -6,11 +6,11 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Services
 {
     public interface IVehicleService
     {
-        Task<Result<VehicleDto>> CreateAsync(CreateNewVehicleRequest request, CancellationToken cancellationToken);
+        Task<Response<VehicleDto>> CreateAsync(CreateNewVehicleRequest request, CancellationToken cancellationToken);
 
-        Task<Result> DeleteAsync(Guid id, CancellationToken cancellationToken);
-        Task<Result<VehicleDto>> GetOneAsync(Guid id, CancellationToken cancellationToken);
-        Task<Result<VehicleDto>> UpdateAsync(UpdateOneVehicleInput input, CancellationToken cancellationToken);
-        Task<Result<Paginate<VehicleDto>>> GetAllAsync(PaginatedRequest paginatedRequest, CancellationToken cancellationToken);
+        Task<Response> DeleteAsync(Guid id, CancellationToken cancellationToken);
+        Task<Response<VehicleDto>> GetOneAsync(Guid id, CancellationToken cancellationToken);
+        Task<Response<VehicleDto>> UpdateAsync(UpdateOneVehicleInput input, CancellationToken cancellationToken);
+        Task<Response<Paginate<VehicleDto>>> GetAllAsync(PaginatedRequest paginatedRequest, CancellationToken cancellationToken);
     }
 }

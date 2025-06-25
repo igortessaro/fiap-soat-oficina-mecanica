@@ -1,5 +1,4 @@
-﻿using AutoRepairShopManagementSystem.Domains.Entities;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Domains.Entities
 {
