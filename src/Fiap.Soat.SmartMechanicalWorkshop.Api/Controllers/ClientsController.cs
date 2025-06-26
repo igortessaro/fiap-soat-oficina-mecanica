@@ -91,9 +91,12 @@ public sealed class ClientsController(IClientService service) : ControllerBase
     [ProducesResponseType(typeof(ClientDto), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.BadRequest)]
-    public async Task<IActionResult> UpdateAsync([FromRoute][Required] Guid id, [FromBody, Required] UpdateOneClientRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateAsync([FromRoute, Required] Guid id, [FromBody, Required] UpdateOneClientRequest request, CancellationToken cancellationToken)
     {
-        UpdateOneClientInput input = new(id, request.Fullname, request.Document);
+        var phoneInput = request.Phone is not null
+            ? new UpdateOnePhoneInput(request.Phone.CountryCode, request.Phone.AreaCode, request.Phone.Number, request.Phone.Type)
+            : null;
+        UpdateOneClientInput input = new(id, request.Fullname, request.Document, phoneInput);
         var result = await service.UpdateAsync(input, cancellationToken);
         return result.ToActionResult();
     }

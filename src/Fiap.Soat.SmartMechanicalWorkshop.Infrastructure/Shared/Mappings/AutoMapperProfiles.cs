@@ -5,6 +5,7 @@ using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Supplies;
 using Fiap.Soat.SmartMechanicalWorkshop.Api.DTOs.AvailableServices;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Clients;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Shared.Mappings
 {
@@ -31,6 +32,11 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Shared.Mappings
             CreateMap<Paginate<Client>, Paginate<ClientDto>>().ReverseMap();
             CreateMap<Client, CreateClientRequest>().ReverseMap();
             CreateMap<Client, UpdateOneClientRequest>().ReverseMap();
+
+            CreateMap<Phone, PhoneDto>().ReverseMap();
+            CreateMap<Phone, CreatePhoneRequest>().ReverseMap();
+            CreateMap<Phone, UpdateOnePhoneInput>().ReverseMap();
+            CreateMap<Phone, UpdateOnePhoneRequest>().ReverseMap();
         }
     }
 }

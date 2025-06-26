@@ -4,6 +4,7 @@ using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Clients;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Repositories;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.Interfaces;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Services;
 
@@ -44,7 +45,7 @@ public sealed class ClientService(IMapper mapper, IClientRepository repository) 
             return Response<ClientDto>.Fail(new FluentResults.Error("Client not found"), System.Net.HttpStatusCode.NotFound);
         }
 
-        var updatedEntity = await repository.UpdateAsync(foundEntity.Update(input.Fullname, input.Document), cancellationToken);
+        var updatedEntity = await repository.UpdateAsync(foundEntity.Update(input.Fullname, input.Document, mapper.Map<Phone>(input.Phone)), cancellationToken);
         return Response<ClientDto>.Ok(mapper.Map<ClientDto>(updatedEntity));
     }
 

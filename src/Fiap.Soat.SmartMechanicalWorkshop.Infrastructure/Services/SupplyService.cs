@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Domains.Entities;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Supplies;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services;
