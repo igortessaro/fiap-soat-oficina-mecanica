@@ -1,11 +1,11 @@
-using System.ComponentModel.DataAnnotations;
-using System.Net;
 using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Clients;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.Interfaces;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using System.ComponentModel.DataAnnotations;
+using System.Net;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Controllers;
 
@@ -24,8 +24,8 @@ public sealed class ClientsController(IClientService service) : ControllerBase
     /// <returns>The client data.</returns>
     [HttpGet("{id:guid}")]
     [SwaggerOperation(Summary = "Get a client by ID", Description = "Returns a single client by its unique identifier.")]
-    [ProducesResponseType(typeof(ClientDto), (int)HttpStatusCode.OK)]
-    [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.NotFound)]
+    [ProducesResponseType(typeof(ClientDto), (int) HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.NotFound)]
     public async Task<IActionResult> GetOneAsync([FromRoute][Required] Guid id, CancellationToken cancellationToken)
     {
         var result = await service.GetOneAsync(id, cancellationToken);
@@ -40,7 +40,7 @@ public sealed class ClientsController(IClientService service) : ControllerBase
     /// <returns>Paginated list of clients.</returns>
     [HttpGet]
     [SwaggerOperation(Summary = "Get all clients (paginated)", Description = "Returns a paginated list of clients.")]
-    [ProducesResponseType(typeof(Paginate<ClientDto>), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(Paginate<ClientDto>), (int) HttpStatusCode.OK)]
     public async Task<IActionResult> GetAllAsync([FromQuery][Required] PaginatedRequest paginatedRequest, CancellationToken cancellationToken)
     {
         var result = await service.GetAllAsync(paginatedRequest, cancellationToken);
@@ -55,8 +55,8 @@ public sealed class ClientsController(IClientService service) : ControllerBase
     /// <returns>The created client.</returns>
     [HttpPost]
     [SwaggerOperation(Summary = "Create a new client", Description = "Creates a new client and returns its data.")]
-    [ProducesResponseType(typeof(ClientDto), (int)HttpStatusCode.Created)]
-    [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType(typeof(ClientDto), (int) HttpStatusCode.Created)]
+    [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.BadRequest)]
     public async Task<IActionResult> CreateAsync([FromBody][Required] CreateClientRequest request, CancellationToken cancellationToken)
     {
         var result = await service.CreateAsync(request, cancellationToken);
@@ -71,8 +71,8 @@ public sealed class ClientsController(IClientService service) : ControllerBase
     /// <returns>No content if deleted.</returns>
     [HttpDelete("{id:guid}")]
     [SwaggerOperation(Summary = "Delete a client", Description = "Deletes a client by its unique identifier.")]
-    [ProducesResponseType((int)HttpStatusCode.NoContent)]
-    [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.NotFound)]
+    [ProducesResponseType((int) HttpStatusCode.NoContent)]
+    [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.NotFound)]
     public async Task<IActionResult> DeleteAsync([FromRoute][Required] Guid id, CancellationToken cancellationToken)
     {
         var result = await service.DeleteAsync(id, cancellationToken);
@@ -88,9 +88,9 @@ public sealed class ClientsController(IClientService service) : ControllerBase
     /// <returns>The updated Client.</returns>
     [HttpPut("{id:guid}")]
     [SwaggerOperation(Summary = "Update a Client", Description = "Updates an existing Client by its unique identifier.")]
-    [ProducesResponseType(typeof(ClientDto), (int)HttpStatusCode.OK)]
-    [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.NotFound)]
-    [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType(typeof(ClientDto), (int) HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.BadRequest)]
     public async Task<IActionResult> UpdateAsync([FromRoute, Required] Guid id, [FromBody, Required] UpdateOneClientRequest request, CancellationToken cancellationToken)
     {
         UpdateOneClientInput input = new(id, request.Fullname, request.Document, request.Email, request.Phone, request.Address);

@@ -1,5 +1,5 @@
-using System.Linq.Expressions;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
+using System.Linq.Expressions;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Repositories;
 

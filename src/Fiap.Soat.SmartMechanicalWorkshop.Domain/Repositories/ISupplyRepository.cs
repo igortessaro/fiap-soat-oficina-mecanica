@@ -1,12 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.Domains.Entities;
 
-namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Repositories
-{
-    public interface ISupplyRepository
-    {
-    }
-}
+namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Repositories;
+
+public interface ISupplyRepository : IRepository<Supply> { }
