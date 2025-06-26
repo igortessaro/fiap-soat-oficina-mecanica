@@ -1,4 +1,4 @@
-﻿using Fiap.Soat.SmartMechanicalWorkshop.Domain.Repositories;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.Repositories;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;

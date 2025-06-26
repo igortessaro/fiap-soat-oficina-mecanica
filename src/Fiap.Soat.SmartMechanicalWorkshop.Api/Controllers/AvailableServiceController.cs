@@ -12,35 +12,35 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Controllers;
 public class AvailableServicesController(IAvailableService service) : ControllerBase
 {
     [HttpGet("{id:guid}")]
-    public async Task<IActionResult> GetOneAsync([FromRoute] [Required] Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetOneAsync([FromRoute][Required] Guid id, CancellationToken cancellationToken)
     {
         var result = await service.GetOneAsync(id, cancellationToken);
         return result.ToActionResult();
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllAsync([FromQuery] [Required] PaginatedRequest paginatedRequest, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAllAsync([FromQuery][Required] PaginatedRequest paginatedRequest, CancellationToken cancellationToken)
     {
         var result = await service.GetAllAsync(paginatedRequest, cancellationToken);
         return result.ToActionResult();
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateAsync([FromBody] [Required] CreateAvailableServiceRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> CreateAsync([FromBody][Required] CreateAvailableServiceRequest request, CancellationToken cancellationToken)
     {
         var result = await service.CreateAsync(request, cancellationToken);
         return result.ToActionResult();
     }
 
     [HttpDelete("{id:guid}")]
-    public async Task<IActionResult> DeleteAsync([FromRoute] [Required] Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> DeleteAsync([FromRoute][Required] Guid id, CancellationToken cancellationToken)
     {
         var result = await service.DeleteAsync(id, cancellationToken);
         return result.ToActionResult();
     }
 
     [HttpPut("{id:guid}")]
-    public async Task<IActionResult> UpdateAsync([FromRoute] [Required] Guid id, [FromBody, Required] UpdateOneAvailableServiceRequest request,
+    public async Task<IActionResult> UpdateAsync([FromRoute][Required] Guid id, [FromBody, Required] UpdateOneAvailableServiceRequest request,
         CancellationToken cancellationToken)
     {
         UpdateOneAvailableServiceInput input = new() { Id = id, Name = request.Name, Price = request.Price };

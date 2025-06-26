@@ -1,4 +1,4 @@
-﻿using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Vehicles;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Vehicles;
 using FluentValidation;
 using System.Text.RegularExpressions;
 

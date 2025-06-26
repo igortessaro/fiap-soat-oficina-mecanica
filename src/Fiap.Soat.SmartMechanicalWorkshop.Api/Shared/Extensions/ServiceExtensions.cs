@@ -1,4 +1,4 @@
-﻿using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.Interfaces;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Shared.Extensions;

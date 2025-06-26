@@ -1,4 +1,4 @@
-﻿namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Vehicles;
+namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Vehicles;
 
 public record VehicleDto
 {

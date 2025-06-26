@@ -1,4 +1,4 @@
-﻿namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
+namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 
 public class Paginate<T> : IPaginate<T>
 {
