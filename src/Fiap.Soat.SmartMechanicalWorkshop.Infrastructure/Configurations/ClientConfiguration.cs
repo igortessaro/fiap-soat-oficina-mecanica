@@ -39,5 +39,28 @@ public sealed class ClientConfiguration : IEntityTypeConfiguration<Client>
                 .HasColumnName("phoneType")
                 .HasColumnType("VARCHAR(10)");
         });
+
+        builder.OwnsOne(c => c.Address, address =>
+        {
+            address.Property(a => a.Street)
+                .HasColumnName("addressStreet")
+                .HasColumnType("VARCHAR(100)");
+            address.Property(a => a.City)
+                .HasColumnName("addressCity")
+                .HasColumnType("VARCHAR(60)");
+            address.Property(a => a.State)
+                .HasColumnName("addressState")
+                .HasColumnType("VARCHAR(30)");
+            address.Property(a => a.ZipCode)
+                .HasColumnName("addressZipCode")
+                .HasColumnType("VARCHAR(15)");
+        });
+
+        builder.OwnsOne(c => c.Email, email =>
+        {
+            email.Property(a => a.Address)
+                .HasColumnName("email")
+                .HasColumnType("VARCHAR(255)");
+        });
     }
 }

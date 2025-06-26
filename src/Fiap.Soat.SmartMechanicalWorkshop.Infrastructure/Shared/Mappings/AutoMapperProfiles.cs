@@ -37,6 +37,13 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Shared.Mappings
             CreateMap<Phone, CreatePhoneRequest>().ReverseMap();
             CreateMap<Phone, UpdateOnePhoneInput>().ReverseMap();
             CreateMap<Phone, UpdateOnePhoneRequest>().ReverseMap();
+
+            CreateMap<Address, AddressDto>().ReverseMap();
+            CreateMap<Address, CreateAddressRequest>().ReverseMap();
+            CreateMap<Address, UpdateOneAddressInput>().ReverseMap();
+            CreateMap<Address, UpdateOneAddressRequest>().ReverseMap();
+
+            CreateMap<Email, EmailDto>().ReverseMap();
         }
     }
 }

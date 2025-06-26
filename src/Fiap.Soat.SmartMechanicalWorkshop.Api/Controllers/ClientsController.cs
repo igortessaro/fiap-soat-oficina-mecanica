@@ -93,10 +93,7 @@ public sealed class ClientsController(IClientService service) : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.BadRequest)]
     public async Task<IActionResult> UpdateAsync([FromRoute, Required] Guid id, [FromBody, Required] UpdateOneClientRequest request, CancellationToken cancellationToken)
     {
-        var phoneInput = request.Phone is not null
-            ? new UpdateOnePhoneInput(request.Phone.CountryCode, request.Phone.AreaCode, request.Phone.Number, request.Phone.Type)
-            : null;
-        UpdateOneClientInput input = new(id, request.Fullname, request.Document, phoneInput);
+        UpdateOneClientInput input = new(id, request.Fullname, request.Document, request.Email, request.Phone, request.Address);
         var result = await service.UpdateAsync(input, cancellationToken);
         return result.ToActionResult();
     }

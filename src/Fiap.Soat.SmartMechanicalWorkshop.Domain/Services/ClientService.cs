@@ -45,7 +45,9 @@ public sealed class ClientService(IMapper mapper, IClientRepository repository) 
             return Response<ClientDto>.Fail(new FluentResults.Error("Client not found"), System.Net.HttpStatusCode.NotFound);
         }
 
-        var updatedEntity = await repository.UpdateAsync(foundEntity.Update(input.Fullname, input.Document, mapper.Map<Phone>(input.Phone)), cancellationToken);
+        var phone = mapper.Map<Phone>(input.Phone);
+        var address = mapper.Map<Address>(input.Address);
+        var updatedEntity = await repository.UpdateAsync(foundEntity.Update(input.Fullname, input.Document, input.Email, phone, address) , cancellationToken);
         return Response<ClientDto>.Ok(mapper.Map<ClientDto>(updatedEntity));
     }
 
