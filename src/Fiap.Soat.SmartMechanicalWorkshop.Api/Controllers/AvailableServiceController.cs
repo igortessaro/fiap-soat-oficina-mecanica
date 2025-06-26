@@ -3,6 +3,7 @@ using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Controllers
 {

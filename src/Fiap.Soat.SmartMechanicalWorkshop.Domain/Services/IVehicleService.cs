@@ -1,5 +1,4 @@
 ﻿using Fiap.Soat.SmartMechanicalWorkshop.Api.DTOs.Vehicles;
-using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Services
