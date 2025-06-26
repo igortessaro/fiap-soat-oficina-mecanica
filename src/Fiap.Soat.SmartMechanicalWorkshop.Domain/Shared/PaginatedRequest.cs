@@ -1,7 +1,8 @@
-﻿using System.ComponentModel;
+﻿
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared
+namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Shared
 {
     public class PaginatedRequest
     {

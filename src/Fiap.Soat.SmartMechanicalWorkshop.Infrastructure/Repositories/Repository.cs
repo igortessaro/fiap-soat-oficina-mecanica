@@ -1,19 +1,18 @@
-﻿using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
+﻿using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.Repositories;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Repositories
 {
-    public abstract class Repository<T>(DbContext context) : IRepository<T> where T : class
+    public abstract class Repository<T>(DbContext context) where T : class
     {
         private readonly DbContext _context = context;
         private readonly DbSet<T> _dbSet = context.Set<T>();
 
-        public async Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+        public async Task<T> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
-            return await _dbSet.FindAsync([id], cancellationToken);
+            return await _dbSet.FindAsync(id, cancellationToken);
         }
 
         public async Task<Paginate<T>> GetAllAsync(PaginatedRequest paginatedRequest, CancellationToken cancellationToken)
@@ -56,7 +55,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Repositories
 
         public async Task<T> AddAsync(T entity, CancellationToken cancellationToken)
         {
-            EntityEntry<T> insertedEntity = await _dbSet.AddAsync(entity, cancellationToken);
+            Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<T> insertedEntity = await _dbSet.AddAsync(entity, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
 
             return insertedEntity.Entity;
