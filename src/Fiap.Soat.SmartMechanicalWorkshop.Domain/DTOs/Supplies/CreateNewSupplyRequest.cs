@@ -1,14 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
-namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Supplies
+namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Supplies;
+
+public class CreateNewSupplyRequest
 {
-    public class CreateNewSupplyRequest
-    {
-        [Required]
-        public string Name { get; set; }
-        [Required]
-        public int Quantity { get; set; }
-        [Required]
-        public decimal Price { get; set; }
-    }
+    [Required]
+    public string Name { get; set; }
+    [Required]
+    public int Quantity { get; set; }
+    [Required]
+    public decimal Price { get; set; }
 }

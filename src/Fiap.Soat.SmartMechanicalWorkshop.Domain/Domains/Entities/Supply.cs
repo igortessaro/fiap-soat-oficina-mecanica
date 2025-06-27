@@ -1,14 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
-namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Domains.Entities
+namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Domains.Entities;
+
+public record Supply : Entity
 {
-    public record Supply : Entity
-    {
-        [Required]
-        public string Name { get; set; }
-        [Required]
-        public int Quantity { get; set; }
-        [Required]
-        public decimal Price { get; set; }
-    }
+    [Required]
+    public string Name { get; set; }
+    [Required]
+    public int Quantity { get; set; }
+    [Required]
+    public decimal Price { get; set; }
 }

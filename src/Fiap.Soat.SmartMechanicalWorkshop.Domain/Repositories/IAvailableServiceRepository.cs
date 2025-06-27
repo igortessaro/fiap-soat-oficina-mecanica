@@ -1,6 +1,5 @@
-namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Repositories
-{
-    public interface IAvailableServiceRepository
-    {
-    }
-}
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.Domains.Entities;
+
+namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Repositories;
+
+public interface IAvailableServiceRepository : IRepository<AvailableService> { }

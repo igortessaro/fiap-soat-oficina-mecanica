@@ -47,7 +47,7 @@ public sealed class ClientService(IMapper mapper, IClientRepository repository) 
 
         var phone = mapper.Map<Phone>(input.Phone);
         var address = mapper.Map<Address>(input.Address);
-        var updatedEntity = await repository.UpdateAsync(foundEntity.Update(input.Fullname, input.Document, input.Email, phone, address) , cancellationToken);
+        var updatedEntity = await repository.UpdateAsync(foundEntity.Update(input.Fullname, input.Document, input.Email, phone, address), cancellationToken);
         return Response<ClientDto>.Ok(mapper.Map<ClientDto>(updatedEntity));
     }
 

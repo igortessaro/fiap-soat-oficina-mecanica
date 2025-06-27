@@ -1,18 +1,17 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
-namespace Fiap.Soat.SmartMechanicalWorkshop.Api.DTOs.Vehicles
+namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Vehicles;
+
+public class CreateNewVehicleRequest
 {
-    public class CreateNewVehicleRequest
-    {
-        [Required]
-        public string LicensePlate { get; set; }
-        [Required]
-        public DateOnly ManufactureYear { get; set; }
-        [Required]
-        public string Brand { get; set; }
-        [Required]
-        public string Model { get; set; }
-        [Required]
-        public Guid ClientId { get; set; }
-    }
+    [Required]
+    public string LicensePlate { get; set; }
+    [Required]
+    public DateOnly ManufactureYear { get; set; }
+    [Required]
+    public string Brand { get; set; }
+    [Required]
+    public string Model { get; set; }
+    [Required]
+    public Guid ClientId { get; set; }
 }

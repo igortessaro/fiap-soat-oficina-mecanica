@@ -1,9 +1,8 @@
-namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Domains.Entities
+namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Domains.Entities;
+
+public record AvailableService : Entity
 {
-        public record AvailableService : Entity
-    {
-        public Guid Id { get; set; }
-        public string Name { get; set; }
-        public decimal Price { get; set; }
-    }
+    public Guid Id { get; set; }
+    public string Name { get; set; }
+    public decimal Price { get; set; }
 }
