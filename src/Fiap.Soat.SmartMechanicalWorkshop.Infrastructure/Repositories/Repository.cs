@@ -65,7 +65,7 @@ public abstract class Repository<T>(DbContext context) : IRepository<T> where T 
 
     private async Task<Paginate<T>> GetAllAsync(IQueryable<T> query, PaginatedRequest paginatedRequest, CancellationToken cancellationToken)
     {
-        int totalCount = await _dbSet.AsNoTracking().CountAsync(cancellationToken);
+        int totalCount = await query.AsNoTracking().CountAsync(cancellationToken);
         if (paginatedRequest.PageNumber == 0)
         {
             return new Paginate<T>(
