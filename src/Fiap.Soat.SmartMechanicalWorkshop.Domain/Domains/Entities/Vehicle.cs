@@ -14,4 +14,6 @@ public record Vehicle : Entity
     public string Model { get; set; }
     [Required]
     public Guid ClientId { get; set; }
+
+    public Client Client { get; private set; }
 }

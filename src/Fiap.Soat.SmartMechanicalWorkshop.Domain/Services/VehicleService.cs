@@ -8,15 +8,16 @@ using System.Text.RegularExpressions;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Services;
 
-public class VehicleService(IVehicleRepository repository, IMapper mapper) : IVehicleService
+public class VehicleService(IVehicleRepository repository, IClientRepository clientRepository, IMapper mapper) : IVehicleService
 {
     public async Task<Response<VehicleDto>> CreateAsync(CreateNewVehicleRequest request, CancellationToken cancellationToken)
     {
-        //var foundClient = await clientRepository.GetByIdAsync(request.ClientId, cancellationToken);
-        //if (foundClient == null)
-        //{
-        //    return Result.Fail(new Error("Client not found"));
-        //}
+        var foundClient = await clientRepository.GetByIdAsync(request.ClientId, cancellationToken);
+        if (foundClient is null)
+        {
+            return Response<VehicleDto>.Fail(new FluentResults.Error("Client not found"), System.Net.HttpStatusCode.BadRequest);
+        }
+
         if (!IsValidLicensePlate(request.LicensePlate))
         {
             return Response<VehicleDto>.Fail(new FluentResults.Error("Invalid license plate format"), System.Net.HttpStatusCode.BadRequest);

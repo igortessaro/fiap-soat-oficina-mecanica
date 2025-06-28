@@ -2,17 +2,19 @@ using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Domains.Entities;
 
-public record Client(string Document, string Fullname, Phone? Phone, Email? Email, Address? Address) : Entity
+public record Client : Entity
 {
-    private Client() : this(string.Empty, string.Empty, null, null, null) { }
+    private Client() { }
 
-    public string Document { get; private set; } = Document;
-    public string Fullname { get; private set; } = Fullname;
-    public Phone? Phone { get; private set; } = Phone;
-    public Email? Email { get; private set; } = Email;
-    public Address? Address { get; private set; } = Address;
+    public string Document { get; private set; } = string.Empty;
+    public string Fullname { get; private set; } = string.Empty;
+    public Phone Phone { get; private set; }
+    public Email Email { get; private set; }
+    public Guid AddressId { get; private set; }
+    public Address Address { get; private set; }
+    public IReadOnlyList<Vehicle> Vehicles { get; private set; } = [];
 
-    public Client Update(string fullname, string document, string email, Phone? phone, Address? address)
+    public Client Update(string fullname, string document, string email, Phone phone, Address? address)
     {
         if (!string.IsNullOrEmpty(document)) Document = document;
         if (!string.IsNullOrEmpty(fullname)) Fullname = fullname;
@@ -25,7 +27,7 @@ public record Client(string Document, string Fullname, Phone? Phone, Email? Emai
     private void UpdatePhone(Phone? phone)
     {
         if (phone is null) return;
-        Phone = new Phone(phone.CountryCode, phone.AreaCode, phone.Number, phone.Type);
+        Phone = new Phone(phone.AreaCode, phone.Number);
     }
 
     private void UpdateEmail(string email)
@@ -34,9 +36,5 @@ public record Client(string Document, string Fullname, Phone? Phone, Email? Emai
         Email = email;
     }
 
-    private void UpdateAddress(Address? address)
-    {
-        if (address is null) return;
-        Address = new Address(address.Street, address.City, address.State, address.ZipCode);
-    }
+    private void UpdateAddress(Address? address) => Address.Update(address);
 }

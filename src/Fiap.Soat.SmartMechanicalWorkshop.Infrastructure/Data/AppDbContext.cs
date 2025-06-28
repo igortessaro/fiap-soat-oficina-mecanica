@@ -7,6 +7,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Data;
 public class AppDbContext(DbContextOptions<AppDbContext> dbContextOptions) : DbContext(dbContextOptions)
 {
     public DbSet<Client> Clients { get; set; }
+    public DbSet<Address> Addresses { get; set; }
     public DbSet<Vehicle> Vehicles { get; set; }
     public DbSet<Supply> Supplies { get; set; }
     public DbSet<AvailableService> AvailableServices { get; set; }
@@ -15,5 +16,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> dbContextOptions) : DbC
     {
         base.OnModelCreating(modelBuilder);
         modelBuilder.ApplyConfiguration(new ClientConfiguration());
+        modelBuilder.ApplyConfiguration(new AddressConfiguration());
+        modelBuilder.ApplyConfiguration(new AvailableServiceConfiguration());
+        modelBuilder.ApplyConfiguration(new SupplyConfiguration());
+        modelBuilder.ApplyConfiguration(new VehicleConfiguration());
     }
 }
