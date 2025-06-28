@@ -13,4 +13,13 @@ public sealed class ServiceOrderRepository(AppDbContext appDbContext) : Reposito
             .Include(x => x.ServiceOrderAvailableServices)
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
     }
+
+    public async Task<ServiceOrder?> GetDetailedAsync(Guid id, CancellationToken cancellationToken)
+    {
+        return await Query()
+            .Include(x => x.ServiceOrderAvailableServices).ThenInclude(x => x.AvailableService)
+            .Include(x => x.Client)
+            .Include(x => x.Vehicle)
+            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+    }
 }

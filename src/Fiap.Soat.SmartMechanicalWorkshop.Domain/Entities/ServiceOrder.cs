@@ -1,3 +1,5 @@
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
+
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 
 public class ServiceOrder : Entity
@@ -10,10 +12,10 @@ public class ServiceOrder : Entity
         Description = description;
         VehicleId = vehicleId;
         ClientId = clientId;
-        Status = "Received";
+        Status = ServiceOrderStatus.Received;
     }
 
-    public string Status { get; private set; } = string.Empty;
+    public ServiceOrderStatus Status { get; private set; } = ServiceOrderStatus.Received;
     public Guid ClientId { get; private set; }
     public Guid VehicleId { get; private set; }
     public string Title { get; private set; } = string.Empty;

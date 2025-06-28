@@ -35,15 +35,19 @@ public sealed class ServiceOrdersController(IServiceOrderService service) : Cont
     /// <summary>
     /// Gets a paginated list of service orders.
     /// </summary>
+    /// <param name="clientId">Client Id</param>
     /// <param name="paginatedRequest">Pagination parameters.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>Paginated list of service orders.</returns>
     [HttpGet]
     [SwaggerOperation(Summary = "Get all service orders (paginated)", Description = "Returns a paginated list of service orders.")]
     [ProducesResponseType(typeof(Paginate<ServiceOrderDto>), (int) HttpStatusCode.OK)]
-    public async Task<IActionResult> GetAllAsync([FromQuery][Required] PaginatedRequest paginatedRequest, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAllAsync(
+        [FromQuery][Required] PaginatedRequest paginatedRequest,
+        [FromQuery] Guid? clientId,
+        CancellationToken cancellationToken)
     {
-        var result = await service.GetAllAsync(paginatedRequest, cancellationToken);
+        var result = await service.GetAllAsync(clientId, paginatedRequest, cancellationToken);
         return result.ToActionResult();
     }
 

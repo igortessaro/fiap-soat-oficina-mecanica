@@ -57,7 +57,7 @@ public sealed class ServiceOrderService(
 
     public async Task<Response<ServiceOrderDto>> GetOneAsync(Guid id, CancellationToken cancellationToken)
     {
-        var foundEntity = await repository.GetByIdAsync(id, cancellationToken);
+        var foundEntity = await repository.GetDetailedAsync(id, cancellationToken);
         return foundEntity != null
             ? Response<ServiceOrderDto>.Ok(mapper.Map<ServiceOrderDto>(foundEntity))
             : Response<ServiceOrderDto>.Fail(new FluentResults.Error("Service Order Not Found"), System.Net.HttpStatusCode.NotFound);
@@ -85,9 +85,11 @@ public sealed class ServiceOrderService(
         return Response<ServiceOrderDto>.Ok(mapper.Map<ServiceOrderDto>(updatedEntity));
     }
 
-    public async Task<Response<Paginate<ServiceOrderDto>>> GetAllAsync(PaginatedRequest paginatedRequest, CancellationToken cancellationToken)
+    public async Task<Response<Paginate<ServiceOrderDto>>> GetAllAsync(Guid? clientId, PaginatedRequest paginatedRequest, CancellationToken cancellationToken)
     {
-        var response = await repository.GetAllAsync(paginatedRequest, cancellationToken);
+        var response = clientId.HasValue ?
+            await repository.GetAllAsync(x => x.ClientId == clientId, paginatedRequest, cancellationToken) :
+            await repository.GetAllAsync(paginatedRequest, cancellationToken);
         var mappedResponse = mapper.Map<Paginate<ServiceOrderDto>>(response);
         return Response<Paginate<ServiceOrderDto>>.Ok(mappedResponse);
     }
