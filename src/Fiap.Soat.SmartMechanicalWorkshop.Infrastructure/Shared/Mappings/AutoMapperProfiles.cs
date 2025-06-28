@@ -19,9 +19,13 @@ public class AutoMapperProfiles : Profile
         CreateMap<Vehicle, CreateNewVehicleRequest>().ReverseMap();
         CreateMap<Vehicle, UpdateOneVehicleRequest>().ReverseMap();
 
-        CreateMap<AvailableService, AvailableServiceDto>().ReverseMap();
+        CreateMap<AvailableService, AvailableServiceDto>()
+            .ForMember(dest => dest.Supplies, opt => opt.MapFrom(src => src.AvailableServiceSupplies.Select(x => x.Supply)))
+            .ReverseMap();
         CreateMap<Paginate<AvailableService>, Paginate<AvailableServiceDto>>().ReverseMap();
-        CreateMap<AvailableService, CreateAvailableServiceRequest>().ReverseMap();
+        CreateMap<AvailableService, CreateAvailableServiceRequest>()
+            .ReverseMap()
+            .ForMember(dest => dest.AvailableServiceSupplies, opt => opt.Ignore());;
         CreateMap<AvailableService, UpdateOneAvailableServiceRequest>().ReverseMap();
 
         CreateMap<Supply, SupplyDto>().ReverseMap();

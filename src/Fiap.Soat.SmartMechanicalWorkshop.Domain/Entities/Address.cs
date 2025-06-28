@@ -1,16 +1,16 @@
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 
-public record Address : Entity
+public class Address : Entity
 {
     private Address() { }
 
-    public Address(string street, string city, string state, string zipCode, Client? client = null)
+    public Address(string street, string city, string state, string zipCode)//, Client? client = null)
     {
         Street = street;
         City = city;
         State = state;
         ZipCode = zipCode;
-        Client = client;
+        // Client = client;
     }
 
     public string Street { get; private set; } = string.Empty;

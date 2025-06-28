@@ -1,8 +1,8 @@
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 
-public record Entity
+public class Entity
 {
-    public Guid Id { get; init; }
-    public DateTime CreatedAt { get; init; } = DateTime.Now;
-    public DateTime UpdatedAt { get; init; } = DateTime.Now;
+    public Guid Id { get; private set; }
+    public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
+    public DateTime UpdatedAt { get; private set; } = DateTime.UtcNow;
 }

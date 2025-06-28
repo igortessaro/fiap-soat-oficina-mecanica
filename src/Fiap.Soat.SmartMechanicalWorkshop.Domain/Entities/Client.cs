@@ -2,7 +2,7 @@ using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 
-public record Client : Entity
+public class Client : Entity
 {
     private Client() { }
 
@@ -12,7 +12,7 @@ public record Client : Entity
     public Email Email { get; private set; } = null!;
     public Guid AddressId { get; private set; }
     public Address Address { get; private set; } = null!;
-    public IReadOnlyList<Vehicle> Vehicles { get; private set; } = [];
+    public ICollection<Vehicle> Vehicles { get; private set; } = [];
 
     public Client Update(string fullname, string document, string email, Phone phone, Address? address)
     {

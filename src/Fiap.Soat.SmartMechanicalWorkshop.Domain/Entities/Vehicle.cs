@@ -1,6 +1,6 @@
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 
-public record Vehicle : Entity
+public class Vehicle : Entity
 {
     public string LicensePlate { get; private set; } = string.Empty;
     public int ManufactureYear { get; private set; }

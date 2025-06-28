@@ -28,5 +28,7 @@ public sealed class SupplyConfiguration : IEntityTypeConfiguration<Supply>
             .HasColumnName("price")
             .HasColumnType("decimal(18,2)")
             .IsRequired();
+
+        builder.HasIndex(x => x.Name).IsUnique();
     }
 }

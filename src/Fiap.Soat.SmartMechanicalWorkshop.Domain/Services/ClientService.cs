@@ -39,7 +39,7 @@ public sealed class ClientService(IMapper mapper, IClientRepository repository) 
 
     public async Task<Response<ClientDto>> UpdateAsync(UpdateOneClientInput input, CancellationToken cancellationToken)
     {
-        var foundEntity = await repository.GetByIdAsync(input.Id, cancellationToken);
+        var foundEntity = await repository.GetAsync(input.Id, cancellationToken);
         if (foundEntity is null)
         {
             return Response<ClientDto>.Fail(new FluentResults.Error("Client not found"), System.Net.HttpStatusCode.NotFound);

@@ -1,6 +1,6 @@
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 
-public record ServiceOrder : Entity
+public class ServiceOrder : Entity
 {
     public string Status { get; private set; } = string.Empty;
     public Guid ClientId { get; private set; }
@@ -10,5 +10,6 @@ public record ServiceOrder : Entity
 
     public Client Client { get; private set; } = null!;
     public Vehicle Vehicle { get; private set; } = null!;
-    public IReadOnlyList<AvailableService> AvailableServices { get; private set; } = [];
+    // public ICollection<AvailableService> AvailableServices { get; private set; } = [];
+    public ICollection<ServiceOrderAvailableService> ServiceOrderAvailableServices { get; private set; } = [];
 }

@@ -45,5 +45,7 @@ public sealed class VehicleConfiguration : IEntityTypeConfiguration<Vehicle>
             .WithMany(c => c.Vehicles)
             .HasForeignKey(v => v.ClientId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasIndex(x => x.LicensePlate).IsUnique();
     }
 }

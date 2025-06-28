@@ -1,11 +1,12 @@
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 
-public record Supply : Entity
+public class Supply : Entity
 {
     public string Name { get; private set; } = string.Empty;
     public int Quantity { get; private set; }
     public decimal Price { get; private set; }
-    public IReadOnlyList<AvailableService> AvailableServices { get; set; } = [];
+    // public ICollection<AvailableService> AvailableServices { get; private set; } = [];
+    public ICollection<AvailableServiceSupply> AvailableServiceSupplies { get; private set; } = [];
 
     public Supply Update(string name, decimal? price, int? quantity)
     {

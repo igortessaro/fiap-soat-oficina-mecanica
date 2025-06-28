@@ -11,6 +11,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> dbContextOptions) : DbC
     public DbSet<Vehicle> Vehicles { get; set; }
     public DbSet<Supply> Supplies { get; set; }
     public DbSet<AvailableService> AvailableServices { get; set; }
+    public DbSet<ServiceOrder> ServiceOrders { get; set; }
+    public DbSet<ServiceOrderAvailableService> ServiceOrderAvailableServices { get; set; }
+    public DbSet<AvailableServiceSupply> AvailableServiceSupplies { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -20,5 +23,11 @@ public class AppDbContext(DbContextOptions<AppDbContext> dbContextOptions) : DbC
         modelBuilder.ApplyConfiguration(new AvailableServiceConfiguration());
         modelBuilder.ApplyConfiguration(new SupplyConfiguration());
         modelBuilder.ApplyConfiguration(new VehicleConfiguration());
+        modelBuilder.ApplyConfiguration(new ServiceOrderConfiguration());
+        modelBuilder.ApplyConfiguration(new ServiceOrderAvailableServiceConfiguration());
+        modelBuilder.ApplyConfiguration(new AvailableServiceSupplyConfiguration());
     }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        => optionsBuilder.LogTo(Console.WriteLine).EnableSensitiveDataLogging();
 }
