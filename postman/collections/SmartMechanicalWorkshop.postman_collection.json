@@ -1,0 +1,575 @@
+{
+	"info": {
+		"_postman_id": "b07c3787-3cd7-4f4e-84d4-f3dc001ce0b1",
+		"name": "SmartMechanicalWorkshop",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "1999875"
+	},
+	"item": [
+		{
+			"name": "clients",
+			"item": [
+				{
+					"name": "create a new client",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"fullname\": \"Fulano da Silva\",\n  \"document\": \"999.999.999-99\",\n  \"email\": \"fulano.silva@email.com\",\n  \"phone\": {\n    \"areaCode\": \"51\",\n    \"number\": \"999999-99\"\n  },\n  \"address\": {\n    \"street\": \"Street\",\n    \"city\": \"Viamão\",\n    \"state\": \"RS\",\n    \"zipCode\": \"9999-999\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}api/v1/clients",
+							"host": [
+								"{{BASE_URL}}api"
+							],
+							"path": [
+								"v1",
+								"clients"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get client by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}api/v1/clients/:id",
+							"host": [
+								"{{BASE_URL}}api"
+							],
+							"path": [
+								"v1",
+								"clients",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "08ddb5c5-f0cc-483f-88ca-fd20b32908a1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete a client",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}api/v1/clients/:id",
+							"host": [
+								"{{BASE_URL}}api"
+							],
+							"path": [
+								"v1",
+								"clients",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "08ddb5c5-f0cc-483f-88ca-fd20b32908a1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update a client",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"fullname\": \"Fulano da Silva II\",\n  \"document\": \"900.999.999-99\",\n  \"email\": \"fulano.silva@email.com.br\",\n  \"phone\": {\n    \"areaCode\": \"55\",\n    \"number\": \"999999-11\"\n  },\n  \"address\": {\n    \"street\": \"Street III\",\n    \"city\": \"São Paulo\",\n    \"state\": \"SP\",\n    \"zipCode\": \"0999-999\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}api/v1/clients/:id",
+							"host": [
+								"{{BASE_URL}}api"
+							],
+							"path": [
+								"v1",
+								"clients",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "08ddb5c5-f0cc-483f-88ca-fd20b32908a1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all clients",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}api/v1/clients",
+							"host": [
+								"{{BASE_URL}}api"
+							],
+							"path": [
+								"v1",
+								"clients"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "supplies",
+			"item": [
+				{
+					"name": "get all supplies",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}api/v1/supplies",
+							"host": [
+								"{{BASE_URL}}api"
+							],
+							"path": [
+								"v1",
+								"supplies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create a new supply",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Supply III\",\n  \"quantity\": 1,\n  \"price\": 90\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}api/v1/supplies",
+							"host": [
+								"{{BASE_URL}}api"
+							],
+							"path": [
+								"v1",
+								"supplies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get supply by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}api/v1/supplies/:id",
+							"host": [
+								"{{BASE_URL}}api"
+							],
+							"path": [
+								"v1",
+								"supplies",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "08ddb5d8-5c3b-42db-8219-846bc0957edc"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete a supply",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}api/v1/supplies/:id",
+							"host": [
+								"{{BASE_URL}}api"
+							],
+							"path": [
+								"v1",
+								"supplies",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "08ddb5d8-521f-483a-8a17-1f0f6e80c0d5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update a supply",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Supply II\",\n    \"quantity\": 12,\n    \"price\": 100\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}api/v1/supplies/:id",
+							"host": [
+								"{{BASE_URL}}api"
+							],
+							"path": [
+								"v1",
+								"supplies",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "08ddb5d8-5c3b-42db-8219-846bc0957edc"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "available services",
+			"item": [
+				{
+					"name": "get all available services",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}api/v1/availableservices",
+							"host": [
+								"{{BASE_URL}}api"
+							],
+							"path": [
+								"v1",
+								"availableservices"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create a new available service",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Service IV\",\n  \"price\": 12.98873\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}api/v1/availableservices",
+							"host": [
+								"{{BASE_URL}}api"
+							],
+							"path": [
+								"v1",
+								"availableservices"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get available service by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}api/v1/availableservices/:id",
+							"host": [
+								"{{BASE_URL}}api"
+							],
+							"path": [
+								"v1",
+								"availableservices",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "08ddb5d9-de5a-409f-8c98-ece966904f4a"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete a available service",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}api/v1/availableservices/:id",
+							"host": [
+								"{{BASE_URL}}api"
+							],
+							"path": [
+								"v1",
+								"availableservices",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "08ddb5d9-de5a-409f-8c98-ece966904f4a"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update a available service",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Service\",\n  \"price\": 12.98873\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}api/v1/availableservices/:id",
+							"host": [
+								"{{BASE_URL}}api"
+							],
+							"path": [
+								"v1",
+								"availableservices",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "08ddb5d9-e335-458f-8af2-72d764caede1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "vehicles",
+			"item": [
+				{
+					"name": "get all vehicles",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}api/v1/vehicles",
+							"host": [
+								"{{BASE_URL}}api"
+							],
+							"path": [
+								"v1",
+								"vehicles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create a new vehicle",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"licensePlate\": \"NFA-0362\",\n  \"manufactureYear\": \"2025-06-28\",\n  \"brand\": \"Brand\",\n  \"model\": \"Model\",\n  \"clientId\": \"08ddb5da-ac77-4b1f-8e7d-baf4e0413720\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}api/v1/vehicles",
+							"host": [
+								"{{BASE_URL}}api"
+							],
+							"path": [
+								"v1",
+								"vehicles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get vehicle by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}api/v1/vehicles/:id",
+							"host": [
+								"{{BASE_URL}}api"
+							],
+							"path": [
+								"v1",
+								"vehicles",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "08ddb5da-feb9-48e9-8cd5-5642d9da401f"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete a vehicle",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}api/v1/vehicles/:id",
+							"host": [
+								"{{BASE_URL}}api"
+							],
+							"path": [
+								"v1",
+								"vehicles",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "08ddb5da-feb9-48e9-8cd5-5642d9da401f"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update a vehicle",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"licensePlate\": \"NFA-0362\",\n  \"manufactureYear\": \"2026-06-28\",\n  \"brand\": \"Brand II\",\n  \"model\": \"Model II\",\n  \"clientId\": \"08ddb5da-ac77-4b1f-8e7d-baf4e0413720\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}api/v1/vehicles/:id",
+							"host": [
+								"{{BASE_URL}}api"
+							],
+							"path": [
+								"v1",
+								"vehicles",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "08ddb5db-029b-4b18-8e36-a12edef4ced1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "BASE_URL",
+			"value": "http://localhost:5180/",
+			"type": "string"
+		}
+	]
+}
