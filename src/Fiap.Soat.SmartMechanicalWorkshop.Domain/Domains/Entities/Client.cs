@@ -8,10 +8,10 @@ public record Client : Entity
 
     public string Document { get; private set; } = string.Empty;
     public string Fullname { get; private set; } = string.Empty;
-    public Phone Phone { get; private set; }
-    public Email Email { get; private set; }
+    public Phone Phone { get; private set; } = null!;
+    public Email Email { get; private set; } = null!;
     public Guid AddressId { get; private set; }
-    public Address Address { get; private set; }
+    public Address Address { get; private set; } = null!;
     public IReadOnlyList<Vehicle> Vehicles { get; private set; } = [];
 
     public Client Update(string fullname, string document, string email, Phone phone, Address? address)

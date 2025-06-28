@@ -34,6 +34,7 @@ public sealed class VehicleConfiguration : IEntityTypeConfiguration<Vehicle>
 
         builder.Property(v => v.ManufactureYear)
             .HasColumnName("manufacture_year")
+            .HasColumnType("INT")
             .IsRequired();
 
         builder.Property(v => v.ClientId)

@@ -1,7 +1,7 @@
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.AvailableServices;
 
-public class CreateAvailableServiceRequest
+public record CreateAvailableServiceRequest
 {
-    public string Name { get; set; }
-    public decimal Price { get; set; }
+    public string Name { get; private set; } = string.Empty;
+    public decimal Price { get; private set; }
 }

@@ -23,13 +23,10 @@ public class VehicleService(IVehicleRepository repository, IClientRepository cli
             return Response<VehicleDto>.Fail(new FluentResults.Error("Invalid license plate format"), System.Net.HttpStatusCode.BadRequest);
         }
 
-        Vehicle mapperEntity = mapper.Map<Vehicle>(request);
-        mapperEntity.LicensePlate = request.LicensePlate.Trim().ToUpper();
-
-        Vehicle createdEntity = await repository.AddAsync(mapperEntity, cancellationToken);
-        return createdEntity != null
-            ? Response<VehicleDto>.Ok(mapper.Map<VehicleDto>(createdEntity), System.Net.HttpStatusCode.Created)
-            : Response<VehicleDto>.Fail(new FluentResults.Error("Not Created"));
+        var mapperEntity = mapper.Map<Vehicle>(request);
+        // mapperEntity.LicensePlate = request.LicensePlate.Trim().ToUpper();
+        var createdEntity = await repository.AddAsync(mapperEntity, cancellationToken);
+        return Response<VehicleDto>.Ok(mapper.Map<VehicleDto>(createdEntity), System.Net.HttpStatusCode.Created);
     }
 
     private bool IsValidLicensePlate(string licensePlate)
@@ -47,28 +44,22 @@ public class VehicleService(IVehicleRepository repository, IClientRepository cli
 
     public async Task<Response> DeleteAsync(Guid id, CancellationToken cancellationToken)
     {
-        Vehicle foundEntity = await repository.GetByIdAsync(id, cancellationToken);
-
-        if (foundEntity == null)
-        {
-            return Response.Fail(new FluentResults.Error("Vehicle not found"), System.Net.HttpStatusCode.NotFound);
-        }
-
+        var foundEntity = await repository.GetByIdAsync(id, cancellationToken);
+        if (foundEntity is null) return Response.Fail(new FluentResults.Error("Vehicle not found"), System.Net.HttpStatusCode.NotFound);
         await repository.DeleteAsync(foundEntity, cancellationToken);
-
         return Response.Ok();
     }
 
     public async Task<Response<Paginate<VehicleDto>>> GetAllAsync(PaginatedRequest paginatedRequest, CancellationToken cancellationToken)
     {
-        Paginate<Vehicle> response = await repository.GetAllAsync(paginatedRequest, cancellationToken);
-        Paginate<VehicleDto> mappedResponse = mapper.Map<Paginate<VehicleDto>>(response);
+        var response = await repository.GetAllAsync(paginatedRequest, cancellationToken);
+        var mappedResponse = mapper.Map<Paginate<VehicleDto>>(response);
         return Response<Paginate<VehicleDto>>.Ok(mappedResponse);
     }
 
     public async Task<Response<VehicleDto>> GetOneAsync(Guid id, CancellationToken cancellationToken)
     {
-        Vehicle foundEntity = await repository.GetByIdAsync(id, cancellationToken);
+        var foundEntity = await repository.GetByIdAsync(id, cancellationToken);
         return foundEntity != null
             ? Response<VehicleDto>.Ok(mapper.Map<VehicleDto>(foundEntity))
             : Response<VehicleDto>.Fail(new FluentResults.Error("Vehicle Not Found"), System.Net.HttpStatusCode.NotFound);
@@ -76,48 +67,14 @@ public class VehicleService(IVehicleRepository repository, IClientRepository cli
 
     public async Task<Response<VehicleDto>> UpdateAsync(UpdateOneVehicleInput input, CancellationToken cancellationToken)
     {
-        Vehicle foundEntity = await repository.GetByIdAsync(input.Id, cancellationToken);
-
-        if (foundEntity == null)
+        var foundEntity = await repository.GetByIdAsync(input.Id, cancellationToken);
+        if (foundEntity is null)
         {
             return Response<VehicleDto>.Fail(new FluentResults.Error("Vehicle not found"), System.Net.HttpStatusCode.NotFound);
         }
 
-        if (input.ManufactureYear != null)
-        {
-            foundEntity.ManufactureYear = (DateOnly) input.ManufactureYear;
-        }
-
-        if (input.LicensePlate != null)
-        {
-            foundEntity.LicensePlate = input.LicensePlate;
-        }
-
-        if (input.Brand != null)
-        {
-            foundEntity.Brand = input.Brand;
-        }
-
-        if (input.Model != null)
-        {
-            foundEntity.Model = input.Model;
-        }
-
-        //if (input.ClientId != null)
-        //{
-        //    Task<Client> foundClient = clientRepository.GetByIdAsync((Guid)input.ClientId, cancellationToken);
-
-        //    if (foundClient == null)
-        //    {
-        //        return Result.Fail(new Error("Client not found"));
-        //    }
-        //    foundEntity.ClientId = (Guid)input.ClientId;
-        //}
-
-        Vehicle updatedEntity = await repository.UpdateAsync(foundEntity, cancellationToken);
-
-        return updatedEntity != null
-            ? Response<VehicleDto>.Ok(mapper.Map<VehicleDto>(updatedEntity))
-            : Response<VehicleDto>.Fail(new FluentResults.Error("Not Updated"));
+        _ = foundEntity.Update(input.ManufactureYear, input.LicensePlate, input.Brand, input.Model);
+        var updatedEntity = await repository.UpdateAsync(foundEntity, cancellationToken);
+        return Response<VehicleDto>.Ok(mapper.Map<VehicleDto>(updatedEntity));
     }
 }

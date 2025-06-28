@@ -24,16 +24,12 @@ public class VehiclesController(IVehicleService vehicleService) : ControllerBase
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>The vehicle data.</returns>
     [HttpGet("{id:guid}")]
-    [SwaggerOperation(
-        Summary = "Get a vehicle by ID",
-        Description = "Returns a single vehicle by its unique identifier."
-    )]
+    [SwaggerOperation(Summary = "Get a vehicle by ID", Description = "Returns a single vehicle by its unique identifier.")]
     [ProducesResponseType(typeof(VehicleDto), (int) HttpStatusCode.OK)]
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.NotFound)]
     public async Task<IActionResult> GetOneAsync([FromRoute][Required] Guid id, CancellationToken cancellationToken)
     {
-        // Retrieves a vehicle by its ID
-        Response<VehicleDto> result = await vehicleService.GetOneAsync(id, cancellationToken);
+        var result = await vehicleService.GetOneAsync(id, cancellationToken);
         return result.ToActionResult();
     }
 
@@ -44,15 +40,11 @@ public class VehiclesController(IVehicleService vehicleService) : ControllerBase
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>Paginated list of vehicles.</returns>
     [HttpGet]
-    [SwaggerOperation(
-        Summary = "Get all vehicles (paginated)",
-        Description = "Returns a paginated list of vehicles."
-    )]
+    [SwaggerOperation(Summary = "Get all vehicles (paginated)", Description = "Returns a paginated list of vehicles.")]
     [ProducesResponseType(typeof(Paginate<VehicleDto>), (int) HttpStatusCode.OK)]
     public async Task<IActionResult> GetAllAsync([FromQuery][Required] PaginatedRequest paginatedRequest, CancellationToken cancellationToken)
     {
-        // Retrieves a paginated list of vehicles
-        Response<Paginate<VehicleDto>> result = await vehicleService.GetAllAsync(paginatedRequest, cancellationToken);
+        var result = await vehicleService.GetAllAsync(paginatedRequest, cancellationToken);
         return result.ToActionResult();
     }
 
@@ -63,16 +55,12 @@ public class VehiclesController(IVehicleService vehicleService) : ControllerBase
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>The created vehicle.</returns>
     [HttpPost]
-    [SwaggerOperation(
-        Summary = "Create a new vehicle",
-        Description = "Creates a new vehicle and returns its data."
-    )]
+    [SwaggerOperation(Summary = "Create a new vehicle", Description = "Creates a new vehicle and returns its data.")]
     [ProducesResponseType(typeof(VehicleDto), (int) HttpStatusCode.Created)]
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.BadRequest)]
     public async Task<IActionResult> CreateAsync([FromBody][Required] CreateNewVehicleRequest request, CancellationToken cancellationToken)
     {
-        // Creates a new vehicle
-        Response<VehicleDto> result = await vehicleService.CreateAsync(request, cancellationToken);
+        var result = await vehicleService.CreateAsync(request, cancellationToken);
         return result.ToActionResult();
     }
 
@@ -83,16 +71,12 @@ public class VehiclesController(IVehicleService vehicleService) : ControllerBase
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>No content if deleted.</returns>
     [HttpDelete("{id:guid}")]
-    [SwaggerOperation(
-        Summary = "Delete a vehicle",
-        Description = "Deletes a vehicle by its unique identifier."
-    )]
+    [SwaggerOperation(Summary = "Delete a vehicle", Description = "Deletes a vehicle by its unique identifier.")]
     [ProducesResponseType((int) HttpStatusCode.NoContent)]
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.NotFound)]
     public async Task<IActionResult> DeleteAsync([FromRoute][Required] Guid id, CancellationToken cancellationToken)
     {
-        // Deletes a vehicle by its ID
-        Response result = await vehicleService.DeleteAsync(id, cancellationToken);
+        var result = await vehicleService.DeleteAsync(id, cancellationToken);
         return result.ToActionResult();
     }
 
@@ -104,27 +88,14 @@ public class VehiclesController(IVehicleService vehicleService) : ControllerBase
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>The updated vehicle.</returns>
     [HttpPut("{id:guid}")]
-    [SwaggerOperation(
-        Summary = "Update a vehicle",
-        Description = "Updates an existing vehicle by its unique identifier."
-    )]
+    [SwaggerOperation(Summary = "Update a vehicle", Description = "Updates an existing vehicle by its unique identifier.")]
     [ProducesResponseType(typeof(VehicleDto), (int) HttpStatusCode.OK)]
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.BadRequest)]
     public async Task<IActionResult> UpdateAsync([FromRoute][Required] Guid id, [FromBody, Required] UpdateOneVehicleRequest request, CancellationToken cancellationToken)
     {
-        // Updates an existing vehicle
-        UpdateOneVehicleInput updateRequest = new()
-        {
-            Id = id,
-            ClientId = request.ClientId,
-            Model = request.Model,
-            Brand = request.Brand,
-            LicensePlate = request.LicensePlate,
-            ManufactureYear = request.ManufactureYear
-        };
-
-        Response<VehicleDto> result = await vehicleService.UpdateAsync(updateRequest, cancellationToken);
+        UpdateOneVehicleInput updateRequest = new(id, request.LicensePlate, request.ManufactureYear, request.Brand, request.Model, request.ClientId);
+        var result = await vehicleService.UpdateAsync(updateRequest, cancellationToken);
         return result.ToActionResult();
     }
 }

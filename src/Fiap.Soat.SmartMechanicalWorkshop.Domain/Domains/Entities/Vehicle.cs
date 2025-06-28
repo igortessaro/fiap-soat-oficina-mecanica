@@ -4,16 +4,20 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Domains.Entities;
 
 public record Vehicle : Entity
 {
-    [Required]
-    public string LicensePlate { get; set; }
-    [Required]
-    public DateOnly ManufactureYear { get; set; }
-    [Required]
-    public string Brand { get; set; }
-    [Required]
-    public string Model { get; set; }
-    [Required]
-    public Guid ClientId { get; set; }
+    public string LicensePlate { get; private set; } = string.Empty;
+    public int ManufactureYear { get; private set; }
+    public string Brand { get; private set; } = string.Empty;
+    public string Model { get; private set; } = string.Empty;
+    public Guid ClientId { get; private set; }
 
-    public Client Client { get; private set; }
+    public Client Client { get; private set; } = null!;
+
+    public Vehicle Update(int? manufactureYear, string licensePlate, string brand, string model)
+    {
+        if (manufactureYear.HasValue) ManufactureYear = manufactureYear.Value;
+        if (!string.IsNullOrEmpty(licensePlate)) LicensePlate = licensePlate;
+        if (!string.IsNullOrEmpty(brand)) Brand = brand;
+        if (!string.IsNullOrEmpty(model)) Model = model;
+        return this;
+    }
 }

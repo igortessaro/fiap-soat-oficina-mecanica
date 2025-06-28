@@ -1,8 +1,8 @@
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.AvailableServices;
 
-public class UpdateOneAvailableServiceInput
+public record UpdateOneAvailableServiceInput
 {
-    public Guid Id { get; set; }
-    public string? Name { get; set; }
-    public decimal? Price { get; set; }
+    public Guid Id { get; init; }
+    public string Name { get; init; } = string.Empty;
+    public decimal? Price { get; init; }
 }

@@ -2,16 +2,16 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Vehicles;
 
-public class CreateNewVehicleRequest
+public record CreateNewVehicleRequest
 {
     [Required]
-    public string LicensePlate { get; set; }
+    public string LicensePlate { get; init; } = string.Empty;
     [Required]
-    public DateOnly ManufactureYear { get; set; }
+    public int ManufactureYear { get; init; }
     [Required]
-    public string Brand { get; set; }
+    public string Brand { get; init; } = string.Empty;
     [Required]
-    public string Model { get; set; }
+    public string Model { get; init; } = string.Empty;
     [Required]
-    public Guid ClientId { get; set; }
+    public Guid ClientId { get; init; }
 }
