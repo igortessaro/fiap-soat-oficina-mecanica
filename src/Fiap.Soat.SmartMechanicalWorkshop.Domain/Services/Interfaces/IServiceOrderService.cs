@@ -9,5 +9,5 @@ public interface IServiceOrderService
     Task<Response> DeleteAsync(Guid id, CancellationToken cancellationToken);
     Task<Response<ServiceOrderDto>> GetOneAsync(Guid id, CancellationToken cancellationToken);
     Task<Response<ServiceOrderDto>> UpdateAsync(UpdateOneServiceOrderInput input, CancellationToken cancellationToken);
-    Task<Response<Paginate<ServiceOrderDto>>> GetAllAsync(PaginatedRequest paginatedRequest, CancellationToken cancellationToken);
+    Task<Response<Paginate<ServiceOrderDto>>> GetAllAsync(Guid? clientId, PaginatedRequest paginatedRequest, CancellationToken cancellationToken);
 }

@@ -25,10 +25,6 @@ public class AvailableService : Entity
         AvailableServiceSupplies.Clear();
         if (!supplies.Any()) return this;
         foreach (var supply in supplies) _ = AddSupply(supply);
-        // var toAdd = supplies.Where(s => AvailableServiceSupplies.All(ass => ass.SupplyId != s.Id)).ToList();
-        // var toRemove = AvailableServiceSupplies.Where(ass => supplies.All(s => s.Id != ass.SupplyId)).ToList();
-        // foreach (var supply in toAdd) AddSupply(supply);
-        // foreach (var supply in toRemove) AvailableServiceSupplies.Remove(supply);
         return this;
     }
 }

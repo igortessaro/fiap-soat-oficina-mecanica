@@ -16,38 +16,11 @@ public abstract class Repository<T>(DbContext context) : IRepository<T> where T 
         return await _dbSet.FindAsync([id], cancellationToken);
     }
 
-    public async Task<Paginate<T>> GetAllAsync(PaginatedRequest paginatedRequest, CancellationToken cancellationToken)
-    {
-        int totalCount = await _dbSet
-            .AsNoTracking().CountAsync(cancellationToken);
+    public Task<Paginate<T>> GetAllAsync(PaginatedRequest paginatedRequest, CancellationToken cancellationToken) =>
+        GetAllAsync(_dbSet, paginatedRequest, cancellationToken);
 
-        if (paginatedRequest.PageNumber == 0)
-        {
-            return new Paginate<T>(
-                [],
-                totalCount,
-                paginatedRequest.PageSize,
-                paginatedRequest.PageNumber,
-                (int) Math.Ceiling((double) totalCount / paginatedRequest.PageSize)
-            );
-        }
-
-        var items = await _dbSet
-            .AsNoTracking()
-            .Skip((paginatedRequest.PageNumber - 1) * paginatedRequest.PageSize)
-            .Take(paginatedRequest.PageSize)
-            .ToListAsync(cancellationToken);
-
-        Paginate<T> paginate = new(
-            items,
-            totalCount,
-            paginatedRequest.PageSize,
-            paginatedRequest.PageNumber,
-            (int) Math.Ceiling((double) totalCount / paginatedRequest.PageSize)
-        );
-
-        return paginate;
-    }
+    public Task<Paginate<T>> GetAllAsync(Expression<Func<T, bool>> predicate, PaginatedRequest paginatedRequest, CancellationToken cancellationToken) =>
+        GetAllAsync(_dbSet.Where(predicate), paginatedRequest, cancellationToken);
 
     public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken)
     {
@@ -89,4 +62,35 @@ public abstract class Repository<T>(DbContext context) : IRepository<T> where T 
         _dbSet.AsNoTracking().AnyAsync(predicate, cancellationToken);
 
     protected IQueryable<T> Query(bool noTracking = true) => noTracking ? _dbSet.AsQueryable().AsNoTracking() : _dbSet.AsQueryable();
+
+    private async Task<Paginate<T>> GetAllAsync(IQueryable<T> query, PaginatedRequest paginatedRequest, CancellationToken cancellationToken)
+    {
+        int totalCount = await _dbSet.AsNoTracking().CountAsync(cancellationToken);
+        if (paginatedRequest.PageNumber == 0)
+        {
+            return new Paginate<T>(
+                [],
+                totalCount,
+                paginatedRequest.PageSize,
+                paginatedRequest.PageNumber,
+                (int) Math.Ceiling((double) totalCount / paginatedRequest.PageSize)
+            );
+        }
+
+        var items = await query
+            .AsNoTracking()
+            .Skip((paginatedRequest.PageNumber - 1) * paginatedRequest.PageSize)
+            .Take(paginatedRequest.PageSize)
+            .ToListAsync(cancellationToken);
+
+        Paginate<T> paginate = new(
+            items,
+            totalCount,
+            paginatedRequest.PageSize,
+            paginatedRequest.PageNumber,
+            (int) Math.Ceiling((double) totalCount / paginatedRequest.PageSize)
+        );
+
+        return paginate;
+    }
 }
