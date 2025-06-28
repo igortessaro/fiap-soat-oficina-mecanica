@@ -1,9 +1,10 @@
 using AutoMapper;
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.Domains.Entities;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.AvailableServices;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Clients;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.ServiceOrders;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Supplies;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Vehicles;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 
@@ -44,5 +45,10 @@ public class AutoMapperProfiles : Profile
         CreateMap<Address, UpdateOneAddressRequest>().ReverseMap();
 
         CreateMap<Email, EmailDto>().ReverseMap();
+
+        CreateMap<ServiceOrder, ServiceOrderDto>().ReverseMap();
+        CreateMap<Paginate<ServiceOrder>, Paginate<ServiceOrderDto>>().ReverseMap();
+        CreateMap<ServiceOrder, CreateServiceOrderRequest>().ReverseMap();
+        CreateMap<ServiceOrder, UpdateOneServiceOrderRequest>().ReverseMap();
     }
 }

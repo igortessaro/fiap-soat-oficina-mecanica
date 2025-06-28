@@ -4,6 +4,7 @@ using Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Data;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Repositories;
 
-public class VehicleRepository(AppDbContext appDbContext) : Repository<Vehicle>(appDbContext), IVehicleRepository
+public sealed class ServiceOrderRepository(AppDbContext appDbContext) : Repository<ServiceOrder>(appDbContext), IServiceOrderRepository
 {
+
 }

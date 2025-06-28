@@ -1,4 +1,4 @@
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.Domains.Entities;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Repositories;
 

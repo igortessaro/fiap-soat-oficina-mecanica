@@ -1,4 +1,4 @@
-namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Domains.Entities;
+namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 
 public record Supply : Entity
 {

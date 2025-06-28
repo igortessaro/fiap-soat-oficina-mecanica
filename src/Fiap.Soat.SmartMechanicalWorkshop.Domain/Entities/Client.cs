@@ -1,6 +1,6 @@
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 
-namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Domains.Entities;
+namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 
 public record Client : Entity
 {
