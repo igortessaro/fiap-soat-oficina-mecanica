@@ -24,7 +24,6 @@ public class VehicleService(IVehicleRepository repository, IClientRepository cli
         }
 
         var mapperEntity = mapper.Map<Vehicle>(request);
-        // mapperEntity.LicensePlate = request.LicensePlate.Trim().ToUpper();
         var createdEntity = await repository.AddAsync(mapperEntity, cancellationToken);
         return Response<VehicleDto>.Ok(mapper.Map<VehicleDto>(createdEntity), System.Net.HttpStatusCode.Created);
     }
