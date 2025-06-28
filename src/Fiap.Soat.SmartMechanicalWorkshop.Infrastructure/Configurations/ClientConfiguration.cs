@@ -1,4 +1,4 @@
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.Domains.Entities;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 using Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Converters;
 using Microsoft.EntityFrameworkCore;
@@ -50,8 +50,10 @@ public sealed class ClientConfiguration : IEntityTypeConfiguration<Client>
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasMany(c => c.Vehicles)
-            .WithOne(v => v.Client)
+            .WithOne(x => x.Client)
             .HasForeignKey(v => v.ClientId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasIndex(x => x.Document).IsUnique();
     }
 }

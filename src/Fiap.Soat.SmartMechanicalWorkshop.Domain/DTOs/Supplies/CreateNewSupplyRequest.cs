@@ -2,12 +2,12 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Supplies;
 
-public class CreateNewSupplyRequest
+public record CreateNewSupplyRequest
 {
     [Required]
-    public string Name { get; set; }
+    public string Name { get; init; } = string.Empty;
     [Required]
-    public int Quantity { get; set; }
+    public int Quantity { get; init; }
     [Required]
-    public decimal Price { get; set; }
+    public decimal Price { get; init; }
 }

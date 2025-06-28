@@ -1,4 +1,4 @@
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.Domains.Entities;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -25,6 +25,8 @@ public class AddressConfiguration : IEntityTypeConfiguration<Address>
         builder.Property(a => a.ZipCode)
             .HasColumnName("zip_code")
             .HasColumnType("VARCHAR(15)");
-        builder.Ignore(a => a.Client);
+        // builder.Ignore(a => a.Client);
+
+        builder.HasIndex(x => new { x.Street, x.City, x.State, x.ZipCode }).IsUnique();
     }
 }

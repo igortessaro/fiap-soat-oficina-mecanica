@@ -1,10 +1,10 @@
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Vehicles;
 
-public class UpdateOneVehicleRequest
+public record UpdateOneVehicleRequest
 {
-    public string? LicensePlate { get; set; }
-    public DateOnly? ManufactureYear { get; set; }
-    public string? Brand { get; set; }
-    public string? Model { get; set; }
-    public Guid? ClientId { get; set; }
+    public string LicensePlate { get; init; } = string.Empty;
+    public int? ManufactureYear { get; init; }
+    public string Brand { get; init; } = string.Empty;
+    public string Model { get; init; } = string.Empty;
+    public Guid? ClientId { get; init; }
 }

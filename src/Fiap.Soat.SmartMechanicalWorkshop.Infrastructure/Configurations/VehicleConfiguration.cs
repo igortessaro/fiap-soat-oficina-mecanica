@@ -1,4 +1,4 @@
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.Domains.Entities;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -34,6 +34,7 @@ public sealed class VehicleConfiguration : IEntityTypeConfiguration<Vehicle>
 
         builder.Property(v => v.ManufactureYear)
             .HasColumnName("manufacture_year")
+            .HasColumnType("INT")
             .IsRequired();
 
         builder.Property(v => v.ClientId)
@@ -44,5 +45,7 @@ public sealed class VehicleConfiguration : IEntityTypeConfiguration<Vehicle>
             .WithMany(c => c.Vehicles)
             .HasForeignKey(v => v.ClientId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasIndex(x => x.LicensePlate).IsUnique();
     }
 }

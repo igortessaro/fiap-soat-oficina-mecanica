@@ -11,6 +11,7 @@ public static class ServiceExtensions
         iServiceCollection.AddTransient<ISupplyService, SupplyService>();
         iServiceCollection.AddTransient<IAvailableService, AvailableServiceService>();
         iServiceCollection.AddTransient<IClientService, ClientService>();
+        iServiceCollection.AddTransient<IServiceOrderService, ServiceOrderService>();
 
         return iServiceCollection;
 

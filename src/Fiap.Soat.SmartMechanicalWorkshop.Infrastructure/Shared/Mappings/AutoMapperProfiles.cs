@@ -1,9 +1,10 @@
 using AutoMapper;
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.Domains.Entities;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.AvailableServices;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Clients;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.ServiceOrders;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Supplies;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Vehicles;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 
@@ -15,12 +16,18 @@ public class AutoMapperProfiles : Profile
     {
         CreateMap<Vehicle, VehicleDto>().ReverseMap();
         CreateMap<Paginate<Vehicle>, Paginate<VehicleDto>>().ReverseMap();
-        CreateMap<Vehicle, CreateNewVehicleRequest>().ReverseMap();
+        CreateMap<Vehicle, CreateNewVehicleRequest>()
+            .ReverseMap()
+            .ConstructUsing(dest => new Vehicle(dest.Model, dest.Brand, dest.ManufactureYear, dest.LicensePlate, dest.ClientId));
         CreateMap<Vehicle, UpdateOneVehicleRequest>().ReverseMap();
 
-        CreateMap<AvailableService, AvailableServiceDto>().ReverseMap();
+        CreateMap<AvailableService, AvailableServiceDto>()
+            .ForMember(dest => dest.Supplies, opt => opt.MapFrom(src => src.AvailableServiceSupplies.Select(x => x.Supply)))
+            .ReverseMap();
         CreateMap<Paginate<AvailableService>, Paginate<AvailableServiceDto>>().ReverseMap();
-        CreateMap<AvailableService, CreateAvailableServiceRequest>().ReverseMap();
+        CreateMap<AvailableService, CreateAvailableServiceRequest>()
+            .ReverseMap()
+            .ForMember(dest => dest.AvailableServiceSupplies, opt => opt.Ignore());
         CreateMap<AvailableService, UpdateOneAvailableServiceRequest>().ReverseMap();
 
         CreateMap<Supply, SupplyDto>().ReverseMap();
@@ -44,5 +51,14 @@ public class AutoMapperProfiles : Profile
         CreateMap<Address, UpdateOneAddressRequest>().ReverseMap();
 
         CreateMap<Email, EmailDto>().ReverseMap();
+
+        CreateMap<ServiceOrder, ServiceOrderDto>()
+            .ForMember(dest => dest.AvailableServices, opt => opt.MapFrom(src => src.ServiceOrderAvailableServices.Select(x => x.AvailableService)))
+            .ReverseMap();
+        CreateMap<Paginate<ServiceOrder>, Paginate<ServiceOrderDto>>().ReverseMap();
+        CreateMap<ServiceOrder, CreateServiceOrderRequest>()
+            .ReverseMap()
+            .ConstructUsing(dest => new ServiceOrder(dest.Title, dest.Description, dest.VehicleId, dest.ClientId));
+        CreateMap<ServiceOrder, UpdateOneServiceOrderRequest>().ReverseMap();
     }
 }

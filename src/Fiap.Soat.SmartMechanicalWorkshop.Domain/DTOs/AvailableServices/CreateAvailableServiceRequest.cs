@@ -1,7 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.AvailableServices;
 
-public class CreateAvailableServiceRequest
-{
-    public string Name { get; set; }
-    public decimal Price { get; set; }
-}
+public record CreateAvailableServiceRequest([Required, MaxLength(100)] string Name, [Required] decimal Price, IReadOnlyList<Guid> Supplies);

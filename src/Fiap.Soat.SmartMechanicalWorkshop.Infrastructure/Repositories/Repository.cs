@@ -32,7 +32,7 @@ public abstract class Repository<T>(DbContext context) : IRepository<T> where T 
             );
         }
 
-        List<T> items = await _dbSet
+        var items = await _dbSet
             .AsNoTracking()
             .Skip((paginatedRequest.PageNumber - 1) * paginatedRequest.PageSize)
             .Take(paginatedRequest.PageSize)
@@ -54,9 +54,12 @@ public abstract class Repository<T>(DbContext context) : IRepository<T> where T 
         return await _dbSet.AsNoTracking().Where(predicate).ToListAsync(cancellationToken);
     }
 
+    public Task<T?> FindSingleAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken) =>
+        _dbSet.AsNoTracking().Where(predicate).FirstOrDefaultAsync(cancellationToken);
+
     public async Task<T> AddAsync(T entity, CancellationToken cancellationToken)
     {
-        EntityEntry<T> insertedEntity = await _dbSet.AddAsync(entity, cancellationToken);
+        var insertedEntity = await _dbSet.AddAsync(entity, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
 
         return insertedEntity.Entity;
@@ -75,4 +78,15 @@ public abstract class Repository<T>(DbContext context) : IRepository<T> where T 
         _dbSet.Remove(entity);
         await _context.SaveChangesAsync(cancellationToken);
     }
+
+    public async Task DeleteRangeAsync(ICollection<T> entities, CancellationToken cancellationToken)
+    {
+        _dbSet.RemoveRange(entities);
+        await _context.SaveChangesAsync(cancellationToken);
+    }
+
+    public Task<bool> AnyAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken) =>
+        _dbSet.AsNoTracking().AnyAsync(predicate, cancellationToken);
+
+    protected IQueryable<T> Query(bool noTracking = true) => noTracking ? _dbSet.AsQueryable().AsNoTracking() : _dbSet.AsQueryable();
 }

@@ -1,4 +1,4 @@
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.Domains.Entities;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -28,5 +28,7 @@ public sealed class SupplyConfiguration : IEntityTypeConfiguration<Supply>
             .HasColumnName("price")
             .HasColumnType("decimal(18,2)")
             .IsRequired();
+
+        builder.HasIndex(x => x.Name).IsUnique();
     }
 }
