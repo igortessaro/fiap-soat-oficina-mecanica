@@ -1,4 +1,6 @@
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Domains.Entities;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
+using Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Converters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -24,37 +26,16 @@ public sealed class ClientConfiguration : IEntityTypeConfiguration<Client>
             .HasMaxLength(100)
             .IsRequired();
 
-        builder.OwnsOne(c => c.Phone, phone =>
-        {
-            phone.Property(p => p.CountryCode)
-                .HasColumnName("phoneCountryCode")
-                .HasColumnType("VARCHAR(5)");
-            phone.Property(p => p.AreaCode)
-                .HasColumnName("phoneAreaCode")
-                .HasColumnType("VARCHAR(5)");
-            phone.Property(p => p.Number)
-                .HasColumnName("phoneNumber")
-                .HasColumnType("VARCHAR(15)");
-            phone.Property(p => p.Type)
-                .HasColumnName("phoneType")
-                .HasColumnType("VARCHAR(10)");
-        });
+        builder.Property(x => x.AddressId)
+            .HasColumnName("address_id")
+            .IsRequired();
 
-        builder.OwnsOne(c => c.Address, address =>
-        {
-            address.Property(a => a.Street)
-                .HasColumnName("addressStreet")
-                .HasColumnType("VARCHAR(100)");
-            address.Property(a => a.City)
-                .HasColumnName("addressCity")
-                .HasColumnType("VARCHAR(60)");
-            address.Property(a => a.State)
-                .HasColumnName("addressState")
-                .HasColumnType("VARCHAR(30)");
-            address.Property(a => a.ZipCode)
-                .HasColumnName("addressZipCode")
-                .HasColumnType("VARCHAR(15)");
-        });
+        builder.Property(x => x.Phone)
+            .HasColumnName("phone")
+            .HasColumnType("VARCHAR(25)")
+            .HasMaxLength(25)
+            .HasConversion(new PhoneConverter())
+            .IsRequired();
 
         builder.OwnsOne(c => c.Email, email =>
         {
@@ -62,5 +43,15 @@ public sealed class ClientConfiguration : IEntityTypeConfiguration<Client>
                 .HasColumnName("email")
                 .HasColumnType("VARCHAR(255)");
         });
+
+        builder.HasOne(c => c.Address)
+            .WithOne(a => a.Client)
+            .HasForeignKey<Client>(c => c.AddressId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasMany(c => c.Vehicles)
+            .WithOne(v => v.Client)
+            .HasForeignKey(v => v.ClientId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

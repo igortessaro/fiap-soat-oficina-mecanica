@@ -1,9 +1,27 @@
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 
-public record Phone(string CountryCode, string AreaCode, string Number, string Type)
+public record Phone
 {
-    public string CountryCode { get; private set; } = CountryCode;
-    public string AreaCode { get; private set; } = AreaCode;
-    public string Number { get; private set; } = Number;
-    public string Type { get; private set; } = Type;
+    public Phone(string phone)
+    {
+        if (string.IsNullOrWhiteSpace(phone)) return;
+
+        string[] parts = phone.Split(' ', 2);
+        AreaCode = parts[0];
+        Number = parts.Length > 1 ? parts[1] : string.Empty;
+    }
+
+    public Phone(string areaCode, string number)
+    {
+        AreaCode = areaCode;
+        Number = number;
+    }
+
+    private Phone() { }
+
+    public string AreaCode { get; private set; } = string.Empty;
+    public string Number { get; private set; } = string.Empty;
+
+    public static implicit operator Phone(string phone) => new Phone(phone);
+    public static implicit operator string(Phone phone) => $"{phone.AreaCode} {phone.Number}";
 }
