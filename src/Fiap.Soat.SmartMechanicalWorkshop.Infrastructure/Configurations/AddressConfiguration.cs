@@ -23,7 +23,7 @@ public class AddressConfiguration : IEntityTypeConfiguration<Address>
             .HasColumnName("state")
             .HasColumnType("VARCHAR(30)");
         builder.Property(a => a.ZipCode)
-            .HasColumnName("zipCode")
+            .HasColumnName("zip_code")
             .HasColumnType("VARCHAR(15)");
         builder.Ignore(a => a.Client);
     }
