@@ -50,9 +50,13 @@ public class AutoMapperProfiles : Profile
 
         CreateMap<Email, EmailDto>().ReverseMap();
 
-        CreateMap<ServiceOrder, ServiceOrderDto>().ReverseMap();
+        CreateMap<ServiceOrder, ServiceOrderDto>()
+            .ForMember(dest => dest.AvailableServices, opt => opt.MapFrom(src => src.ServiceOrderAvailableServices.Select(x => x.AvailableService)))
+            .ReverseMap();
         CreateMap<Paginate<ServiceOrder>, Paginate<ServiceOrderDto>>().ReverseMap();
-        CreateMap<ServiceOrder, CreateServiceOrderRequest>().ReverseMap();
+        CreateMap<ServiceOrder, CreateServiceOrderRequest>()
+            .ReverseMap()
+            .ConstructUsing(dest => new ServiceOrder(dest.Title, dest.Description, dest.VehicleId, dest.ClientId));
         CreateMap<ServiceOrder, UpdateOneServiceOrderRequest>().ReverseMap();
     }
 }

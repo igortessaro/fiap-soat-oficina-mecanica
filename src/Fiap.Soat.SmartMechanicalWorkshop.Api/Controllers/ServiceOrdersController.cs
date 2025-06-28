@@ -93,7 +93,7 @@ public sealed class ServiceOrdersController(IServiceOrderService service) : Cont
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.BadRequest)]
     public async Task<IActionResult> UpdateAsync([FromRoute, Required] Guid id, [FromBody, Required] UpdateOneServiceOrderRequest request, CancellationToken cancellationToken)
     {
-        UpdateOneServiceOrderInput input = new(id);
+        UpdateOneServiceOrderInput input = new(id, request.ServiceIds, request.Title, request.Description);
         var result = await service.UpdateAsync(input, cancellationToken);
         return result.ToActionResult();
     }

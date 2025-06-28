@@ -11,7 +11,9 @@ public sealed class ServiceOrderService(
     IMapper mapper,
     IServiceOrderRepository repository,
     IClientRepository clientRepository,
-    IVehicleRepository vehicleRepository) : IServiceOrderService
+    IVehicleRepository vehicleRepository,
+    IAvailableServiceRepository availableServiceRepository,
+    IServiceOrderAvailableServiceRepository serviceOrderAvailableServiceRepository) : IServiceOrderService
 {
     public async Task<Response<ServiceOrderDto>> CreateAsync(CreateServiceOrderRequest request, CancellationToken cancellationToken)
     {
@@ -26,10 +28,16 @@ public sealed class ServiceOrderService(
             return Response<ServiceOrderDto>.Fail(new FluentResults.Error("Vehicle not found"), System.Net.HttpStatusCode.NotFound);
         }
 
-        // if (request.ServiceIds.Any() && !await availableServiceRepository.AnyAsync(x => request.ServiceIds.Contains(x.Id), cancellationToken))
-        // {
-        //     return Response<ServiceOrderDto>.Fail(new FluentResults.Error("One or more services not found"), System.Net.HttpStatusCode.NotFound);
-        // }
+        foreach (var serviceId in request.ServiceIds)
+        {
+            var availableService = await availableServiceRepository.GetByIdAsync(serviceId, cancellationToken);
+            if (availableService is null)
+            {
+                return Response<ServiceOrderDto>.Fail(new FluentResults.Error($"Service with Id {serviceId} not found"), System.Net.HttpStatusCode.NotFound);
+            }
+
+            _ = mapperEntity.AddAvailableService(availableService);
+        }
 
         var createdEntity = await repository.AddAsync(mapperEntity, cancellationToken);
         return Response<ServiceOrderDto>.Ok(mapper.Map<ServiceOrderDto>(createdEntity), System.Net.HttpStatusCode.Created);
@@ -57,14 +65,24 @@ public sealed class ServiceOrderService(
 
     public async Task<Response<ServiceOrderDto>> UpdateAsync(UpdateOneServiceOrderInput input, CancellationToken cancellationToken)
     {
-        var foundEntity = await repository.GetByIdAsync(input.Id, cancellationToken);
+        var foundEntity = await repository.GetAsync(input.Id, cancellationToken);
         if (foundEntity is null)
         {
             return Response<ServiceOrderDto>.Fail(new FluentResults.Error("Service Order not found"), System.Net.HttpStatusCode.NotFound);
         }
 
-        // var updatedEntity = await repository.UpdateAsync(foundEntity.Update(input.Fullname, input.Document, input.Email, phone, address), cancellationToken);
-        return Response<ServiceOrderDto>.Ok(mapper.Map<ServiceOrderDto>(foundEntity));
+        await serviceOrderAvailableServiceRepository.DeleteRangeAsync(foundEntity.ServiceOrderAvailableServices, cancellationToken);
+        foreach (var service in input.ServiceIds)
+        {
+            var foundService = await availableServiceRepository.GetByIdAsync(service, cancellationToken);
+            if (foundService is null)
+            {
+                return Response<ServiceOrderDto>.Fail(new FluentResults.Error($"Available Service with ID {service} not found"), System.Net.HttpStatusCode.NotFound);
+            }
+            _ = foundEntity.AddAvailableService(foundService);
+        }
+        var updatedEntity = await repository.UpdateAsync(foundEntity.Update(input.Title, input.Description), cancellationToken);
+        return Response<ServiceOrderDto>.Ok(mapper.Map<ServiceOrderDto>(updatedEntity));
     }
 
     public async Task<Response<Paginate<ServiceOrderDto>>> GetAllAsync(PaginatedRequest paginatedRequest, CancellationToken cancellationToken)
