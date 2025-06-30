@@ -1,12 +1,12 @@
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Repositories;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Linq.Expressions;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Repositories;
 
-public abstract class Repository<T>(DbContext context) : IRepository<T> where T : class
+public abstract class Repository<T>(DbContext context) : IRepository<T> where T : Entity
 {
     private readonly DbContext _context = context;
     private readonly DbSet<T> _dbSet = context.Set<T>();
@@ -79,6 +79,7 @@ public abstract class Repository<T>(DbContext context) : IRepository<T> where T 
 
         var items = await query
             .AsNoTracking()
+            .OrderBy(item => item.CreatedAt)
             .Skip((paginatedRequest.PageNumber - 1) * paginatedRequest.PageSize)
             .Take(paginatedRequest.PageSize)
             .ToListAsync(cancellationToken);
