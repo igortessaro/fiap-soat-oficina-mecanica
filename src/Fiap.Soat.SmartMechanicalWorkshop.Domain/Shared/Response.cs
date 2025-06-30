@@ -1,23 +1,21 @@
 using FluentResults;
 using System.Net;
+using System.Text.Json.Serialization;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 
-public class Response<T>
+
+public class Response<T>(FluentResults.Result<T> result, HttpStatusCode statusCode)
 {
-    public FluentResults.Result<T> InnerResult { get; }
-    public HttpStatusCode StatusCode { get; }
+    [JsonIgnore]
+    public FluentResults.Result<T> InnerResult { get; } = result;
+    [JsonIgnore]
+    public HttpStatusCode StatusCode { get; } = statusCode;
 
     public bool IsSuccess => InnerResult.IsSuccess;
     public bool IsFailed => InnerResult.IsFailed;
     public T Value => InnerResult.ValueOrDefault;
     public List<IReason> Reasons => InnerResult.Reasons;
-
-    public Response(FluentResults.Result<T> result, HttpStatusCode statusCode)
-    {
-        InnerResult = result;
-        StatusCode = statusCode;
-    }
 
     // Aqui inferimos T automaticamente
     public static Response<T> Ok(T value, HttpStatusCode statusCode = HttpStatusCode.OK)
@@ -38,20 +36,16 @@ public class Response<T>
 }
 
 // Versão não genérica para operações que não retornam valor
-public class Response
+public class Response(FluentResults.Result result, HttpStatusCode statusCode)
 {
-    public FluentResults.Result InnerResult { get; }
-    public HttpStatusCode StatusCode { get; }
+    [JsonIgnore]
+    public FluentResults.Result InnerResult { get; } = result;
+    [JsonIgnore]
+    public HttpStatusCode StatusCode { get; } = statusCode;
 
     public bool IsSuccess => InnerResult.IsSuccess;
     public bool IsFailed => InnerResult.IsFailed;
     public List<IReason> Reasons => InnerResult.Reasons;
-
-    public Response(FluentResults.Result result, HttpStatusCode statusCode)
-    {
-        InnerResult = result;
-        StatusCode = statusCode;
-    }
 
     public static Response<object> Ok(object value, HttpStatusCode statusCode = HttpStatusCode.OK)
         => new(FluentResults.Result.Ok(value), statusCode);

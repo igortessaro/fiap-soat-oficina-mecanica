@@ -15,7 +15,7 @@ public class VehicleService(IVehicleRepository repository, IClientRepository cli
         var foundClient = await clientRepository.GetByIdAsync(request.ClientId, cancellationToken);
         if (foundClient is null)
         {
-            return Response<VehicleDto>.Fail(new FluentResults.Error("Client not found"), System.Net.HttpStatusCode.BadRequest);
+            return Response<VehicleDto>.Fail(new FluentResults.Error("Client not found"), System.Net.HttpStatusCode.NotFound);
         }
 
         if (!IsValidLicensePlate(request.LicensePlate))

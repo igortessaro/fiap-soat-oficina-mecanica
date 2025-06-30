@@ -12,6 +12,8 @@ public record ServiceOrderDto
     public string Description { get; init; } = string.Empty;
     public Guid ClientId { get; init; }
     public Guid VehicleId { get; init; }
+    public DateTime VehicleCheckOutDate { get; private set; }
+    public DateTime VehicleCheckInDate { get; private set; }
     public ClientDto Client { get; init; } = null!;
     public VehicleDto Vehicle { get; init; } = null!;
     public IReadOnlyList<AvailableServiceDto> AvailableServices { get; init; } = [];
