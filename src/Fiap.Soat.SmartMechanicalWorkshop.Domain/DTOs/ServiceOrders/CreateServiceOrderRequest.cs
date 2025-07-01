@@ -7,4 +7,6 @@ public record CreateServiceOrderRequest(
     [Required] Guid VehicleId,
     IReadOnlyList<Guid> ServiceIds,
     [Required] string Title,
-    [Required] string Description);
+    [Required] string Description,
+     [Required] DateTime VehicleCheckInDate
+    );
