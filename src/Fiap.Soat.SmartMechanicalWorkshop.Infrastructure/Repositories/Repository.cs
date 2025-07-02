@@ -1,9 +1,7 @@
-using Amazon.Runtime.Identity;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Repositories;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Linq.Expressions;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Repositories;
