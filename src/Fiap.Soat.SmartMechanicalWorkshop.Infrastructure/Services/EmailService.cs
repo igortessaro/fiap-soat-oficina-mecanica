@@ -6,9 +6,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Services;
 
 public class EmailService : IEmailService
 {
-    private readonly string _fromAddress;
-
-    public EmailService(IConfiguration config)
+    public EmailService()
     {
 
     }

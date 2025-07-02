@@ -112,35 +112,71 @@ public sealed class ServiceOrdersController(IServiceOrderService service) : Cont
         return result.ToActionResult();
     }
 
+    /// <summary>
+    /// Sends a service order to the client for approval via email.
+    /// </summary>
+    /// <param name="request">Data required to send the service order for approval.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>Returns 200 OK if the e-mail was successfully sent.</returns>
     [HttpPost("send")]
-    public async Task<IActionResult> SendForApprovalAsync([FromBody, Required] SendServiceOrderApprovalRequest request, CancellationToken cancellationToken)
+    [SwaggerOperation(
+        Summary = "Send service order for client approval",
+        Description = "Sends the service order details via e-mail to the client for approval or rejection."
+    )]
+    [ProducesResponseType((int) HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.BadRequest)]
+    public async Task<IActionResult> SendForApprovalAsync(
+        [FromBody, Required] SendServiceOrderApprovalRequest request,
+        CancellationToken cancellationToken)
     {
         var result = await service.SendForApprovalAsync(request, cancellationToken);
         return result.ToActionResult();
     }
 
+    /// <summary>
+    /// Approves a service order via approval link.
+    /// </summary>
+    /// <param name="id">Service order unique identifier.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>Returns 200 OK if the service order was successfully approved.</returns>
     [HttpGet("{id:guid}/approve")]
+    [SwaggerOperation(
+        Summary = "Approve a service order via email link",
+        Description = "Approves the service order by updating its status when accessed from an e-mail approval link."
+    )]
+    [ProducesResponseType((int) HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.NotFound)]
     public async Task<IActionResult> ApproveAsync([FromRoute, Required] Guid id, CancellationToken cancellationToken)
     {
         UpdateOneServiceOrderInput input = new()
         {
             Id = id,
-            ServiceOrderStatus = Domain.ValueObjects.ServiceOrderStatus.InProgress,  
+            ServiceOrderStatus = Domain.ValueObjects.ServiceOrderStatus.InProgress,
         };
-
 
         var result = await service.UpdateAsync(input, cancellationToken);
         return result.ToActionResult();
     }
 
+    /// <summary>
+    /// Rejects a service order via rejection link.
+    /// </summary>
+    /// <param name="id">Service order unique identifier.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>Returns 200 OK if the service order was successfully rejected.</returns>
     [HttpGet("{id:guid}/reject")]
+    [SwaggerOperation(
+        Summary = "Reject a service order via email link",
+        Description = "Rejects the service order by updating its status when accessed from an e-mail rejection link."
+    )]
+    [ProducesResponseType((int) HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.NotFound)]
     public async Task<IActionResult> RejectAsync([FromRoute, Required] Guid id, CancellationToken cancellationToken)
     {
         UpdateOneServiceOrderInput input = new()
         {
             Id = id,
             ServiceOrderStatus = Domain.ValueObjects.ServiceOrderStatus.Rejected,
-
         };
 
         var result = await service.UpdateAsync(input, cancellationToken);
