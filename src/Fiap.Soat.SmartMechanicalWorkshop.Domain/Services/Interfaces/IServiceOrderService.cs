@@ -6,6 +6,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.Interfaces;
 public interface IServiceOrderService
 {
     Task<Response<ServiceOrderDto>> CreateAsync(CreateServiceOrderRequest request, CancellationToken cancellationToken);
+    Task<Response> SendForApprovalAsync(SendServiceOrderApprovalRequest request, CancellationToken cancellationToken);
     Task<Response> DeleteAsync(Guid id, CancellationToken cancellationToken);
     Task<Response<ServiceOrderDto>> GetOneAsync(Guid id, CancellationToken cancellationToken);
     Task<Response<ServiceOrderDto>> UpdateAsync(UpdateOneServiceOrderInput input, CancellationToken cancellationToken);

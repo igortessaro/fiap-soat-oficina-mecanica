@@ -1,7 +1,7 @@
 services:
   db:
     image: mysql:8.4
-    container_name: smart-mechanical-workshop-db
+    container_name: smart-mechanical-workshop
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
       MYSQL_DATABASE: workshopdb
@@ -11,7 +11,28 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-
+  localstack:
+    container_name: "localstack-smart-mechanical-workshop"
+    image: localstack/localstack:3.0.2
+    ports:
+      - "4566:4566"
+      - "4571:4571"
+    environment:
+      - DEBUG=1
+      - SERVICES=ses
+      - DEFAULT_REGION=us-east-1
+      - AWS_ACCESS_KEY_ID=test
+      - AWS_SECRET_ACCESS_KEY=test
+      - INIT_SCRIPTS_PATH=/etc/localstack/init
+    volumes:
+      - ./local/localstack:/etc/localstack/init
+      - "${HOME}/.colima/default/docker.sock:/var/run/docker.sock"
+  mailhog:
+    image: mailhog/mailhog
+    container_name: mailhog-smart-mechanical-workshop
+    ports:
+      - "1025:1025"  # SMTP (porta usada para envio)
+      - "8025:8025"  # Web UI (acesso no navegador)
   # api:
   #   build:
   #     context: ./src/Fiap.Soat.SmartMechanicalWorkshop.Api

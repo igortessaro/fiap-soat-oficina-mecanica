@@ -46,3 +46,6 @@ dotnet ef migrations remove --project src/Fiap.Soat.SmartMechanicalWorkshop.Infr
 ```
 
 Para mais informações, consulte
+
+## Como rodar o MailHog  
+Rode o docker-compose e acesse [http://localhost:8025](http://localhost:8025), onde você poderá visualizar todos os e-mails enviados pela aplicação em tempo real através de uma interface simples e intuitiva.

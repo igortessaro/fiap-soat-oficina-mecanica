@@ -30,5 +30,27 @@ public sealed class ServiceOrderConfiguration : IEntityTypeConfiguration<Service
             .HasColumnType("VARCHAR(250)")
             .HasMaxLength(250)
             .IsRequired();
+        builder.Property(x => x.VehicleCheckInDate)
+            .HasColumnName("vehicle_check_in_date")
+            .HasColumnType("DATETIME")
+            .IsRequired();
+        builder.Property(x => x.VehicleCheckOutDate)
+            .HasColumnName("vehicle_check_out_date")
+            .HasColumnType("DATETIME")
+            .IsRequired(false);
+
+        builder.HasOne(x => x.Client)
+            .WithMany()
+            .HasForeignKey(x => x.ClientId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasOne(x => x.Vehicle)
+            .WithMany()
+            .HasForeignKey(x => x.VehicleId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasMany(x => x.ServiceOrderAvailableServices)
+            .WithOne(x => x.ServiceOrder)
+            .HasForeignKey(x => x.ServiceOrderId);
     }
 }

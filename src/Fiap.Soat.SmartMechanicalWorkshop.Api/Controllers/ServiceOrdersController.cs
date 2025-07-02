@@ -2,6 +2,7 @@ using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.ServiceOrders;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.Interfaces;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
+using FluentResults;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
@@ -97,7 +98,51 @@ public sealed class ServiceOrdersController(IServiceOrderService service) : Cont
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.BadRequest)]
     public async Task<IActionResult> UpdateAsync([FromRoute, Required] Guid id, [FromBody, Required] UpdateOneServiceOrderRequest request, CancellationToken cancellationToken)
     {
-        UpdateOneServiceOrderInput input = new(id, request.ServiceIds, request.Title, request.Description);
+        UpdateOneServiceOrderInput input = new()
+        {
+            VehicleCheckInDate = request.VehicleCheckInDate,
+            VehicleCheckOutDate = request.VehicleCheckOutDate,
+            Id = id,
+            ServiceOrderStatus = request.ServiceOrderStatus,
+            Title = request.Title,
+            Description = request.Description,
+        };
+
+        var result = await service.UpdateAsync(input, cancellationToken);
+        return result.ToActionResult();
+    }
+
+    [HttpPost("send")]
+    public async Task<IActionResult> SendForApprovalAsync([FromBody, Required] SendServiceOrderApprovalRequest request, CancellationToken cancellationToken)
+    {
+        var result = await service.SendForApprovalAsync(request, cancellationToken);
+        return result.ToActionResult();
+    }
+
+    [HttpGet("{id:guid}/approve")]
+    public async Task<IActionResult> ApproveAsync([FromRoute, Required] Guid id, CancellationToken cancellationToken)
+    {
+        UpdateOneServiceOrderInput input = new()
+        {
+            Id = id,
+            ServiceOrderStatus = Domain.ValueObjects.ServiceOrderStatus.InProgress,  
+        };
+
+
+        var result = await service.UpdateAsync(input, cancellationToken);
+        return result.ToActionResult();
+    }
+
+    [HttpGet("{id:guid}/reject")]
+    public async Task<IActionResult> RejectAsync([FromRoute, Required] Guid id, CancellationToken cancellationToken)
+    {
+        UpdateOneServiceOrderInput input = new()
+        {
+            Id = id,
+            ServiceOrderStatus = Domain.ValueObjects.ServiceOrderStatus.Rejected,
+
+        };
+
         var result = await service.UpdateAsync(input, cancellationToken);
         return result.ToActionResult();
     }
