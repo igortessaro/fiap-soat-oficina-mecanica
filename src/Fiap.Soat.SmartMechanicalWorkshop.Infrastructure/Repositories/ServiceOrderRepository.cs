@@ -23,7 +23,7 @@ public sealed class ServiceOrderRepository(AppDbContext appDbContext) : Reposito
             .ThenInclude(x => x.Supply)
             .Include(x => x.Client)
             .Include(x => x.Vehicle)
-           
+
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
     }
 }

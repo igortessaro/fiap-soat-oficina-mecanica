@@ -68,7 +68,7 @@ public sealed class Response(Result result, HttpStatusCode statusCode)
 
 public static class ResponseFactory
 {
-    public static Response Ok( HttpStatusCode statusCode = HttpStatusCode.OK)
+    public static Response Ok(HttpStatusCode statusCode = HttpStatusCode.OK)
         => new(Result.Ok(), statusCode);
 
     public static Response<T> Ok<T>(T value, HttpStatusCode statusCode = HttpStatusCode.OK)

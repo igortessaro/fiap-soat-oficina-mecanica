@@ -1,27 +1,29 @@
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.ExternalServices;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using System.Net.Mail;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Services;
 
 public class EmailService : IEmailService
 {
-    public EmailService()
-    {
+    private readonly EmailSettings _emailSettings;
 
+    public EmailService(IOptions<EmailSettings> options)
+    {
+        _emailSettings = options.Value;
     }
 
     public async Task<bool> SendEmailAsync(string to, string subject, string htmlBody)
     {
-        var fromAddress = new MailAddress("noreply@smartworkshop.com", "Oficina");
+        var fromAddress = new MailAddress(_emailSettings.SenderAddress, _emailSettings.SenderName);
         var toAddress = new MailAddress(to);
-        const string smtpHost = "localhost";
-        const int smtpPort = 1025;
 
         using var smtp = new SmtpClient
         {
-            Host = smtpHost,
-            Port = smtpPort,
+            Host = _emailSettings.SmtpHost,
+            Port = _emailSettings.SmtpPort,
             EnableSsl = false,
             DeliveryMethod = SmtpDeliveryMethod.Network,
             UseDefaultCredentials = true

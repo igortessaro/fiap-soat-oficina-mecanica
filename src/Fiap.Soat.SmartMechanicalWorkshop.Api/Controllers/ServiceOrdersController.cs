@@ -2,6 +2,7 @@ using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.ServiceOrders;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.Interfaces;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 using FluentResults;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -98,15 +99,15 @@ public sealed class ServiceOrdersController(IServiceOrderService service) : Cont
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.BadRequest)]
     public async Task<IActionResult> UpdateAsync([FromRoute, Required] Guid id, [FromBody, Required] UpdateOneServiceOrderRequest request, CancellationToken cancellationToken)
     {
-        UpdateOneServiceOrderInput input = new()
-        {
-            VehicleCheckInDate = request.VehicleCheckInDate,
-            VehicleCheckOutDate = request.VehicleCheckOutDate,
-            Id = id,
-            ServiceOrderStatus = request.ServiceOrderStatus,
-            Title = request.Title,
-            Description = request.Description,
-        };
+        UpdateOneServiceOrderInput input = new(
+            id,
+            request.ServiceIds,
+            request.Title,
+            request.Description,
+            request.VehicleCheckInDate,
+            request.VehicleCheckOutDate,
+            request.ServiceOrderStatus
+        );
 
         var result = await service.UpdateAsync(input, cancellationToken);
         return result.ToActionResult();
@@ -117,8 +118,7 @@ public sealed class ServiceOrdersController(IServiceOrderService service) : Cont
     /// </summary>
     /// <param name="request">Data required to send the service order for approval.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>Returns 200 OK if the e-mail was successfully sent.</returns>
-    [HttpPost("send")]
+    [HttpPost("send-email")]
     [SwaggerOperation(
         Summary = "Send service order for client approval",
         Description = "Sends the service order details via e-mail to the client for approval or rejection."
@@ -138,7 +138,6 @@ public sealed class ServiceOrdersController(IServiceOrderService service) : Cont
     /// </summary>
     /// <param name="id">Service order unique identifier.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>Returns 200 OK if the service order was successfully approved.</returns>
     [HttpGet("{id:guid}/approve")]
     [SwaggerOperation(
         Summary = "Approve a service order via email link",
@@ -148,11 +147,7 @@ public sealed class ServiceOrdersController(IServiceOrderService service) : Cont
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.NotFound)]
     public async Task<IActionResult> ApproveAsync([FromRoute, Required] Guid id, CancellationToken cancellationToken)
     {
-        UpdateOneServiceOrderInput input = new()
-        {
-            Id = id,
-            ServiceOrderStatus = Domain.ValueObjects.ServiceOrderStatus.InProgress,
-        };
+        UpdateOneServiceOrderInput input = new(id, ServiceOrderStatus.InProgress);
 
         var result = await service.UpdateAsync(input, cancellationToken);
         return result.ToActionResult();
@@ -163,7 +158,6 @@ public sealed class ServiceOrdersController(IServiceOrderService service) : Cont
     /// </summary>
     /// <param name="id">Service order unique identifier.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>Returns 200 OK if the service order was successfully rejected.</returns>
     [HttpGet("{id:guid}/reject")]
     [SwaggerOperation(
         Summary = "Reject a service order via email link",
@@ -173,11 +167,7 @@ public sealed class ServiceOrdersController(IServiceOrderService service) : Cont
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.NotFound)]
     public async Task<IActionResult> RejectAsync([FromRoute, Required] Guid id, CancellationToken cancellationToken)
     {
-        UpdateOneServiceOrderInput input = new()
-        {
-            Id = id,
-            ServiceOrderStatus = Domain.ValueObjects.ServiceOrderStatus.Rejected,
-        };
+        UpdateOneServiceOrderInput input = new(id, ServiceOrderStatus.Rejected);
 
         var result = await service.UpdateAsync(input, cancellationToken);
         return result.ToActionResult();

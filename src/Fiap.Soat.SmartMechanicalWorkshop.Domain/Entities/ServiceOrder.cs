@@ -43,9 +43,9 @@ public class ServiceOrder : Entity
     {
         if (!string.IsNullOrEmpty(title)) Title = title;
         if (!string.IsNullOrEmpty(description)) Description = description;
-        if (serviceOrderStatus !=null) Status = (ServiceOrderStatus) serviceOrderStatus;
-        if (vehicleCheckInDate!=null) VehicleCheckInDate = (DateTime) vehicleCheckInDate;
-        if (vehicleCheckOutDate!=null) VehicleCheckOutDate = (DateTime) vehicleCheckOutDate;
+        if (serviceOrderStatus != null) Status = serviceOrderStatus.Value;
+        if (vehicleCheckInDate != null) VehicleCheckInDate = vehicleCheckInDate.Value;
+        if (vehicleCheckOutDate != null) VehicleCheckOutDate = vehicleCheckOutDate.Value;
         return this;
     }
 }
