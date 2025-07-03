@@ -8,8 +8,6 @@ public record UpdateOneServiceOrderInput
     public IReadOnlyList<Guid>? ServiceIds { get; init; }
     public string? Title { get; init; }
     public string? Description { get; init; }
-    public DateTime? VehicleCheckOutDate { get; init; }
-    public DateTime? VehicleCheckInDate { get; init; }
     public ServiceOrderStatus? ServiceOrderStatus { get; init; }
 
     public UpdateOneServiceOrderInput() { }
@@ -18,16 +16,12 @@ public record UpdateOneServiceOrderInput
         IReadOnlyList<Guid>? serviceIds,
         string? title,
         string? description,
-        DateTime? vehicleCheckInDate,
-        DateTime? vehicleCheckOutDate,
         ServiceOrderStatus? serviceOrderStatus)
     {
         Id = id;
         ServiceIds = serviceIds;
         Title = title;
         Description = description;
-        VehicleCheckInDate = vehicleCheckInDate;
-        VehicleCheckOutDate = vehicleCheckOutDate;
         ServiceOrderStatus = serviceOrderStatus;
     }
 

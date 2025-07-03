@@ -104,8 +104,6 @@ public sealed class ServiceOrdersController(IServiceOrderService service) : Cont
             request.ServiceIds,
             request.Title,
             request.Description,
-            request.VehicleCheckInDate,
-            request.VehicleCheckOutDate,
             request.ServiceOrderStatus
         );
 

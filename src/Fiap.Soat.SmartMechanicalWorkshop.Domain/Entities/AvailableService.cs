@@ -6,6 +6,8 @@ public class AvailableService : Entity
     public decimal Price { get; private set; }
     public ICollection<AvailableServiceSupply> AvailableServiceSupplies { get; private set; } = [];
     public ICollection<ServiceOrderAvailableService> ServiceOrderAvailableServices { get; private set; } = [];
+    public ICollection<ServiceOrder> ServiceOrders { get; private set; } = [];
+    public ICollection<Supply> Supplies { get; private set; } = [];
 
     public AvailableService Update(string name, decimal? price)
     {
@@ -17,6 +19,7 @@ public class AvailableService : Entity
     public AvailableService AddSupply(Supply supply)
     {
         AvailableServiceSupplies.Add(new AvailableServiceSupply(this, supply));
+        Supplies.Add(supply);
         return this;
     }
 

@@ -1,4 +1,5 @@
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Supplies;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.AvailableServices;
 
