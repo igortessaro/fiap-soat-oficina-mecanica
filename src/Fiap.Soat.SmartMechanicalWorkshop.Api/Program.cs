@@ -1,5 +1,6 @@
 using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared.Extensions;
 using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared.Middlewares;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 using Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Data;
 using Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Shared.Mappings;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +26,7 @@ _ = builder.Services.AddSwaggerGen(options =>
 
 _ = builder.Services.AddControllers().AddJsonOptions(options =>
 {
+    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
 });
 
@@ -36,6 +38,7 @@ _ = builder.Services.AddDbContext<AppDbContext>(options =>
             mySqlOptions.MigrationsAssembly("Fiap.Soat.SmartMechanicalWorkshop.Infrastructure")
     ));
 
+_ = builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("Email"));
 _ = builder.Services.AddServiceExtensions();
 _ = builder.Services.AddRepositoryExtensions();
 _ = builder.Services.AddLogging();

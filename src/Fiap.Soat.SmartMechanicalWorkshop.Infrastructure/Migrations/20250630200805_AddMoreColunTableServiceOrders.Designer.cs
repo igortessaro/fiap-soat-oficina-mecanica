@@ -4,6 +4,7 @@ using Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250630200805_AddMoreColunTableServiceOrders")]
+    partial class AddMoreColunTableServiceOrders
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -217,12 +220,10 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Migrations
                         .HasColumnName("updated_at");
 
                     b.Property<DateTime>("VehicleCheckInDate")
-                        .HasColumnType("DATETIME")
-                        .HasColumnName("vehicle_check_in_date");
+                        .HasColumnType("datetime(6)");
 
-                    b.Property<DateTime?>("VehicleCheckOutDate")
-                        .HasColumnType("DATETIME")
-                        .HasColumnName("vehicle_check_out_date");
+                    b.Property<DateTime>("VehicleCheckOutDate")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<Guid>("VehicleId")
                         .HasColumnType("char(36)")
@@ -414,13 +415,13 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Migrations
                     b.HasOne("Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities.Client", "Client")
                         .WithMany()
                         .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities.Vehicle", "Vehicle")
                         .WithMany()
                         .HasForeignKey("VehicleId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Client");

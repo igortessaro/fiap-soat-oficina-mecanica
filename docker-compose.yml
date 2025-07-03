@@ -11,7 +11,12 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-
+  mailhog:
+    image: mailhog/mailhog
+    container_name: mailhog-smart-mechanical-workshop
+    ports:
+      - "1025:1025"  # SMTP (porta usada para envio)
+      - "8025:8025"  # Web UI (acesso no navegador)
   # api:
   #   build:
   #     context: ./src/Fiap.Soat.SmartMechanicalWorkshop.Api

@@ -1,4 +1,5 @@
 using AutoMapper;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Clients;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Supplies;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Repositories;
@@ -14,31 +15,31 @@ public class SupplyService(ISupplyRepository repository, IMapper mapper) : ISupp
     {
         var mapperEntity = mapper.Map<Supply>(request);
         var createdEntity = await repository.AddAsync(mapperEntity, cancellationToken);
-        return Response<SupplyDto>.Ok(mapper.Map<SupplyDto>(createdEntity), HttpStatusCode.Created);
+        return ResponseFactory.Ok(mapper.Map<SupplyDto>(createdEntity), HttpStatusCode.Created);
     }
 
     public async Task<Response> DeleteAsync(Guid id, CancellationToken cancellationToken)
     {
         var foundEntity = await repository.GetByIdAsync(id, cancellationToken);
-        if (foundEntity is null) return Response.Fail(new FluentResults.Error("Supply not found"), HttpStatusCode.NotFound);
+        if (foundEntity is null) return ResponseFactory.Fail(new FluentResults.Error("Supply not found"), HttpStatusCode.NotFound);
 
         await repository.DeleteAsync(foundEntity, cancellationToken);
-        return Response.Ok();
+        return ResponseFactory.Ok(System.Net.HttpStatusCode.NoContent);
     }
 
     public async Task<Response<Paginate<SupplyDto>>> GetAllAsync(PaginatedRequest paginatedRequest, CancellationToken cancellationToken)
     {
         var response = await repository.GetAllAsync(paginatedRequest, cancellationToken);
         var mappedResponse = mapper.Map<Paginate<SupplyDto>>(response);
-        return Response<Paginate<SupplyDto>>.Ok(mappedResponse);
+        return ResponseFactory.Ok(mappedResponse);
     }
 
     public async Task<Response<SupplyDto>> GetOneAsync(Guid id, CancellationToken cancellationToken)
     {
         var foundEntity = await repository.GetByIdAsync(id, cancellationToken);
         return foundEntity != null
-            ? Response<SupplyDto>.Ok(mapper.Map<SupplyDto>(foundEntity))
-            : Response<SupplyDto>.Fail(new FluentResults.Error("Supply Not Found"), HttpStatusCode.NotFound);
+            ? ResponseFactory.Ok(mapper.Map<SupplyDto>(foundEntity))
+            : ResponseFactory.Fail<SupplyDto>(new FluentResults.Error("Supply Not Found"), HttpStatusCode.NotFound);
     }
 
     public async Task<Response<SupplyDto>> UpdateAsync(UpdateOneSupplyInput input, CancellationToken cancellationToken)
@@ -46,10 +47,10 @@ public class SupplyService(ISupplyRepository repository, IMapper mapper) : ISupp
         var foundEntity = await repository.GetByIdAsync(input.Id, cancellationToken);
         if (foundEntity is null)
         {
-            return Response<SupplyDto>.Fail(new FluentResults.Error("Supply not found"), HttpStatusCode.NotFound);
+            return ResponseFactory.Fail<SupplyDto>(new FluentResults.Error("Supply not found"), HttpStatusCode.NotFound);
         }
 
         var updatedEntity = await repository.UpdateAsync(foundEntity.Update(input.Name, input.Price, input.Quantity), cancellationToken);
-        return Response<SupplyDto>.Ok(mapper.Map<SupplyDto>(updatedEntity));
+        return ResponseFactory.Ok(mapper.Map<SupplyDto>(updatedEntity));
     }
 }

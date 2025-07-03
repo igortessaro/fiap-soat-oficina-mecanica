@@ -30,4 +30,18 @@ public class AppDbContext(DbContextOptions<AppDbContext> dbContextOptions) : DbC
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.LogTo(Console.WriteLine).EnableSensitiveDataLogging();
+
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        var modifiedEntries = ChangeTracker
+        .Entries()
+            .Where(e => e.State == EntityState.Modified && e.Entity is Entity);
+
+        foreach (var entry in modifiedEntries)
+        {
+            ((Entity) entry.Entity).MarkAsUpdated();
+        }
+
+        return base.SaveChangesAsync(cancellationToken);
+    }
 }

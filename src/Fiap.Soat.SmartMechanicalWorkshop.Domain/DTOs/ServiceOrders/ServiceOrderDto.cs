@@ -1,17 +1,20 @@
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.AvailableServices;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Clients;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Vehicles;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.ServiceOrders;
 
 public record ServiceOrderDto
 {
     public Guid Id { get; init; }
-    public string Status { get; init; } = string.Empty;
+    public ServiceOrderStatus Status { get; init; }
     public string Title { get; init; } = string.Empty;
     public string Description { get; init; } = string.Empty;
     public Guid ClientId { get; init; }
     public Guid VehicleId { get; init; }
+    public DateTime VehicleCheckOutDate { get; init; }
+    public DateTime VehicleCheckInDate { get; init; }
     public ClientDto Client { get; init; } = null!;
     public VehicleDto Vehicle { get; init; } = null!;
     public IReadOnlyList<AvailableServiceDto> AvailableServices { get; init; } = [];
