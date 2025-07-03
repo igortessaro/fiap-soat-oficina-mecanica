@@ -24,8 +24,7 @@ public class EmailTemplateProvider(IConfiguration configuration) : IEmailTemplat
       <li><strong>Título:</strong> {serviceOrder.Title}</li>
       <li><strong>Descrição:</strong> {serviceOrder.Description}</li>
       <li><strong>Status Atual:</strong> {serviceOrder.Status}</li>
-      <li><strong>Data Entrada:</strong> {serviceOrder.VehicleCheckInDate:dd/MM/yyyy}</li>
-      <li><strong>Data Saída:</strong> {(serviceOrder.VehicleCheckOutDate.HasValue ? serviceOrder.VehicleCheckOutDate.Value.ToString("dd/MM/yyyy") : "—")}</li>
+
     </ul>
 
     <h4>Informações do veículo</h4>
@@ -36,10 +35,10 @@ public class EmailTemplateProvider(IConfiguration configuration) : IEmailTemplat
       <li><strong>Placa:</strong> {serviceOrder.Vehicle.LicensePlate}</li>
     </ul>
 
-    <h4>Serviços solicitados:</h4>
-    <ul>
-      {string.Join("", serviceOrder.ServiceOrderAvailableServices.Select(s => $"<li>{s.AvailableServiceId}</li>"))}
-    </ul>
+<h4>Serviços solicitados:</h4>
+<ul>
+  {string.Join("", serviceOrder.AvailableServices.Select(s => $"<li>{s.Name} - {s.Price:C} - {string.Join(", ", s.Supplies.Select(supply => supply.Name))}</li>"))}
+</ul>
 
     <div style='margin-top: 30px;'>
       <a href='{approveUrl}' style='padding: 12px 20px; background-color: #28a745; color: white; text-decoration: none; border-radius: 5px; margin-right: 10px;'>Aprovar</a>

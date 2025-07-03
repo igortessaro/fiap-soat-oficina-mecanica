@@ -92,7 +92,7 @@ public sealed class ServiceOrderService(
             }
         }
 
-        var updatedObj = foundEntity.Update(input.Title, input.Description, input.ServiceOrderStatus, input.VehicleCheckInDate, input.VehicleCheckOutDate);
+        var updatedObj = foundEntity.Update(input.Title, input.Description, input.ServiceOrderStatus);
         var updatedEntity = await repository.UpdateAsync(updatedObj, cancellationToken);
         return ResponseFactory.Ok(mapper.Map<ServiceOrderDto>(updatedEntity));
     }

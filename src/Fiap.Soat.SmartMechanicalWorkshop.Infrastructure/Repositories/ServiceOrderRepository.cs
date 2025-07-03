@@ -17,10 +17,7 @@ public sealed class ServiceOrderRepository(AppDbContext appDbContext) : Reposito
     public async Task<ServiceOrder?> GetDetailedAsync(Guid id, CancellationToken cancellationToken)
     {
         return await Query()
-            .Include(x => x.ServiceOrderAvailableServices)
-            .ThenInclude(x => x.AvailableService)
-            .ThenInclude(x => x.AvailableServiceSupplies)
-            .ThenInclude(x => x.Supply)
+            .Include(x => x.AvailableServices).ThenInclude(item => item.Supplies)
             .Include(x => x.Client)
             .Include(x => x.Vehicle)
 

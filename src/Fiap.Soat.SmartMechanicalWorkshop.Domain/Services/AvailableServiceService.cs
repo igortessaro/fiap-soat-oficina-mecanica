@@ -17,9 +17,9 @@ public class AvailableServiceService(
     public async Task<Response<AvailableServiceDto>> CreateAsync(CreateAvailableServiceRequest request, CancellationToken cancellationToken)
     {
         var entity = mapper.Map<AvailableService>(request);
-        if (!request.Supplies.Any()) return ResponseFactory.Ok(mapper.Map<AvailableServiceDto>(await repository.AddAsync(entity, cancellationToken)));
+        if (!request.SuppliesIds.Any()) return ResponseFactory.Ok(mapper.Map<AvailableServiceDto>(await repository.AddAsync(entity, cancellationToken)));
 
-        foreach (var supply in request.Supplies)
+        foreach (var supply in request.SuppliesIds)
         {
             var foundSupply = await supplyRepository.GetByIdAsync(supply, cancellationToken);
             if (foundSupply is null) return ResponseFactory.Fail<AvailableServiceDto>(new Error($"Supply with ID {supply} not found"), System.Net.HttpStatusCode.NotFound);

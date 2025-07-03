@@ -25,6 +25,9 @@ public sealed class AvailableServiceConfiguration : IEntityTypeConfiguration<Ava
             .HasColumnType("decimal(18,2)")
             .IsRequired();
 
+        builder.HasMany(x => x.Supplies)
+      .WithMany(x => x.AvailableServices);
+
         // builder.HasMany(a => a.Supplies)
         //     .WithMany(s => s.AvailableServices)
         //     .UsingEntity<Dictionary<string, object>>(
