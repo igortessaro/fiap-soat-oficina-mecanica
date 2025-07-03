@@ -53,7 +53,7 @@ public class AutoMapperProfiles : Profile
         CreateMap<Email, EmailDto>().ReverseMap();
 
         CreateMap<ServiceOrder, ServiceOrderDto>()
-            
+
             .ReverseMap();
         CreateMap<Paginate<ServiceOrder>, Paginate<ServiceOrderDto>>().ReverseMap();
         CreateMap<ServiceOrder, CreateServiceOrderRequest>()
