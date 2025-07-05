@@ -78,7 +78,7 @@ public sealed class ServiceOrderService(
             return ResponseFactory.Fail<ServiceOrderDto>(new FluentResults.Error("Service Order not found"), System.Net.HttpStatusCode.NotFound);
         }
 
-        await availableServiceRepository.DeleteRangeAsync(foundEntity.AvailableServices, cancellationToken);
+        foundEntity.AvailableServices.Clear();
 
         if (input.ServiceIds != null)
         {

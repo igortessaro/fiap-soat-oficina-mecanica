@@ -57,7 +57,8 @@ public class AvailableServiceService(
     {
         var found = await repository.GetAsync(input.Id, cancellationToken);
         if (found is null) return ResponseFactory.Fail<AvailableServiceDto>(new Error("AvailableService not found"), System.Net.HttpStatusCode.NotFound);
-        await supplyRepository.DeleteRangeAsync(found.Supplies, cancellationToken);
+        found.Supplies.Clear();
+
         foreach (var supply in input.Supplies)
         {
             var foundSupply = await supplyRepository.GetByIdAsync(supply, cancellationToken);

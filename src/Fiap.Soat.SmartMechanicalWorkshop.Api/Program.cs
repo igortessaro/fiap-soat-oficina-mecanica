@@ -75,7 +75,6 @@ try
 {
     Log.Information("Starting up...");
     await app.RunAsync();
-    app.Run();
 }
 catch (Exception ex)
 {
