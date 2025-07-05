@@ -42,6 +42,7 @@ public sealed class ServiceOrderConfiguration : IEntityTypeConfiguration<Service
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasMany(x => x.AvailableServices)
-            .WithMany(x => x.ServiceOrders);
+            .WithMany(x => x.ServiceOrders)
+            .UsingEntity(j => j.ToTable("available_services_services_orders")); ;
     }
 }

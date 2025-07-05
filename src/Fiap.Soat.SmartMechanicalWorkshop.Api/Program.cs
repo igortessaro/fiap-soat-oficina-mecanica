@@ -7,9 +7,18 @@ using Microsoft.EntityFrameworkCore;
 using Serilog;
 using System.Text.Json.Serialization;
 
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .CreateBootstrapLogger();
+
 var builder = WebApplication.CreateBuilder(args);
 
-_ = builder.Host.UseSerilog((context, services, configuration) => configuration.ReadFrom.Configuration(context.Configuration));
+
+
+_ = builder.Host.UseSerilog((context, services, configuration) => configuration
+        .ReadFrom.Configuration(context.Configuration)                     
+        .Enrich.FromLogContext());
+
 _ = builder.Logging.ClearProviders();
 _ = builder.Services.AddControllers();
 _ = builder.Services.AddEndpointsApiExplorer();
@@ -20,7 +29,7 @@ _ = builder.Services.AddSwaggerGen(options =>
     {
         options.IncludeXmlComments(xmlFile, includeControllerXmlComments: true);
     }
-
+    
     options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "SmartMechanicalWorkshop", Version = "V1" });
 });
 
@@ -41,7 +50,6 @@ _ = builder.Services.AddDbContext<AppDbContext>(options =>
 _ = builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("Email"));
 _ = builder.Services.AddServiceExtensions();
 _ = builder.Services.AddRepositoryExtensions();
-_ = builder.Services.AddLogging();
 _ = builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
 _ = builder.Services.AddHttpContextAccessor();
 _ = builder.Services.AddHealthChecks();
@@ -57,10 +65,25 @@ if (app.Environment.IsDevelopment())
 }
 
 _ = app.UseSwagger();
-_ = app.UseSwaggerUI();
+_ = app.UseSwaggerUI(c => { c.EnableTryItOutByDefault(); c.DisplayRequestDuration(); });
 _ = app.UseMiddleware<ExceptionMiddleware>();
 _ = app.UseHttpsRedirection();
 _ = app.UseAuthorization();
 _ = app.MapControllers();
 
-await app.RunAsync();
+try
+{
+    Log.Information("Starting up...");
+    await app.RunAsync();
+    app.Run();
+}
+catch (Exception ex)
+{
+    Log.Fatal(ex, "Application failed to start");
+}
+finally
+{
+    Log.CloseAndFlush();
+}
+
+

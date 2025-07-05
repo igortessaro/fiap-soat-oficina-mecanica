@@ -8,12 +8,10 @@ public static class RepositoryExtensions
     public static IServiceCollection AddRepositoryExtensions(this IServiceCollection serviceCollection)
     {
         _ = serviceCollection.AddScoped<IAvailableServiceRepository, AvailableServiceRepository>();
-        _ = serviceCollection.AddScoped<IAvailableServiceSupplyRepository, AvailableServiceSupplyRepository>();
-        _ = serviceCollection.AddScoped<IClientRepository, ClientRepository>();
-        _ = serviceCollection.AddScoped<IServiceOrderAvailableServiceRepository, ServiceOrderAvailableServiceRepository>();
         _ = serviceCollection.AddScoped<IServiceOrderRepository, ServiceOrderRepository>();
         _ = serviceCollection.AddScoped<ISupplyRepository, SupplyRepository>();
         _ = serviceCollection.AddScoped<IVehicleRepository, VehicleRepository>();
+        _ = serviceCollection.AddScoped<IClientRepository, ClientRepository>();
 
         return serviceCollection;
     }

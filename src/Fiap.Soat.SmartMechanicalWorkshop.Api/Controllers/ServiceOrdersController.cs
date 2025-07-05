@@ -2,8 +2,6 @@ using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.ServiceOrders;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.Interfaces;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
-using FluentResults;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
@@ -145,9 +143,9 @@ public sealed class ServiceOrdersController(IServiceOrderService service) : Cont
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.NotFound)]
     public async Task<IActionResult> ApproveAsync([FromRoute, Required] Guid id, CancellationToken cancellationToken)
     {
-        UpdateOneServiceOrderInput input = new(id, ServiceOrderStatus.InProgress);
+        UpdateOneServiceOrderInput input = new(id);
 
-        var result = await service.UpdateAsync(input, cancellationToken);
+        var result = await service.ApproveOrderAsync(input, cancellationToken);
         return result.ToActionResult();
     }
 
@@ -165,9 +163,9 @@ public sealed class ServiceOrdersController(IServiceOrderService service) : Cont
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.NotFound)]
     public async Task<IActionResult> RejectAsync([FromRoute, Required] Guid id, CancellationToken cancellationToken)
     {
-        UpdateOneServiceOrderInput input = new(id, ServiceOrderStatus.Rejected);
+        UpdateOneServiceOrderInput input = new(id);
 
-        var result = await service.UpdateAsync(input, cancellationToken);
+        var result = await service.RejectOrderAsync(input, cancellationToken);
         return result.ToActionResult();
     }
 }
