@@ -27,7 +27,7 @@ public class AutoMapperProfiles : Profile
         CreateMap<Paginate<AvailableService>, Paginate<AvailableServiceDto>>().ReverseMap();
         CreateMap<AvailableService, CreateAvailableServiceRequest>()
             .ReverseMap();
-            //.ForMember(dest => dest.AvailableServiceSupplies, opt => opt.Ignore());
+        //.ForMember(dest => dest.AvailableServiceSupplies, opt => opt.Ignore());
         CreateMap<AvailableService, UpdateOneAvailableServiceRequest>().ReverseMap();
 
         CreateMap<Supply, SupplyDto>().ReverseMap();

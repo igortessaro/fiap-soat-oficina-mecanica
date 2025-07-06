@@ -162,7 +162,7 @@ public sealed class ServiceOrderService(
                 System.Net.HttpStatusCode.NotAcceptable
             );
         }
-        input.ServiceOrderStatus = ServiceOrderStatus.Rejected; 
+        input.ServiceOrderStatus = ServiceOrderStatus.Rejected;
         return await UpdateAsync(input, cancellationToken);
     }
 }

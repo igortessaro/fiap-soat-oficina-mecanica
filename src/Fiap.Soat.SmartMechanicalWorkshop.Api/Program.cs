@@ -16,7 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 _ = builder.Host.UseSerilog((context, services, configuration) => configuration
-        .ReadFrom.Configuration(context.Configuration)                     
+        .ReadFrom.Configuration(context.Configuration)
         .Enrich.FromLogContext());
 
 _ = builder.Logging.ClearProviders();
@@ -29,7 +29,7 @@ _ = builder.Services.AddSwaggerGen(options =>
     {
         options.IncludeXmlComments(xmlFile, includeControllerXmlComments: true);
     }
-    
+
     options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "SmartMechanicalWorkshop", Version = "V1" });
 });
 

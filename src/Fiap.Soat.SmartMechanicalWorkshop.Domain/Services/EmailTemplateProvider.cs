@@ -40,7 +40,7 @@ public class EmailTemplateProvider(IConfiguration configuration) : IEmailTemplat
     <p>Olá, {serviceOrder.Client.Fullname}!</p>
  <ul style='list-style: none; padding-left: 0;'>
       <li><strong>Document:</strong> {serviceOrder.Client.Document}</li>
-      <li><strong>Email:</strong> {serviceOrder.Client.Email.Address }</li>
+      <li><strong>Email:</strong> {serviceOrder.Client.Email.Address}</li>
       <li><strong>Phone:</strong> {serviceOrder.Client.Phone}</li>
     </ul>
 
