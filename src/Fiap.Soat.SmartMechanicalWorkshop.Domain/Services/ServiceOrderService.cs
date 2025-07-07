@@ -141,8 +141,7 @@ public sealed class ServiceOrderService(
             );
         }
 
-        input.ServiceOrderStatus = ServiceOrderStatus.InProgress;
-        return await UpdateAsync(input, cancellationToken);
+        return await UpdateAsync(new UpdateOneServiceOrderInput(input.Id,input.ServiceIds,input.Title, input.Description, ServiceOrderStatus.InProgress), cancellationToken);
     }
 
     public async Task<Response<ServiceOrderDto>> RejectOrderAsync(UpdateOneServiceOrderInput input, CancellationToken cancellationToken)
@@ -162,7 +161,7 @@ public sealed class ServiceOrderService(
                 System.Net.HttpStatusCode.NotAcceptable
             );
         }
-        input.ServiceOrderStatus = ServiceOrderStatus.Rejected;
-        return await UpdateAsync(input, cancellationToken);
+
+        return await UpdateAsync(new UpdateOneServiceOrderInput(input.Id, input.ServiceIds, input.Title, input.Description, ServiceOrderStatus.Rejected), cancellationToken);
     }
 }

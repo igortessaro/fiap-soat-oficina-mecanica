@@ -43,6 +43,27 @@ public sealed class ServiceOrderConfiguration : IEntityTypeConfiguration<Service
 
         builder.HasMany(x => x.AvailableServices)
             .WithMany(x => x.ServiceOrders)
-            .UsingEntity(j => j.ToTable("available_services_services_orders")); ;
+            .UsingEntity<Dictionary<string, object>>(
+                "available_services_services_orders",
+                j => j
+                    .HasOne<AvailableService>()
+                    .WithMany()
+                    .HasForeignKey("available_service_id")
+                    .HasConstraintName("fk_available_service_service_order")
+                    .OnDelete(DeleteBehavior.Cascade),
+                j => j
+                    .HasOne<ServiceOrder>()
+                    .WithMany()
+                    .HasForeignKey("service_order_id")
+                    .HasConstraintName("fk_service_order_available_service")
+                    .OnDelete(DeleteBehavior.Cascade),
+                j =>
+                {
+                    j.HasKey("available_service_id", "service_order_id");
+                    j.Property<Guid>("available_service_id").HasColumnName("available_service_id");
+                    j.Property<Guid>("service_order_id").HasColumnName("service_order_id");
+                    j.ToTable("available_services_services_orders");
+                }
+            );
     }
 }
