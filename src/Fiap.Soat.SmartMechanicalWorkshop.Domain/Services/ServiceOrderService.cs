@@ -141,7 +141,7 @@ public sealed class ServiceOrderService(
             );
         }
 
-        return await UpdateAsync(new UpdateOneServiceOrderInput(input.Id,input.ServiceIds,input.Title, input.Description, ServiceOrderStatus.InProgress), cancellationToken);
+        return await UpdateAsync(new UpdateOneServiceOrderInput(input.Id, input.ServiceIds, input.Title, input.Description, ServiceOrderStatus.InProgress), cancellationToken);
     }
 
     public async Task<Response<ServiceOrderDto>> RejectOrderAsync(UpdateOneServiceOrderInput input, CancellationToken cancellationToken)

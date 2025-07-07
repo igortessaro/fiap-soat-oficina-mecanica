@@ -59,13 +59,13 @@ public class AvailableServiceService(
         if (found is null) return ResponseFactory.Fail<AvailableServiceDto>(new Error("AvailableService not found"), System.Net.HttpStatusCode.NotFound);
         found.Supplies.Clear();
 
-        if(input.SuppliesIds !=null)
-        foreach (var supply in input.SuppliesIds)
-        {
-            var foundSupply = await supplyRepository.GetByIdAsync(supply, cancellationToken);
-            if (foundSupply is null) return ResponseFactory.Fail<AvailableServiceDto>(new Error($"Supply with ID {supply} not found"), System.Net.HttpStatusCode.NotFound);
-            _ = found.AddSupply(foundSupply);
-        }
+        if (input.SuppliesIds != null)
+            foreach (var supply in input.SuppliesIds)
+            {
+                var foundSupply = await supplyRepository.GetByIdAsync(supply, cancellationToken);
+                if (foundSupply is null) return ResponseFactory.Fail<AvailableServiceDto>(new Error($"Supply with ID {supply} not found"), System.Net.HttpStatusCode.NotFound);
+                _ = found.AddSupply(foundSupply);
+            }
 
         var updated = await repository.UpdateAsync(found.Update(input.Name, input.Price), cancellationToken);
         return ResponseFactory.Ok(mapper.Map<AvailableServiceDto>(updated));
