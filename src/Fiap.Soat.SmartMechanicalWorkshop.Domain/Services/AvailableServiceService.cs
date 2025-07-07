@@ -11,8 +11,8 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Services;
 public class AvailableServiceService(
     IMapper mapper,
     IAvailableServiceRepository repository,
-    ISupplyRepository supplyRepository,
-    IAvailableServiceSupplyRepository availableServiceSupplyRepository) : IAvailableService
+    ISupplyRepository supplyRepository
+) : IAvailableService
 {
     public async Task<Response<AvailableServiceDto>> CreateAsync(CreateAvailableServiceRequest request, CancellationToken cancellationToken)
     {
@@ -47,7 +47,7 @@ public class AvailableServiceService(
 
     public async Task<Response<AvailableServiceDto>> GetOneAsync(Guid id, CancellationToken cancellationToken)
     {
-        var found = await repository.GetByIdAsync(id, cancellationToken);
+        var found = await repository.GetAsync(id, cancellationToken);
         return found != null
             ? ResponseFactory.Ok(mapper.Map<AvailableServiceDto>(found))
             : ResponseFactory.Fail<AvailableServiceDto>(new Error("AvailableService Not Found"), System.Net.HttpStatusCode.NotFound);
@@ -57,13 +57,15 @@ public class AvailableServiceService(
     {
         var found = await repository.GetAsync(input.Id, cancellationToken);
         if (found is null) return ResponseFactory.Fail<AvailableServiceDto>(new Error("AvailableService not found"), System.Net.HttpStatusCode.NotFound);
-        await availableServiceSupplyRepository.DeleteRangeAsync(found.AvailableServiceSupplies, cancellationToken);
-        foreach (var supply in input.Supplies)
-        {
-            var foundSupply = await supplyRepository.GetByIdAsync(supply, cancellationToken);
-            if (foundSupply is null) return ResponseFactory.Fail<AvailableServiceDto>(new Error($"Supply with ID {supply} not found"), System.Net.HttpStatusCode.NotFound);
-            _ = found.AddSupply(foundSupply);
-        }
+        found.Supplies.Clear();
+
+        if (input.SuppliesIds != null)
+            foreach (var supply in input.SuppliesIds)
+            {
+                var foundSupply = await supplyRepository.GetByIdAsync(supply, cancellationToken);
+                if (foundSupply is null) return ResponseFactory.Fail<AvailableServiceDto>(new Error($"Supply with ID {supply} not found"), System.Net.HttpStatusCode.NotFound);
+                _ = found.AddSupply(foundSupply);
+            }
 
         var updated = await repository.UpdateAsync(found.Update(input.Name, input.Price), cancellationToken);
         return ResponseFactory.Ok(mapper.Map<AvailableServiceDto>(updated));

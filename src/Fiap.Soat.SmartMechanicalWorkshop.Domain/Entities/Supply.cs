@@ -6,7 +6,6 @@ public class Supply : Entity
     public int Quantity { get; private set; }
     public decimal Price { get; private set; }
     public ICollection<AvailableService> AvailableServices { get; private set; } = [];
-    public ICollection<AvailableServiceSupply> AvailableServiceSupplies { get; private set; } = [];
 
     public Supply Update(string name, decimal? price, int? quantity)
     {

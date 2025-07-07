@@ -1,6 +1,7 @@
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.Interfaces;
 using Microsoft.Extensions.Configuration;
+using System.Text;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Services;
 public class EmailTemplateProvider(IConfiguration configuration) : IEmailTemplateProvider
@@ -12,10 +13,37 @@ public class EmailTemplateProvider(IConfiguration configuration) : IEmailTemplat
         string approveUrl = $"{emailBaseUrl}/api/v1/serviceorders/{serviceOrder.Id}/approve";
         string rejectUrl = $"{emailBaseUrl}/api/v1/serviceorders/{serviceOrder.Id}/reject";
 
+
+        var servicesHtml = new StringBuilder();
+
+        foreach (var service in serviceOrder.AvailableServices)
+        {
+            servicesHtml.AppendLine("<li>");
+            servicesHtml.AppendLine($"<strong>{service.Name}</strong> - R$ {service.Price:F2}");
+
+            if (service.Supplies.Any())
+            {
+                servicesHtml.AppendLine("<ul>");
+                foreach (var supply in service.Supplies)
+                {
+                    servicesHtml.AppendLine($"<li>{supply.Name} (Qtd: {supply.Quantity}) - R$ {supply.Price:F2}</li>");
+                }
+                servicesHtml.AppendLine("</ul>");
+            }
+
+            servicesHtml.AppendLine("</li>");
+        }
+
         string html = $@"
   <div style='font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #ccc; padding: 20px;'>
     <h2 style='color: #007BFF;'>Ordem de Serviço - Oficina Smart</h2>
     <p>Olá, {serviceOrder.Client.Fullname}!</p>
+ <ul style='list-style: none; padding-left: 0;'>
+      <li><strong>Document:</strong> {serviceOrder.Client.Document}</li>
+      <li><strong>Email:</strong> {serviceOrder.Client.Email.Address}</li>
+      <li><strong>Phone:</strong> {serviceOrder.Client.Phone}</li>
+    </ul>
+
 
     <p>Segue abaixo os detalhes da sua ordem de serviço:</p>
 
@@ -35,9 +63,18 @@ public class EmailTemplateProvider(IConfiguration configuration) : IEmailTemplat
       <li><strong>Placa:</strong> {serviceOrder.Vehicle.LicensePlate}</li>
     </ul>
 
-<h4>Serviços solicitados:</h4>
+<br>
+<h2>Serviços solicitados:</h2>
 <ul>
-  {string.Join("", serviceOrder.AvailableServices.Select(s => $"<li>{s.Name} - {s.Price:C} - {string.Join(", ", s.Supplies.Select(supply => supply.Name))}</li>"))}
+   {servicesHtml.ToString()}
+</ul>
+
+
+<br>
+<br>
+<h2>Valor final de orçamento:</h2>
+<ul>
+   <strong>{00000}<strong>
 </ul>
 
     <div style='margin-top: 30px;'>

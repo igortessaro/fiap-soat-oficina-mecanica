@@ -25,9 +25,8 @@ public record UpdateOneServiceOrderInput
         ServiceOrderStatus = serviceOrderStatus;
     }
 
-    public UpdateOneServiceOrderInput(Guid id, ServiceOrderStatus status)
+    public UpdateOneServiceOrderInput(Guid id)
     {
         Id = id;
-        ServiceOrderStatus = status;
     }
 }

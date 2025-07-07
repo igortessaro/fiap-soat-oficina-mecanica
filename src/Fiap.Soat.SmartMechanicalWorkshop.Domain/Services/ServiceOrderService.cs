@@ -5,18 +5,19 @@ using Fiap.Soat.SmartMechanicalWorkshop.Domain.Repositories;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.ExternalServices;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.Interfaces;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
-using Microsoft.Extensions.Configuration;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
+using Microsoft.Extensions.Logging;
 using System.Net;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Services;
 
 public sealed class ServiceOrderService(
+  ILogger<ServiceOrderService> logger,
     IMapper mapper,
     IServiceOrderRepository repository,
     IClientRepository clientRepository,
     IVehicleRepository vehicleRepository,
     IAvailableServiceRepository availableServiceRepository,
-    IServiceOrderAvailableServiceRepository serviceOrderAvailableServiceRepository,
      IEmailService emailService,
      IEmailTemplateProvider emailTemplateProvider
      ) : IServiceOrderService
@@ -77,7 +78,7 @@ public sealed class ServiceOrderService(
             return ResponseFactory.Fail<ServiceOrderDto>(new FluentResults.Error("Service Order not found"), System.Net.HttpStatusCode.NotFound);
         }
 
-        await serviceOrderAvailableServiceRepository.DeleteRangeAsync(foundEntity.ServiceOrderAvailableServices, cancellationToken);
+        foundEntity.AvailableServices.Clear();
 
         if (input.ServiceIds != null)
         {
@@ -121,5 +122,46 @@ public sealed class ServiceOrderService(
         return response ? ResponseFactory.Ok(HttpStatusCode.Accepted)
             : ResponseFactory.Fail(new FluentResults.Error("Not possible to send email"), System.Net.HttpStatusCode.InternalServerError);
 
+    }
+
+    public async Task<Response<ServiceOrderDto>> ApproveOrderAsync(UpdateOneServiceOrderInput input, CancellationToken cancellationToken)
+    {
+        var foundServiceOrder = await repository.GetAsync(input.Id, cancellationToken);
+        if (foundServiceOrder is null)
+        {
+            return ResponseFactory.Fail<ServiceOrderDto>(new FluentResults.Error("Service Order not found"), System.Net.HttpStatusCode.NotFound);
+        }
+
+        if (foundServiceOrder.Status != ServiceOrderStatus.WaitingApproval)
+        {
+            logger.LogWarning($"Service Order with ID {input.Id} is not in WaitingApproval status, current status: {foundServiceOrder.Status}");
+            return ResponseFactory.Fail<ServiceOrderDto>(
+                new FluentResults.Error($"Service Order with ID {input.Id} is not in WaitingApproval status, current status: {foundServiceOrder.Status}"),
+                System.Net.HttpStatusCode.NotAcceptable
+            );
+        }
+
+        return await UpdateAsync(new UpdateOneServiceOrderInput(input.Id, input.ServiceIds, input.Title, input.Description, ServiceOrderStatus.InProgress), cancellationToken);
+    }
+
+    public async Task<Response<ServiceOrderDto>> RejectOrderAsync(UpdateOneServiceOrderInput input, CancellationToken cancellationToken)
+    {
+        var foundServiceOrder = await repository.GetAsync(input.Id, cancellationToken);
+        if (foundServiceOrder is null)
+        {
+            return ResponseFactory.Fail<ServiceOrderDto>(new FluentResults.Error("Service Order not found"), System.Net.HttpStatusCode.NotFound);
+        }
+
+        if (foundServiceOrder.Status != ServiceOrderStatus.WaitingApproval)
+        {
+            string logMessage = $"You can only change status if Service Order were in WaitingApproval status, current status: {foundServiceOrder.Status}";
+            logger.LogWarning(logMessage);
+            return ResponseFactory.Fail<ServiceOrderDto>(
+                new FluentResults.Error(logMessage),
+                System.Net.HttpStatusCode.NotAcceptable
+            );
+        }
+
+        return await UpdateAsync(new UpdateOneServiceOrderInput(input.Id, input.ServiceIds, input.Title, input.Description, ServiceOrderStatus.Rejected), cancellationToken);
     }
 }

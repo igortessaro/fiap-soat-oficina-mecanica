@@ -13,8 +13,7 @@ public sealed class Response<T>(Result<T> result, HttpStatusCode statusCode)
     public HttpStatusCode StatusCode { get; } = statusCode;
 
     public bool IsSuccess => InnerResult.IsSuccess;
-    public bool IsFailed => InnerResult.IsFailed;
-    public T Value => InnerResult.ValueOrDefault;
+    public T Data => InnerResult.ValueOrDefault;
     public List<IReason> Reasons => InnerResult.Reasons;
 
     // Aqui inferimos T automaticamente
@@ -44,7 +43,6 @@ public sealed class Response(Result result, HttpStatusCode statusCode)
     public HttpStatusCode StatusCode { get; } = statusCode;
 
     public bool IsSuccess => InnerResult.IsSuccess;
-    public bool IsFailed => InnerResult.IsFailed;
     public List<IReason> Reasons => InnerResult.Reasons;
 
     protected static Response<object> Ok(object value, HttpStatusCode statusCode = HttpStatusCode.OK)

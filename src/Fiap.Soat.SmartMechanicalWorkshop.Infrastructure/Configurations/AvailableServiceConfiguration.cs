@@ -26,27 +26,25 @@ public sealed class AvailableServiceConfiguration : IEntityTypeConfiguration<Ava
             .IsRequired();
 
         builder.HasMany(x => x.Supplies)
-      .WithMany(x => x.AvailableServices);
-
-        // builder.HasMany(a => a.Supplies)
-        //     .WithMany(s => s.AvailableServices)
-        //     .UsingEntity<Dictionary<string, object>>(
-        //         "available_service_supplies",
-        //         j => j.HasOne<Supply>()
-        //             .WithMany()
-        //             .HasForeignKey("supply_id")
-        //             .HasConstraintName("fk_available_service_supplies_supply_id"),
-        //         j => j.HasOne<AvailableService>()
-        //             .WithMany()
-        //             .HasForeignKey("available_service_id")
-        //             .HasConstraintName("fk_available_service_supplies_available_service_id"),
-        //         j =>
-        //         {
-        //             j.Property<Guid>("available_service_id").HasColumnName("available_service_id");
-        //             j.Property<Guid>("supply_id").HasColumnName("supply_id");
-        //             j.HasKey("available_service_id", "supply_id");
-        //         }
-        //     );
+            .WithMany(x => x.AvailableServices)
+            .UsingEntity<Dictionary<string, object>>(
+                "available_service_supplies", // Nome da tabela de junção
+                j => j.HasOne<Supply>()
+                      .WithMany()
+                      .HasForeignKey("supply_id") // Nome da coluna FK para Supply
+                      .HasConstraintName("fk_available_service_supplies_supply_id")
+                      .OnDelete(DeleteBehavior.Cascade),
+                j => j.HasOne<AvailableService>()
+                      .WithMany()
+                      .HasForeignKey("available_service_id") // Nome da coluna FK para AvailableService
+                      .HasConstraintName("fk_available_service_supplies_available_service_id")
+                      .OnDelete(DeleteBehavior.Cascade),
+                j =>
+                {
+                    j.HasKey("available_service_id", "supply_id");
+                    j.ToTable("available_service_supplies");
+                }
+            );
         builder.HasIndex(x => x.Name).IsUnique();
     }
 }

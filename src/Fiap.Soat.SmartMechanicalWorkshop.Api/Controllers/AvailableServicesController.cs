@@ -94,7 +94,7 @@ public class AvailableServicesController(IAvailableService service) : Controller
     public async Task<IActionResult> UpdateAsync([FromRoute][Required] Guid id, [FromBody, Required] UpdateOneAvailableServiceRequest request,
         CancellationToken cancellationToken)
     {
-        UpdateOneAvailableServiceInput input = new(id, request.Name, request.Price, request.Supplies);
+        UpdateOneAvailableServiceInput input = new(id, request.Name, request.Price, request.SuppliesIds);
         var result = await service.UpdateAsync(input, cancellationToken);
         return result.ToActionResult();
     }
