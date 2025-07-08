@@ -16,7 +16,7 @@ public class Address : Entity
     public string City { get; private set; } = string.Empty;
     public string State { get; private set; } = string.Empty;
     public string ZipCode { get; private set; } = string.Empty;
-    public Client Client { get; private set; }
+    public Client Client { get; private set; } = null!;
 
     public void Update(Address? address)
     {
