@@ -6,7 +6,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Data;
 
 public class AppDbContext(DbContextOptions<AppDbContext> dbContextOptions) : DbContext(dbContextOptions)
 {
-    public DbSet<Client> Clients { get; set; }
+    public DbSet<Person> People { get; set; }
     public DbSet<Address> Addresses { get; set; }
     public DbSet<Vehicle> Vehicles { get; set; }
     public DbSet<Supply> Supplies { get; set; }
@@ -16,7 +16,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> dbContextOptions) : DbC
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        modelBuilder.ApplyConfiguration(new ClientConfiguration());
+        modelBuilder.ApplyConfiguration(new PersonConfiguration());
         modelBuilder.ApplyConfiguration(new AddressConfiguration());
         modelBuilder.ApplyConfiguration(new AvailableServiceConfiguration());
         modelBuilder.ApplyConfiguration(new SupplyConfiguration());

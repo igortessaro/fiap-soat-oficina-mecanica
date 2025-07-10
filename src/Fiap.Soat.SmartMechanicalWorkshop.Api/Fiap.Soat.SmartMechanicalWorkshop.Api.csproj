@@ -19,6 +19,7 @@
         <PackageReference Include="Serilog.Settings.Configuration" Version="9.0.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="7.3.1" />
         <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="9.0.1" />
+        <PackageReference Include="Swashbuckle.AspNetCore.ReDoc" Version="9.0.3" />
     </ItemGroup>
 
     <ItemGroup>

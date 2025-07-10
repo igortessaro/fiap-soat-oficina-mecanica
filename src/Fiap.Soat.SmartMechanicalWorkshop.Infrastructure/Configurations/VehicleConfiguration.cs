@@ -41,7 +41,7 @@ public sealed class VehicleConfiguration : IEntityTypeConfiguration<Vehicle>
             .HasColumnName("client_id")
             .IsRequired();
 
-        builder.HasOne(v => v.Client)
+        builder.HasOne(v => v.Person)
             .WithMany(c => c.Vehicles)
             .HasForeignKey(v => v.ClientId)
             .OnDelete(DeleteBehavior.Cascade);

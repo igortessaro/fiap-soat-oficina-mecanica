@@ -19,7 +19,7 @@ public class Vehicle : Entity
     public string Model { get; private set; } = string.Empty;
     public Guid ClientId { get; private set; }
 
-    public Client Client { get; private set; } = null!;
+    public Person Person { get; private set; } = null!;
 
     public Vehicle Update(int? manufactureYear, string licensePlate, string brand, string model)
     {
