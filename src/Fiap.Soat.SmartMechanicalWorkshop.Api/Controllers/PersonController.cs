@@ -57,7 +57,7 @@ public sealed class PersonController(IPersonService service) : ControllerBase
     [SwaggerOperation(Summary = "Create a new client", Description = "Creates a new client and returns its data.")]
     [ProducesResponseType(typeof(PersonDto), (int) HttpStatusCode.Created)]
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.BadRequest)]
-    public async Task<IActionResult> CreateAsync([FromBody][Required] CreateClientRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> CreateAsync([FromBody][Required] CreatePersonRequest request, CancellationToken cancellationToken)
     {
         var result = await service.CreateAsync(request, cancellationToken);
         return result.ToActionResult();
@@ -93,7 +93,7 @@ public sealed class PersonController(IPersonService service) : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.BadRequest)]
     public async Task<IActionResult> UpdateAsync([FromRoute, Required] Guid id, [FromBody, Required] UpdateOnePersonRequest request, CancellationToken cancellationToken)
     {
-        UpdateOnePersonInput input = new(id, request.Fullname, request.Document,request.PersonType, request.EmployeeRole, request.Email, request.Phone, request.Address);
+        UpdateOnePersonInput input = new(id, request.Fullname, request.Document, request.PersonType, request.EmployeeRole, request.Email, request.Phone, request.Address);
         var result = await service.UpdateAsync(input, cancellationToken);
         return result.ToActionResult();
     }

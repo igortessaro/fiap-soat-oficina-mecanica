@@ -35,7 +35,7 @@ public class AutoMapperProfiles : Profile
 
         CreateMap<Person, PersonDto>().ReverseMap();
         CreateMap<Paginate<Person>, Paginate<PersonDto>>().ReverseMap();
-        CreateMap<Person, CreateClientRequest>().ReverseMap();
+        CreateMap<Person, CreatePersonRequest>().ReverseMap();
         CreateMap<Person, UpdateOnePersonRequest>().ReverseMap();
 
         CreateMap<Phone, PhoneDto>().ReverseMap();

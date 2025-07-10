@@ -10,7 +10,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Services;
 
 public sealed class PersonService(IMapper mapper, IPersonRepository repository) : IPersonService
 {
-    public async Task<Response<PersonDto>> CreateAsync(CreateClientRequest request, CancellationToken cancellationToken)
+    public async Task<Response<PersonDto>> CreateAsync(CreatePersonRequest request, CancellationToken cancellationToken)
     {
         var mapperEntity = mapper.Map<Person>(request);
         mapperEntity.Validate();

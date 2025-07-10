@@ -31,10 +31,10 @@ public sealed class PersonConfiguration : IEntityTypeConfiguration<Person>
             .HasMaxLength(100)
             .IsRequired();
 
-       builder.Property(x => x.EmployeeRole)
-            .HasColumnName("employee_role")
-            .HasConversion<string>()
-            .HasMaxLength(100);
+        builder.Property(x => x.EmployeeRole)
+             .HasColumnName("employee_role")
+             .HasConversion<string>()
+             .HasMaxLength(100);
 
         builder.Property(x => x.AddressId)
             .HasColumnName("address_id")

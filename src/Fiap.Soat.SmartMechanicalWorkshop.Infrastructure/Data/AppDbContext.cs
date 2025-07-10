@@ -6,7 +6,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Data;
 
 public class AppDbContext(DbContextOptions<AppDbContext> dbContextOptions) : DbContext(dbContextOptions)
 {
-    public DbSet<Person> Persons { get; set; }
+    public DbSet<Person> People { get; set; }
     public DbSet<Address> Addresses { get; set; }
     public DbSet<Vehicle> Vehicles { get; set; }
     public DbSet<Supply> Supplies { get; set; }

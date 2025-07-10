@@ -45,7 +45,7 @@ public class Person : Entity
 
     public void Validate()
     {
-        if(PersonType == EPersonType.Client && EmployeeRole!=null)
+        if (PersonType == EPersonType.Client && EmployeeRole != null)
         {
             throw new DomainException("Client cannot have an employee role.");
         }
