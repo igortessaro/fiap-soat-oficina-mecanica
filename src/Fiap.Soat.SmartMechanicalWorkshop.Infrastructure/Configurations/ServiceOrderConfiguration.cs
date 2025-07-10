@@ -36,6 +36,11 @@ public sealed class ServiceOrderConfiguration : IEntityTypeConfiguration<Service
             .HasForeignKey(x => x.ClientId)
             .OnDelete(DeleteBehavior.Restrict);
 
+        builder.HasOne(x => x.Employee)
+            .WithMany()
+            .HasForeignKey(x => x.EmployeeId)
+            .OnDelete(DeleteBehavior.Restrict);
+
         builder.HasOne(x => x.Vehicle)
             .WithMany()
             .HasForeignKey(x => x.VehicleId)

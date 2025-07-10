@@ -4,11 +4,12 @@ using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Repositories;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.Interfaces;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 using System.Text.RegularExpressions;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Services;
 
-public class VehicleService(IVehicleRepository repository, IClientRepository clientRepository, IMapper mapper) : IVehicleService
+public class VehicleService(IVehicleRepository repository, IPersonRepository clientRepository, IMapper mapper) : IVehicleService
 {
     public async Task<Response<VehicleDto>> CreateAsync(CreateNewVehicleRequest request, CancellationToken cancellationToken)
     {
@@ -16,6 +17,11 @@ public class VehicleService(IVehicleRepository repository, IClientRepository cli
         if (foundClient is null)
         {
             return ResponseFactory.Fail<VehicleDto>(new FluentResults.Error("Client not found"), System.Net.HttpStatusCode.NotFound);
+        }
+
+        if (foundClient.PersonType != EPersonType.Client)
+        {
+            return ResponseFactory.Fail<VehicleDto>(new FluentResults.Error("Only clients are allowed to register a vehicle"), System.Net.HttpStatusCode.BadRequest);
         }
 
         if (!IsValidLicensePlate(request.LicensePlate))

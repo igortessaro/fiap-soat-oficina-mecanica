@@ -8,7 +8,7 @@ public record UpdateOneServiceOrderInput
     public IReadOnlyList<Guid>? ServiceIds { get; init; }
     public string? Title { get; init; }
     public string? Description { get; init; }
-    public ServiceOrderStatus? ServiceOrderStatus { get; init; }
+    public EServiceOrderStatus? ServiceOrderStatus { get; init; }
 
     public UpdateOneServiceOrderInput() { }
     public UpdateOneServiceOrderInput(
@@ -16,7 +16,7 @@ public record UpdateOneServiceOrderInput
         IReadOnlyList<Guid>? serviceIds,
         string? title,
         string? description,
-        ServiceOrderStatus? serviceOrderStatus)
+        EServiceOrderStatus? serviceOrderStatus)
     {
         Id = id;
         ServiceIds = serviceIds;

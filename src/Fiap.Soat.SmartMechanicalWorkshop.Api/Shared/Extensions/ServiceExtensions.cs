@@ -12,7 +12,7 @@ public static class ServiceExtensions
         iServiceCollection.AddTransient<IVehicleService, VehicleService>();
         iServiceCollection.AddTransient<ISupplyService, SupplyService>();
         iServiceCollection.AddTransient<IAvailableService, AvailableServiceService>();
-        iServiceCollection.AddTransient<IClientService, ClientService>();
+        iServiceCollection.AddTransient<IPersonService, PersonService>();
         iServiceCollection.AddTransient<IServiceOrderService, ServiceOrderService>();
         iServiceCollection.AddSingleton<IEmailService, EmailService>();
         iServiceCollection.AddSingleton<IEmailTemplateProvider, EmailTemplateProvider>();
