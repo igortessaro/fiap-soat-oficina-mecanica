@@ -10,20 +10,20 @@ using System.Net;
 namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Controllers;
 
 /// <summary>
-/// Controller for managing clients in the Smart Mechanical Workshop API.
+/// Controller for managing people in the Smart Mechanical Workshop API.
 /// </summary>
 [Route("api/v1/[controller]")]
 [ApiController]
 public sealed class PersonController(IPersonService service) : ControllerBase
 {
     /// <summary>
-    /// Gets a client by its unique identifier.
+    /// Gets a person by its unique identifier.
     /// </summary>
     /// <param name="id">Client unique identifier.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>The client data.</returns>
+    /// <returns>The person data.</returns>
     [HttpGet("{id:guid}")]
-    [SwaggerOperation(Summary = "Get a client by ID", Description = "Returns a single client by its unique identifier.")]
+    [SwaggerOperation(Summary = "Get a person by ID", Description = "Returns a single person by its unique identifier.")]
     [ProducesResponseType(typeof(PersonDto), (int) HttpStatusCode.OK)]
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.NotFound)]
     public async Task<IActionResult> GetOneAsync([FromRoute][Required] Guid id, CancellationToken cancellationToken)
@@ -33,13 +33,13 @@ public sealed class PersonController(IPersonService service) : ControllerBase
     }
 
     /// <summary>
-    /// Gets a paginated list of clients.
+    /// Gets a paginated list of people.
     /// </summary>
     /// <param name="paginatedRequest">Pagination parameters.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>Paginated list of clients.</returns>
+    /// <returns>Paginated list of people.</returns>
     [HttpGet]
-    [SwaggerOperation(Summary = "Get all clients (paginated)", Description = "Returns a paginated list of clients.")]
+    [SwaggerOperation(Summary = "Get all people (paginated)", Description = "Returns a paginated list of people.")]
     [ProducesResponseType(typeof(Paginate<PersonDto>), (int) HttpStatusCode.OK)]
     public async Task<IActionResult> GetAllAsync([FromQuery][Required] PaginatedRequest paginatedRequest, CancellationToken cancellationToken)
     {
@@ -48,13 +48,13 @@ public sealed class PersonController(IPersonService service) : ControllerBase
     }
 
     /// <summary>
-    /// Creates a new client.
+    /// Creates a new person.
     /// </summary>
     /// <param name="request">Client creation data.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>The created client.</returns>
+    /// <returns>The created person.</returns>
     [HttpPost]
-    [SwaggerOperation(Summary = "Create a new client", Description = "Creates a new client and returns its data.")]
+    [SwaggerOperation(Summary = "Create a new person", Description = "Creates a new person and returns its data.")]
     [ProducesResponseType(typeof(PersonDto), (int) HttpStatusCode.Created)]
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.BadRequest)]
     public async Task<IActionResult> CreateAsync([FromBody][Required] CreatePersonRequest request, CancellationToken cancellationToken)
@@ -64,13 +64,13 @@ public sealed class PersonController(IPersonService service) : ControllerBase
     }
 
     /// <summary>
-    /// Deletes a client by its unique identifier.
+    /// Deletes a person by its unique identifier.
     /// </summary>
     /// <param name="id">Client unique identifier.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>No content if deleted.</returns>
     [HttpDelete("{id:guid}")]
-    [SwaggerOperation(Summary = "Delete a client", Description = "Deletes a client by its unique identifier.")]
+    [SwaggerOperation(Summary = "Delete a person", Description = "Deletes a person by its unique identifier.")]
     [ProducesResponseType((int) HttpStatusCode.NoContent)]
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.NotFound)]
     public async Task<IActionResult> DeleteAsync([FromRoute][Required] Guid id, CancellationToken cancellationToken)
@@ -80,14 +80,14 @@ public sealed class PersonController(IPersonService service) : ControllerBase
     }
 
     /// <summary>
-    /// Updates an existing client.
+    /// Updates an existing person.
     /// </summary>
     /// <param name="id">Client unique identifier.</param>
     /// <param name="request">Client update data.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>The updated Client.</returns>
     [HttpPut("{id:guid}")]
-    [SwaggerOperation(Summary = "Update a Client", Description = "Updates an existing Client by its unique identifier.")]
+    [SwaggerOperation(Summary = "Update a Person", Description = "Updates an existing Person by its unique identifier.")]
     [ProducesResponseType(typeof(PersonDto), (int) HttpStatusCode.OK)]
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.BadRequest)]
