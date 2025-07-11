@@ -38,33 +38,33 @@ insert into supplies (id, name, quantity, price, created_at, updated_at) values
 (uuid(), 'Polidor de Pintura', 12, 60.00, now(), now());
 
 -- Preencher people (8 clientes, 2 funcionários)
-insert into people (id, type, document, fullname, phone, email, address_id, created_at, updated_at) values
-(uuid(), 'customer', '12345678900', 'João da Silva', '51991080001', 'joao.silva@email.com', (select id from addresses limit 1 offset 0), now(), now()),
-(uuid(), 'customer', '23456789011', 'Maria Oliveira', '51991080002', 'maria.oliveira@email.com', (select id from addresses limit 1 offset 1), now(), now()),
-(uuid(), 'customer', '34567890122', 'Carlos Souza', '51991080003', 'carlos.souza@email.com', (select id from addresses limit 1 offset 2), now(), now()),
-(uuid(), 'customer', '45678901233', 'Ana Paula', '51991080004', 'ana.paula@email.com', (select id from addresses limit 1 offset 3), now(), now()),
-(uuid(), 'customer', '56789012344', 'Pedro Santos', '51991080005', 'pedro.santos@email.com', (select id from addresses limit 1 offset 4), now(), now()),
-(uuid(), 'customer', '67890123455', 'Juliana Lima', '51991080006', 'juliana.lima@email.com', (select id from addresses limit 1 offset 5), now(), now()),
-(uuid(), 'customer', '78901234566', 'Ricardo Alves', '51991080007', 'ricardo.alves@email.com', (select id from addresses limit 1 offset 6), now(), now()),
-(uuid(), 'customer', '89012345677', 'Fernanda Costa', '51991080008', 'fernanda.costa@email.com', (select id from addresses limit 1 offset 7), now(), now()),
-(uuid(), 'professional', '90012345688', 'Lucas Mecânico', '51991080009', 'lucas.mecanico@email.com', (select id from addresses limit 1 offset 8), now(), now()),
-(uuid(), 'professional', '90123456799', 'Paulo Inspetor', '51991080010', 'paulo.inspetor@email.com', (select id from addresses limit 1 offset 9), now(), now());
+insert into people (id, person_type, document, fullname, phone, email, address_id, created_at, updated_at) values
+(uuid(), 'Client', '12345678900', 'João da Silva', '51991080001', 'joao.silva@email.com', (select id from addresses limit 1 offset 0), now(), now()),
+(uuid(), 'Client', '23456789011', 'Maria Oliveira', '51991080002', 'maria.oliveira@email.com', (select id from addresses limit 1 offset 1), now(), now()),
+(uuid(), 'Client', '34567890122', 'Carlos Souza', '51991080003', 'carlos.souza@email.com', (select id from addresses limit 1 offset 2), now(), now()),
+(uuid(), 'Client', '45678901233', 'Ana Paula', '51991080004', 'ana.paula@email.com', (select id from addresses limit 1 offset 3), now(), now()),
+(uuid(), 'Client', '56789012344', 'Pedro Santos', '51991080005', 'pedro.santos@email.com', (select id from addresses limit 1 offset 4), now(), now()),
+(uuid(), 'Client', '67890123455', 'Juliana Lima', '51991080006', 'juliana.lima@email.com', (select id from addresses limit 1 offset 5), now(), now()),
+(uuid(), 'Client', '78901234566', 'Ricardo Alves', '51991080007', 'ricardo.alves@email.com', (select id from addresses limit 1 offset 6), now(), now()),
+(uuid(), 'Client', '89012345677', 'Fernanda Costa', '51991080008', 'fernanda.costa@email.com', (select id from addresses limit 1 offset 7), now(), now()),
+(uuid(), 'Employee', '90012345688', 'Lucas Mecânico', '51991080009', 'lucas.mecanico@email.com', (select id from addresses limit 1 offset 8), now(), now()),
+(uuid(), 'Employee', '90123456799', 'Paulo Inspetor', '51991080010', 'paulo.inspetor@email.com', (select id from addresses limit 1 offset 9), now(), now());
 
 -- Preencher available_services_supply (relacionando serviços e insumos)
-insert into available_service_supplies (id, available_service_id, supply_id, created_at, updated_at) values
-(uuid(), (select id from available_services where name = 'Troca de Óleo' limit 1), (select id from supplies where name = 'Óleo 5W30' limit 1), now(), now()),
-(uuid(), (select id from available_services where name = 'Troca de Óleo' limit 1), (select id from supplies where name = 'Filtro de Óleo' limit 1), now(), now()),
-(uuid(), (select id from available_services where name = 'Troca de Pastilha de Freio' limit 1), (select id from supplies where name = 'Pastilha de Freio' limit 1), now(), now()),
-(uuid(), (select id from available_services where name = 'Troca de Pneu' limit 1), (select id from supplies where name = 'Pneu Aro 15' limit 1), now(), now()),
-(uuid(), (select id from available_services where name = 'Troca de Filtro de Ar' limit 1), (select id from supplies where name = 'Filtro de Ar' limit 1), now(), now()),
-(uuid(), (select id from available_services where name = 'Troca de Correia Dentada' limit 1), (select id from supplies where name = 'Correia Dentada' limit 1), now(), now()),
-(uuid(), (select id from available_services where name = 'Revisão Completa' limit 1), (select id from supplies where name = 'Líquido de Arrefecimento' limit 1), now(), now()),
-(uuid(), (select id from available_services where name = 'Polimento' limit 1), (select id from supplies where name = 'Polidor de Pintura' limit 1), now(), now()),
-(uuid(), (select id from available_services where name = 'Higienização do Ar Condicionado' limit 1), (select id from supplies where name = 'Desinfetante Automotivo' limit 1), now(), now()),
-(uuid(), (select id from available_services where name = 'Revisão Completa' limit 1), (select id from supplies where name = 'Limpador de Para-brisa' limit 1), now(), now());
+insert into available_services_supply (available_service_id, supply_id) values
+((select id from available_services where name = 'Troca de Óleo' limit 1), (select id from supplies where name = 'Óleo 5W30' limit 1)),
+((select id from available_services where name = 'Troca de Óleo' limit 1), (select id from supplies where name = 'Filtro de Óleo' limit 1)),
+((select id from available_services where name = 'Troca de Pastilha de Freio' limit 1), (select id from supplies where name = 'Pastilha de Freio' limit 1)),
+((select id from available_services where name = 'Troca de Pneu' limit 1), (select id from supplies where name = 'Pneu Aro 15' limit 1)),
+((select id from available_services where name = 'Troca de Filtro de Ar' limit 1), (select id from supplies where name = 'Filtro de Ar' limit 1)),
+((select id from available_services where name = 'Troca de Correia Dentada' limit 1), (select id from supplies where name = 'Correia Dentada' limit 1)),
+((select id from available_services where name = 'Revisão Completa' limit 1), (select id from supplies where name = 'Líquido de Arrefecimento' limit 1)),
+((select id from available_services where name = 'Polimento' limit 1), (select id from supplies where name = 'Polidor de Pintura' limit 1)),
+((select id from available_services where name = 'Higienização do Ar Condicionado' limit 1), (select id from supplies where name = 'Desinfetante Automotivo' limit 1)),
+((select id from available_services where name = 'Revisão Completa' limit 1), (select id from supplies where name = 'Limpador de Para-brisa' limit 1));
 
 -- Preencher vehicles (relacionando com clientes)
-insert into vehicles (id, license_plate, manufacture_year, brand, model, owner_id, created_at, updated_at) values
+insert into vehicles (id, license_plate, manufacture_year, brand, model, person_id, created_at, updated_at) values
 (uuid(), 'ABC1A23', 2018, 'Volkswagen', 'Gol', (select id from people where fullname = 'João da Silva' limit 1), now(), now()),
 (uuid(), 'DEF2B34', 2020, 'Chevrolet', 'Onix', (select id from people where fullname = 'Maria Oliveira' limit 1), now(), now()),
 (uuid(), 'GHI3C45', 2017, 'Fiat', 'Argo', (select id from people where fullname = 'Carlos Souza' limit 1), now(), now()),

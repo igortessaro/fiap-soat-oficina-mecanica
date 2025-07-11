@@ -14,7 +14,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Controllers;
 /// </summary>
 [Route("api/v1/[controller]")]
 [ApiController]
-public sealed class PersonController(IPersonService service) : ControllerBase
+public sealed class PeopleController(IPersonService service) : ControllerBase
 {
     /// <summary>
     /// Gets a person by its unique identifier.
