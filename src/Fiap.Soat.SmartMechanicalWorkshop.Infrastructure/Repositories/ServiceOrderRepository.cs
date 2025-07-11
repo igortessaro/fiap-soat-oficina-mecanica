@@ -18,7 +18,7 @@ public sealed class ServiceOrderRepository(AppDbContext appDbContext) : Reposito
     {
         return await Query()
             .Include(x => x.AvailableServices).ThenInclude(item => item.Supplies)
-            .Include(x => x.Person)
+            .Include(x => x.Client)
             .Include(x => x.Vehicle)
 
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);

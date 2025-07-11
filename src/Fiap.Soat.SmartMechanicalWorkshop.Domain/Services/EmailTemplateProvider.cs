@@ -37,11 +37,11 @@ public class EmailTemplateProvider(IConfiguration configuration) : IEmailTemplat
         string html = $@"
   <div style='font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #ccc; padding: 20px;'>
     <h2 style='color: #007BFF;'>Ordem de Serviço - Oficina Smart</h2>
-    <p>Olá, {serviceOrder.Person.Fullname}!</p>
+    <p>Olá, {serviceOrder.Client.Fullname}!</p>
  <ul style='list-style: none; padding-left: 0;'>
-      <li><strong>Document:</strong> {serviceOrder.Person.Document}</li>
-      <li><strong>Email:</strong> {serviceOrder.Person.Email.Address}</li>
-      <li><strong>Phone:</strong> {serviceOrder.Person.Phone}</li>
+      <li><strong>Document:</strong> {serviceOrder.Client.Document}</li>
+      <li><strong>Email:</strong> {serviceOrder.Client.Email.Address}</li>
+      <li><strong>Phone:</strong> {serviceOrder.Client.Phone}</li>
     </ul>
 
 

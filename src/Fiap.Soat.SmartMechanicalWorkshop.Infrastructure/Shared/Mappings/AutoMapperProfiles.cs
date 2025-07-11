@@ -56,7 +56,7 @@ public class AutoMapperProfiles : Profile
         CreateMap<Paginate<ServiceOrder>, Paginate<ServiceOrderDto>>().ReverseMap();
         CreateMap<ServiceOrder, CreateServiceOrderRequest>()
             .ReverseMap()
-            .ConstructUsing(dest => new ServiceOrder(dest.Title, dest.Description, dest.VehicleId, dest.PersonId));
+            .ConstructUsing(dest => new ServiceOrder(dest.Title, dest.Description, dest.VehicleId, dest.ClientId));
         CreateMap<ServiceOrder, UpdateOneServiceOrderRequest>().ReverseMap();
     }
 }
