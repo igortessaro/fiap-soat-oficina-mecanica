@@ -1,16 +1,15 @@
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 using Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Converters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Configurations;
 
-public sealed class ClientConfiguration : IEntityTypeConfiguration<Client>
+public sealed class PersonConfiguration : IEntityTypeConfiguration<Person>
 {
-    public void Configure(EntityTypeBuilder<Client> builder)
+    public void Configure(EntityTypeBuilder<Person> builder)
     {
-        builder.ToTable("clients");
+        builder.ToTable("people");
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id).HasColumnName("id").ValueGeneratedOnAdd();
         builder.Property(x => x.CreatedAt).HasColumnName("created_at").IsRequired();
@@ -25,6 +24,17 @@ public sealed class ClientConfiguration : IEntityTypeConfiguration<Client>
             .HasColumnType("VARCHAR(100)")
             .HasMaxLength(100)
             .IsRequired();
+
+        builder.Property(x => x.PersonType)
+            .HasColumnName("person_type")
+            .HasConversion<string>()
+            .HasMaxLength(100)
+            .IsRequired();
+
+        builder.Property(x => x.EmployeeRole)
+             .HasColumnName("employee_role")
+             .HasConversion<string>()
+             .HasMaxLength(100);
 
         builder.Property(x => x.AddressId)
             .HasColumnName("address_id")
@@ -45,12 +55,12 @@ public sealed class ClientConfiguration : IEntityTypeConfiguration<Client>
         });
 
         builder.HasOne(c => c.Address)
-            .WithOne(a => a.Client)
-            .HasForeignKey<Client>(c => c.AddressId)
+            .WithOne(a => a.Person)
+            .HasForeignKey<Person>(c => c.AddressId)
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasMany(c => c.Vehicles)
-            .WithOne(x => x.Client)
+            .WithOne(x => x.Person)
             .HasForeignKey(v => v.ClientId)
             .OnDelete(DeleteBehavior.Cascade);
 

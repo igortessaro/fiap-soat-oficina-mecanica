@@ -5,8 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Repositories;
 
-public sealed class ClientRepository(AppDbContext appDbContext) : Repository<Client>(appDbContext), IClientRepository
+public sealed class PersonRepository(AppDbContext appDbContext) : Repository<Person>(appDbContext), IPersonRepository
 {
-    public Task<Client?> GetAsync(Guid id, CancellationToken cancellationToken) =>
+    public Task<Person?> GetAsync(Guid id, CancellationToken cancellationToken) =>
         Query(false).Include(x => x.Address).FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 }

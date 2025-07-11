@@ -4,6 +4,7 @@ using Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250710155854_UpdatePeopleTable")]
+    partial class UpdatePeopleTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -155,103 +158,6 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("people", (string)null);
-                });
-
-            modelBuilder.Entity("Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities.Quote", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)")
-                        .HasColumnName("id");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("created_at");
-
-                    b.Property<Guid>("ServiceOrderId")
-                        .HasColumnType("char(36)")
-                        .HasColumnName("service_order_id");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)")
-                        .HasColumnName("status");
-
-                    b.Property<decimal>("Total")
-                        .HasColumnType("decimal(18,2)")
-                        .HasColumnName("total");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime(6)")
-                        .HasColumnName("updated_at");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ServiceOrderId")
-                        .IsUnique();
-
-                    b.ToTable("quotes", (string)null);
-                });
-
-            modelBuilder.Entity("Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities.QuoteService", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)")
-                        .HasColumnName("id");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)")
-                        .HasColumnName("price");
-
-                    b.Property<Guid>("QuoteId")
-                        .HasColumnType("char(36)")
-                        .HasColumnName("quote_id");
-
-                    b.Property<Guid>("ServiceId")
-                        .HasColumnType("char(36)")
-                        .HasColumnName("service_id");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("QuoteId");
-
-                    b.HasIndex("ServiceId");
-
-                    b.ToTable("quote_services", (string)null);
-                });
-
-            modelBuilder.Entity("Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities.QuoteSupply", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)")
-                        .HasColumnName("id");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)")
-                        .HasColumnName("price");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int")
-                        .HasColumnName("quantity");
-
-                    b.Property<Guid>("QuoteId")
-                        .HasColumnType("char(36)")
-                        .HasColumnName("quote_id");
-
-                    b.Property<Guid>("SupplyId")
-                        .HasColumnType("char(36)")
-                        .HasColumnName("supply_id");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("QuoteId");
-
-                    b.HasIndex("SupplyId");
-
-                    b.ToTable("quote_supplies", (string)null);
                 });
 
             modelBuilder.Entity("Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities.ServiceOrder", b =>
@@ -461,55 +367,6 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities.Quote", b =>
-                {
-                    b.HasOne("Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities.ServiceOrder", "ServiceOrder")
-                        .WithOne()
-                        .HasForeignKey("Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities.Quote", "ServiceOrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ServiceOrder");
-                });
-
-            modelBuilder.Entity("Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities.QuoteService", b =>
-                {
-                    b.HasOne("Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities.Quote", "Quote")
-                        .WithMany("Services")
-                        .HasForeignKey("QuoteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities.AvailableService", "Service")
-                        .WithMany()
-                        .HasForeignKey("ServiceId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Quote");
-
-                    b.Navigation("Service");
-                });
-
-            modelBuilder.Entity("Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities.QuoteSupply", b =>
-                {
-                    b.HasOne("Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities.Quote", "Quote")
-                        .WithMany("Supplies")
-                        .HasForeignKey("QuoteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities.Supply", "Supply")
-                        .WithMany()
-                        .HasForeignKey("SupplyId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Quote");
-
-                    b.Navigation("Supply");
-                });
-
             modelBuilder.Entity("Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities.ServiceOrder", b =>
                 {
                     b.HasOne("Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities.Person", "Client")
@@ -591,13 +448,6 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Migrations
             modelBuilder.Entity("Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities.Person", b =>
                 {
                     b.Navigation("Vehicles");
-                });
-
-            modelBuilder.Entity("Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities.Quote", b =>
-                {
-                    b.Navigation("Services");
-
-                    b.Navigation("Supplies");
                 });
 #pragma warning restore 612, 618
         }

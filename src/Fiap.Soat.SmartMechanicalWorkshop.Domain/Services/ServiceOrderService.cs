@@ -15,7 +15,7 @@ public sealed class ServiceOrderService(
   ILogger<ServiceOrderService> logger,
     IMapper mapper,
     IServiceOrderRepository repository,
-    IClientRepository clientRepository,
+    IPersonRepository clientRepository,
     IVehicleRepository vehicleRepository,
     IAvailableServiceRepository availableServiceRepository,
      IEmailService emailService,
@@ -109,12 +109,15 @@ public sealed class ServiceOrderService(
 
     public async Task<Response> SendForApprovalAsync(SendServiceOrderApprovalRequest request, CancellationToken cancellationToken)
     {
+
         var foundEntity = await repository.GetDetailedAsync(request.Id, cancellationToken);
+
 
         if (foundEntity is null)
         {
             return ResponseFactory.Fail(new FluentResults.Error("Service Order Not Found"), System.Net.HttpStatusCode.NotFound);
         }
+
 
         string html = emailTemplateProvider.GetTemplate(foundEntity);
 
@@ -132,7 +135,7 @@ public sealed class ServiceOrderService(
             return ResponseFactory.Fail<ServiceOrderDto>(new FluentResults.Error("Service Order not found"), System.Net.HttpStatusCode.NotFound);
         }
 
-        if (foundServiceOrder.Status != ServiceOrderStatus.WaitingApproval)
+        if (foundServiceOrder.Status != EServiceOrderStatus.WaitingApproval)
         {
             logger.LogWarning($"Service Order with ID {input.Id} is not in WaitingApproval status, current status: {foundServiceOrder.Status}");
             return ResponseFactory.Fail<ServiceOrderDto>(
@@ -141,7 +144,7 @@ public sealed class ServiceOrderService(
             );
         }
 
-        return await UpdateAsync(new UpdateOneServiceOrderInput(input.Id, input.ServiceIds, input.Title, input.Description, ServiceOrderStatus.InProgress), cancellationToken);
+        return await UpdateAsync(new UpdateOneServiceOrderInput(input.Id, input.ServiceIds, input.Title, input.Description, EServiceOrderStatus.InProgress), cancellationToken);
     }
 
     public async Task<Response<ServiceOrderDto>> RejectOrderAsync(UpdateOneServiceOrderInput input, CancellationToken cancellationToken)
@@ -152,7 +155,7 @@ public sealed class ServiceOrderService(
             return ResponseFactory.Fail<ServiceOrderDto>(new FluentResults.Error("Service Order not found"), System.Net.HttpStatusCode.NotFound);
         }
 
-        if (foundServiceOrder.Status != ServiceOrderStatus.WaitingApproval)
+        if (foundServiceOrder.Status != EServiceOrderStatus.WaitingApproval)
         {
             string logMessage = $"You can only change status if Service Order were in WaitingApproval status, current status: {foundServiceOrder.Status}";
             logger.LogWarning(logMessage);
@@ -162,6 +165,6 @@ public sealed class ServiceOrderService(
             );
         }
 
-        return await UpdateAsync(new UpdateOneServiceOrderInput(input.Id, input.ServiceIds, input.Title, input.Description, ServiceOrderStatus.Rejected), cancellationToken);
+        return await UpdateAsync(new UpdateOneServiceOrderInput(input.Id, input.ServiceIds, input.Title, input.Description, EServiceOrderStatus.Rejected), cancellationToken);
     }
 }

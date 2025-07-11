@@ -30,8 +30,14 @@ _ = builder.Services.AddSwaggerGen(options =>
         options.IncludeXmlComments(xmlFile, includeControllerXmlComments: true);
     }
 
-    options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "SmartMechanicalWorkshop", Version = "V1" });
+    options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+    {
+        Title = "SmartMechanicalWorkshop",
+        Version = "v1",
+        Description = "Veja a documentação no [ReDoc](/docs) <br> Repositorio do projeto: [GitHub](https://github.com/igortessaro/fiap-soat-oficina-mecanica)"
+    });
 });
+
 
 _ = builder.Services.AddControllers().AddJsonOptions(options =>
 {
@@ -65,7 +71,18 @@ if (app.Environment.IsDevelopment())
 }
 
 _ = app.UseSwagger();
-_ = app.UseSwaggerUI(c => { c.EnableTryItOutByDefault(); c.DisplayRequestDuration(); });
+app.UseSwaggerUI(c =>
+{
+    c.EnableTryItOutByDefault();
+    c.DisplayRequestDuration();
+});
+
+app.UseReDoc(c =>
+{
+    c.RoutePrefix = "docs";
+    c.DocumentTitle = "Smart Mechanical Workshop API Documentation";
+    c.SpecUrl = "/swagger/v1/swagger.json";
+});
 _ = app.UseMiddleware<ExceptionMiddleware>();
 _ = app.UseHttpsRedirection();
 _ = app.UseAuthorization();

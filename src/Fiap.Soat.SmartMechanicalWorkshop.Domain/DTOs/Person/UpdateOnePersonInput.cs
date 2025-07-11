@@ -1,6 +1,8 @@
-namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Clients;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 
-public record UpdateOneClientInput(Guid Id, string Fullname, string Document, string Email, UpdateOnePhoneInput? Phone, UpdateOneAddressInput? Address);
+namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Person;
+
+public record UpdateOnePersonInput(Guid Id, string Fullname, string Document, EPersonType PersonType, EEmployeeRole? EmployeeRole, string Email, UpdateOnePhoneInput? Phone, UpdateOneAddressInput? Address);
 
 public record UpdateOnePhoneInput(string AreaCode, string Number)
 {

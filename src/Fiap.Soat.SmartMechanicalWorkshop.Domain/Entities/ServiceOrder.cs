@@ -12,15 +12,17 @@ public class ServiceOrder : Entity
         Description = description;
         VehicleId = vehicleId;
         ClientId = clientId;
-        Status = ServiceOrderStatus.Received;
+        Status = EServiceOrderStatus.Received;
     }
 
-    public ServiceOrderStatus Status { get; private set; } = ServiceOrderStatus.Received;
+    public EServiceOrderStatus Status { get; private set; } = EServiceOrderStatus.Received;
     public Guid ClientId { get; private set; }
+    public Guid EmployeeId { get; private set; }
     public Guid VehicleId { get; private set; }
     public string Title { get; private set; } = string.Empty;
     public string Description { get; private set; } = string.Empty;
-    public Client Client { get; private set; } = null!;
+    public Person Client { get; private set; } = null!;
+    public Person Employee { get; private set; } = null!;
     public Vehicle Vehicle { get; private set; } = null!;
     public ICollection<AvailableService> AvailableServices { get; private set; } = [];
 
@@ -37,7 +39,7 @@ public class ServiceOrder : Entity
         return this;
     }
 
-    public ServiceOrder Update(string? title, string? description, ServiceOrderStatus? serviceOrderStatus)
+    public ServiceOrder Update(string? title, string? description, EServiceOrderStatus? serviceOrderStatus)
     {
         if (!string.IsNullOrEmpty(title)) Title = title;
         if (!string.IsNullOrEmpty(description)) Description = description;
