@@ -37,13 +37,13 @@ public sealed class VehicleConfiguration : IEntityTypeConfiguration<Vehicle>
             .HasColumnType("INT")
             .IsRequired();
 
-        builder.Property(v => v.ClientId)
-            .HasColumnName("client_id")
+        builder.Property(v => v.PersonId)
+            .HasColumnName("person_id")
             .IsRequired();
 
         builder.HasOne(v => v.Person)
             .WithMany(c => c.Vehicles)
-            .HasForeignKey(v => v.ClientId)
+            .HasForeignKey(v => v.PersonId)
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasIndex(x => x.LicensePlate).IsUnique();

@@ -13,8 +13,6 @@ Log.Logger = new LoggerConfiguration()
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-
 _ = builder.Host.UseSerilog((context, services, configuration) => configuration
         .ReadFrom.Configuration(context.Configuration)
         .Enrich.FromLogContext());
@@ -71,13 +69,13 @@ if (app.Environment.IsDevelopment())
 }
 
 _ = app.UseSwagger();
-app.UseSwaggerUI(c =>
+_ = app.UseSwaggerUI(c =>
 {
     c.EnableTryItOutByDefault();
     c.DisplayRequestDuration();
 });
 
-app.UseReDoc(c =>
+_ = app.UseReDoc(c =>
 {
     c.RoutePrefix = "docs";
     c.DocumentTitle = "Smart Mechanical Workshop API Documentation";

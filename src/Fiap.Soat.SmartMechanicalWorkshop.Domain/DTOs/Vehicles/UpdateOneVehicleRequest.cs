@@ -6,5 +6,5 @@ public record UpdateOneVehicleRequest
     public int? ManufactureYear { get; init; }
     public string Brand { get; init; } = string.Empty;
     public string Model { get; init; } = string.Empty;
-    public Guid? ClientId { get; init; }
+    public Guid? PersonId { get; init; }
 }

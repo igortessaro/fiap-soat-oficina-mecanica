@@ -15,7 +15,7 @@ public sealed class ServiceOrderService(
   ILogger<ServiceOrderService> logger,
     IMapper mapper,
     IServiceOrderRepository repository,
-    IPersonRepository clientRepository,
+    IPersonRepository personRepository,
     IVehicleRepository vehicleRepository,
     IAvailableServiceRepository availableServiceRepository,
      IEmailService emailService,
@@ -25,9 +25,9 @@ public sealed class ServiceOrderService(
     public async Task<Response<ServiceOrderDto>> CreateAsync(CreateServiceOrderRequest request, CancellationToken cancellationToken)
     {
         var mapperEntity = mapper.Map<ServiceOrder>(request);
-        if (!await clientRepository.AnyAsync(x => x.Id == mapperEntity.ClientId, cancellationToken))
+        if (!await personRepository.AnyAsync(x => x.Id == mapperEntity.PersonId, cancellationToken))
         {
-            return ResponseFactory.Fail<ServiceOrderDto>(new FluentResults.Error("Client not found"), System.Net.HttpStatusCode.NotFound);
+            return ResponseFactory.Fail<ServiceOrderDto>(new FluentResults.Error("Person not found"), System.Net.HttpStatusCode.NotFound);
         }
 
         if (!await vehicleRepository.AnyAsync(x => x.Id == mapperEntity.VehicleId, cancellationToken))
@@ -98,10 +98,10 @@ public sealed class ServiceOrderService(
         return ResponseFactory.Ok(mapper.Map<ServiceOrderDto>(updatedEntity));
     }
 
-    public async Task<Response<Paginate<ServiceOrderDto>>> GetAllAsync(Guid? clientId, PaginatedRequest paginatedRequest, CancellationToken cancellationToken)
+    public async Task<Response<Paginate<ServiceOrderDto>>> GetAllAsync(Guid? personId, PaginatedRequest paginatedRequest, CancellationToken cancellationToken)
     {
-        var response = clientId.HasValue ?
-            await repository.GetAllAsync(x => x.ClientId == clientId, paginatedRequest, cancellationToken) :
+        var response = personId.HasValue ?
+            await repository.GetAllAsync(x => x.PersonId == personId, paginatedRequest, cancellationToken) :
             await repository.GetAllAsync(paginatedRequest, cancellationToken);
         var mappedResponse = mapper.Map<Paginate<ServiceOrderDto>>(response);
         return ResponseFactory.Ok(mappedResponse);
@@ -121,7 +121,7 @@ public sealed class ServiceOrderService(
 
         string html = emailTemplateProvider.GetTemplate(foundEntity);
 
-        bool response = await emailService.SendEmailAsync(foundEntity.Client.Email.Address, "Envio de orçamento de serviço(s)", html);
+        bool response = await emailService.SendEmailAsync(foundEntity.Person.Email.Address, "Envio de orçamento de serviço(s)", html);
         return response ? ResponseFactory.Ok(HttpStatusCode.Accepted)
             : ResponseFactory.Fail(new FluentResults.Error("Not possible to send email"), System.Net.HttpStatusCode.InternalServerError);
 

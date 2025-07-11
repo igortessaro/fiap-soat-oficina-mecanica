@@ -19,7 +19,7 @@ public sealed class PersonController(IPersonService service) : ControllerBase
     /// <summary>
     /// Gets a person by its unique identifier.
     /// </summary>
-    /// <param name="id">Client unique identifier.</param>
+    /// <param name="id">Person unique identifier.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>The person data.</returns>
     [HttpGet("{id:guid}")]
@@ -50,7 +50,7 @@ public sealed class PersonController(IPersonService service) : ControllerBase
     /// <summary>
     /// Creates a new person.
     /// </summary>
-    /// <param name="request">Client creation data.</param>
+    /// <param name="request">Person creation data.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>The created person.</returns>
     [HttpPost]
@@ -66,7 +66,7 @@ public sealed class PersonController(IPersonService service) : ControllerBase
     /// <summary>
     /// Deletes a person by its unique identifier.
     /// </summary>
-    /// <param name="id">Client unique identifier.</param>
+    /// <param name="id">Person unique identifier.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>No content if deleted.</returns>
     [HttpDelete("{id:guid}")]
@@ -82,10 +82,10 @@ public sealed class PersonController(IPersonService service) : ControllerBase
     /// <summary>
     /// Updates an existing person.
     /// </summary>
-    /// <param name="id">Client unique identifier.</param>
-    /// <param name="request">Client update data.</param>
+    /// <param name="id">Person unique identifier.</param>
+    /// <param name="request">Person update data.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>The updated Client.</returns>
+    /// <returns>The updated Person.</returns>
     [HttpPut("{id:guid}")]
     [SwaggerOperation(Summary = "Update a Person", Description = "Updates an existing Person by its unique identifier.")]
     [ProducesResponseType(typeof(PersonDto), (int) HttpStatusCode.OK)]

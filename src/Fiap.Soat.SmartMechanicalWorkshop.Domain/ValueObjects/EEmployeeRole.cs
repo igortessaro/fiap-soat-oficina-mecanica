@@ -1,7 +1,7 @@
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 public enum EEmployeeRole
 {
-    Mechanic = 1,
+    Mechanic,
     MasterTechnician,
     VehicleInspector,
     TireAndAlignmentTechnician,

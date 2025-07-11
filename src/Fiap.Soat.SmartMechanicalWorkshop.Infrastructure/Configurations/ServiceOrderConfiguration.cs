@@ -13,7 +13,7 @@ public sealed class ServiceOrderConfiguration : IEntityTypeConfiguration<Service
         builder.Property(x => x.Id).HasColumnName("id").ValueGeneratedOnAdd();
         builder.Property(x => x.CreatedAt).HasColumnName("created_at").IsRequired();
         builder.Property(x => x.UpdatedAt).HasColumnName("updated_at").IsRequired();
-        builder.Property(x => x.ClientId).HasColumnName("client_id").IsRequired();
+        builder.Property(x => x.PersonId).HasColumnName("person_id").IsRequired();
         builder.Property(x => x.VehicleId).HasColumnName("vehicle_id").IsRequired();
         builder.Property(x => x.Status)
             .HasColumnName("status")
@@ -31,9 +31,9 @@ public sealed class ServiceOrderConfiguration : IEntityTypeConfiguration<Service
             .HasMaxLength(250)
             .IsRequired();
 
-        builder.HasOne(x => x.Client)
+        builder.HasOne(x => x.Person)
             .WithMany()
-            .HasForeignKey(x => x.ClientId)
+            .HasForeignKey(x => x.PersonId)
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasOne(x => x.Employee)

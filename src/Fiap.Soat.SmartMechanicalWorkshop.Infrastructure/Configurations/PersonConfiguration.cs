@@ -61,7 +61,7 @@ public sealed class PersonConfiguration : IEntityTypeConfiguration<Person>
 
         builder.HasMany(c => c.Vehicles)
             .WithOne(x => x.Person)
-            .HasForeignKey(v => v.ClientId)
+            .HasForeignKey(v => v.PersonId)
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasIndex(x => x.Document).IsUnique();
