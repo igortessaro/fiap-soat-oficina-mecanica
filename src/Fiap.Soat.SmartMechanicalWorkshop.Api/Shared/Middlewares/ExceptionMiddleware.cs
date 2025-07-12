@@ -1,4 +1,6 @@
 using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared.Exceptions;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
+using FluentResults;
 using System.Net;
 using System.Text.Json;
 
@@ -24,13 +26,14 @@ public class ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddlewa
 
     private static Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
-        HttpStatusCode statusCode = exception switch
+        var statusCode = exception switch
         {
             ArgumentNullException => HttpStatusCode.BadRequest,
             BadHttpRequestException => HttpStatusCode.BadRequest,
             ResourceNotFoundException => HttpStatusCode.NotFound,
             UnauthorizedAccessException => HttpStatusCode.Unauthorized,
             KeyNotFoundException => HttpStatusCode.NotFound,
+            DomainException => HttpStatusCode.BadRequest,
             _ => HttpStatusCode.InternalServerError
         };
 
@@ -43,6 +46,8 @@ public class ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddlewa
 
         context.Response.ContentType = "application/json";
         context.Response.StatusCode = (int) statusCode;
-        return context.Response.WriteAsync(JsonSerializer.Serialize(response));
+        return statusCode != HttpStatusCode.BadRequest ?
+            context.Response.WriteAsync(JsonSerializer.Serialize(response)) :
+            context.Response.WriteAsync(JsonSerializer.Serialize(ResponseFactory.Fail(new Error(exception.Message), statusCode)));
     }
 }

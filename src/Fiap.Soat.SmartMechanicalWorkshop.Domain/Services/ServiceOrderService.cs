@@ -34,6 +34,8 @@ public sealed class ServiceOrderService(
             return ResponseFactory.Fail<ServiceOrderDto>(new FluentResults.Error("Vehicle not found"), System.Net.HttpStatusCode.NotFound);
         }
 
+        // TODO: Adicionar validação para verificar se o cliente já possui uma ordem de serviço em andamento para o mesmo veículo.
+
         foreach (var serviceId in request.ServiceIds)
         {
             var availableService = await availableServiceRepository.GetByIdAsync(serviceId, cancellationToken);
@@ -170,5 +172,18 @@ public sealed class ServiceOrderService(
 
         return await UpdateAsync(new UpdateOneServiceOrderInput(input.Id, input.ServiceIds, input.Title, input.Description, EServiceOrderStatus.Rejected),
             cancellationToken);
+    }
+
+    public async Task<Response<ServiceOrderDto>> PatchAsync(UpdateOneServiceOrderInput input, CancellationToken cancellationToken)
+    {
+        var foundServiceOrder = await repository.GetByIdAsync(input.Id, cancellationToken);
+        if (foundServiceOrder is null)
+        {
+            return ResponseFactory.Fail<ServiceOrderDto>(new FluentResults.Error("Service Order not found"), System.Net.HttpStatusCode.NotFound);
+        }
+
+        _ = foundServiceOrder.ChangeStatus(input.ServiceOrderStatus!.Value);
+        _ = await repository.UpdateAsync(foundServiceOrder, cancellationToken);
+        return ResponseFactory.Ok(mapper.Map<ServiceOrderDto>(foundServiceOrder));
     }
 }

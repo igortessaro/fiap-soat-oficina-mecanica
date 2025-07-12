@@ -134,7 +134,7 @@ public sealed class ServiceOrdersController(IServiceOrderService service) : Cont
     /// </summary>
     /// <param name="id">Service order unique identifier.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
-    [HttpGet("{id:guid}/approve")]
+    [HttpPost("{id:guid}/approve")]
     [SwaggerOperation(
         Summary = "Approve a service order via email link",
         Description = "Approves the service order by updating its status when accessed from an e-mail approval link."
@@ -154,7 +154,7 @@ public sealed class ServiceOrdersController(IServiceOrderService service) : Cont
     /// </summary>
     /// <param name="id">Service order unique identifier.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
-    [HttpGet("{id:guid}/reject")]
+    [HttpPost("{id:guid}/reject")]
     [SwaggerOperation(
         Summary = "Reject a service order via email link",
         Description = "Rejects the service order by updating its status when accessed from an e-mail rejection link."
@@ -166,6 +166,17 @@ public sealed class ServiceOrdersController(IServiceOrderService service) : Cont
         UpdateOneServiceOrderInput input = new(id);
 
         var result = await service.RejectOrderAsync(input, cancellationToken);
+        return result.ToActionResult();
+    }
+
+    [HttpPatch("{id:guid}")]
+    [SwaggerOperation(Summary = "Patch a service order", Description = "Updates an existing service order by its unique identifier with partial data.")]
+    [ProducesResponseType(typeof(ServiceOrderDto), (int) HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.BadRequest)]
+    public async Task<IActionResult> PatchAsync([FromRoute, Required] Guid id, [FromBody, Required] PatchServiceOrderRequest request, CancellationToken cancellationToken)
+    {
+        var result = await service.PatchAsync(new UpdateOneServiceOrderInput(id, request.Status), cancellationToken);
         return result.ToActionResult();
     }
 }
