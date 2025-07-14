@@ -1,7 +1,10 @@
+using Fiap.Soat.MechanicalWorkshop.Application.Commands;
+using Fiap.Soat.MechanicalWorkshop.Application.Notifications;
 using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.ServiceOrders;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.Interfaces;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
@@ -14,7 +17,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Controllers;
 /// </summary>
 [Route("api/v1/[controller]")]
 [ApiController]
-public sealed class ServiceOrdersController(IServiceOrderService service) : ControllerBase
+public sealed class ServiceOrdersController(IServiceOrderService service, IMediator mediator) : ControllerBase
 {
     /// <summary>
     /// Gets a service order by its unique identifier.
@@ -35,7 +38,7 @@ public sealed class ServiceOrdersController(IServiceOrderService service) : Cont
     /// <summary>
     /// Gets a paginated list of service orders.
     /// </summary>
-    /// <param name="clientId">Client Id</param>
+    /// <param name="personId">Person Id</param>
     /// <param name="paginatedRequest">Pagination parameters.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>Paginated list of service orders.</returns>
@@ -44,10 +47,10 @@ public sealed class ServiceOrdersController(IServiceOrderService service) : Cont
     [ProducesResponseType(typeof(Paginate<ServiceOrderDto>), (int) HttpStatusCode.OK)]
     public async Task<IActionResult> GetAllAsync(
         [FromQuery][Required] PaginatedRequest paginatedRequest,
-        [FromQuery] Guid? clientId,
+        [FromQuery] Guid? personId,
         CancellationToken cancellationToken)
     {
-        var result = await service.GetAllAsync(clientId, paginatedRequest, cancellationToken);
+        var result = await service.GetAllAsync(personId, paginatedRequest, cancellationToken);
         return result.ToActionResult();
     }
 
@@ -110,14 +113,14 @@ public sealed class ServiceOrdersController(IServiceOrderService service) : Cont
     }
 
     /// <summary>
-    /// Sends a service order to the client for approval via email.
+    /// Sends a service order to the person for approval via email.
     /// </summary>
     /// <param name="request">Data required to send the service order for approval.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     [HttpPost("send-email")]
     [SwaggerOperation(
-        Summary = "Send service order for client approval",
-        Description = "Sends the service order details via e-mail to the client for approval or rejection."
+        Summary = "Send service order for person approval",
+        Description = "Sends the service order details via e-mail to the person for approval or rejection."
     )]
     [ProducesResponseType((int) HttpStatusCode.OK)]
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.BadRequest)]
@@ -134,7 +137,7 @@ public sealed class ServiceOrdersController(IServiceOrderService service) : Cont
     /// </summary>
     /// <param name="id">Service order unique identifier.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
-    [HttpGet("{id:guid}/approve")]
+    [HttpPost("{id:guid}/approve")]
     [SwaggerOperation(
         Summary = "Approve a service order via email link",
         Description = "Approves the service order by updating its status when accessed from an e-mail approval link."
@@ -154,7 +157,7 @@ public sealed class ServiceOrdersController(IServiceOrderService service) : Cont
     /// </summary>
     /// <param name="id">Service order unique identifier.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
-    [HttpGet("{id:guid}/reject")]
+    [HttpPost("{id:guid}/reject")]
     [SwaggerOperation(
         Summary = "Reject a service order via email link",
         Description = "Rejects the service order by updating its status when accessed from an e-mail rejection link."
@@ -166,6 +169,18 @@ public sealed class ServiceOrdersController(IServiceOrderService service) : Cont
         UpdateOneServiceOrderInput input = new(id);
 
         var result = await service.RejectOrderAsync(input, cancellationToken);
+        return result.ToActionResult();
+    }
+
+    [HttpPatch("{id:guid}")]
+    [SwaggerOperation(Summary = "Patch a service order", Description = "Updates an existing service order by its unique identifier with partial data.")]
+    [ProducesResponseType(typeof(ServiceOrderDto), (int) HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.BadRequest)]
+    public async Task<IActionResult> PatchAsync([FromRoute, Required] Guid id, [FromBody, Required] PatchServiceOrderRequest request, CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new ServiceOrderChangeStatusCommand(id, request.Status), cancellationToken);
+        if (result.IsSuccess) await mediator.Publish(new ServiceOrderChangeStatusNotification(id, result.Data), cancellationToken);
         return result.ToActionResult();
     }
 }

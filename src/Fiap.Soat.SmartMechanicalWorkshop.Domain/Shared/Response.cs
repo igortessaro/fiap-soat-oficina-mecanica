@@ -32,6 +32,11 @@ public sealed class Response<T>(Result<T> result, HttpStatusCode statusCode)
     // Conversão implícita para facilitar integração com FluentResults direto
     public static implicit operator Result<T>(Response<T> result)
         => result.InnerResult;
+
+    public static implicit operator Response(Response<T> result)
+        => result.IsSuccess ?
+            ResponseFactory.Ok(result.StatusCode) :
+            ResponseFactory.Fail(result.Reasons.Select(x => x.Message).ToArray(), result.StatusCode);
 }
 
 // Versão não genérica para operações que não retornam valor
@@ -79,7 +84,13 @@ public static class ResponseFactory
         => new(Result.Fail<T>(error), statusCode);
 
     public static Response Fail(Error error, HttpStatusCode statusCode = HttpStatusCode.InternalServerError)
-    => new(Result.Fail(error), statusCode);
+        => new(Result.Fail(error), statusCode);
+
+    public static Response Fail(string error, HttpStatusCode statusCode = HttpStatusCode.InternalServerError)
+        => new(Result.Fail(error), statusCode);
+
+    public static Response Fail(string[] errors, HttpStatusCode statusCode = HttpStatusCode.InternalServerError)
+        => new(Result.Fail(errors), statusCode);
 
     public static Response<T> Fail<T>(List<IError> errors, HttpStatusCode statusCode = HttpStatusCode.InternalServerError)
         => new(Result.Fail<T>(errors), statusCode);

@@ -1,3 +1,4 @@
+using Fiap.Soat.MechanicalWorkshop.Application.Commands;
 using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared.Extensions;
 using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared.Middlewares;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
@@ -12,8 +13,6 @@ Log.Logger = new LoggerConfiguration()
     .CreateBootstrapLogger();
 
 var builder = WebApplication.CreateBuilder(args);
-
-
 
 _ = builder.Host.UseSerilog((context, services, configuration) => configuration
         .ReadFrom.Configuration(context.Configuration)
@@ -57,6 +56,7 @@ _ = builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("
 _ = builder.Services.AddServiceExtensions();
 _ = builder.Services.AddRepositoryExtensions();
 _ = builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
+_ = builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ServiceOrderChangeStatusCommand).Assembly));
 _ = builder.Services.AddHttpContextAccessor();
 _ = builder.Services.AddHealthChecks();
 _ = builder.Services.AddRouting(options => options.LowercaseUrls = true);
@@ -71,13 +71,13 @@ if (app.Environment.IsDevelopment())
 }
 
 _ = app.UseSwagger();
-app.UseSwaggerUI(c =>
+_ = app.UseSwaggerUI(c =>
 {
     c.EnableTryItOutByDefault();
     c.DisplayRequestDuration();
 });
 
-app.UseReDoc(c =>
+_ = app.UseReDoc(c =>
 {
     c.RoutePrefix = "docs";
     c.DocumentTitle = "Smart Mechanical Workshop API Documentation";

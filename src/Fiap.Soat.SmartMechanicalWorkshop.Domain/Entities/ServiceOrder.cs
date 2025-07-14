@@ -1,3 +1,4 @@
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.States.ServiceOrder;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
@@ -7,22 +8,22 @@ public class ServiceOrder : Entity
     private ServiceOrder() { }
 
     public ServiceOrder(string title, string description, Guid vehicleId, Guid clientId)
+        : this()
     {
         Title = title;
         Description = description;
         VehicleId = vehicleId;
         ClientId = clientId;
-        Status = EServiceOrderStatus.Received;
     }
 
-    public EServiceOrderStatus Status { get; private set; } = EServiceOrderStatus.Received;
+    private ServiceOrderState _state;
+
+    public EServiceOrderStatus Status { get; private set; }
     public Guid ClientId { get; private set; }
-    public Guid EmployeeId { get; private set; }
     public Guid VehicleId { get; private set; }
     public string Title { get; private set; } = string.Empty;
     public string Description { get; private set; } = string.Empty;
     public Person Client { get; private set; } = null!;
-    public Person Employee { get; private set; } = null!;
     public Vehicle Vehicle { get; private set; } = null!;
     public ICollection<AvailableService> AvailableServices { get; private set; } = [];
 
@@ -44,6 +45,37 @@ public class ServiceOrder : Entity
         if (!string.IsNullOrEmpty(title)) Title = title;
         if (!string.IsNullOrEmpty(description)) Description = description;
         if (serviceOrderStatus != null) Status = serviceOrderStatus.Value;
+        return this;
+    }
+
+    public ServiceOrder SetState(ServiceOrderState state)
+    {
+        _state = state;
+        Status = state.Status;
+        return this;
+    }
+
+    public ServiceOrder ChangeStatus(EServiceOrderStatus newStatus)
+    {
+        _state.ChangeStatus(this, newStatus);
+        return this;
+    }
+
+    public ServiceOrder SyncState()
+    {
+        _state = Status switch
+        {
+            EServiceOrderStatus.Received => new ReceivedState(),
+            EServiceOrderStatus.UnderDiagnosis => new UnderDiagnosisState(),
+            EServiceOrderStatus.WaitingApproval => new WaitingApprovalState(),
+            EServiceOrderStatus.InProgress => new InProgressState(),
+            EServiceOrderStatus.Completed => new CompletedState(),
+            EServiceOrderStatus.Delivered => new DeliveredState(),
+            EServiceOrderStatus.Cancelled => new CancelledState(),
+            EServiceOrderStatus.Rejected => new RejectedState(),
+            _ => throw new InvalidOperationException("Unknown status")
+        };
+
         return this;
     }
 }

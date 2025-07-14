@@ -13,5 +13,5 @@ public record CreateNewVehicleRequest
     [Required]
     public string Model { get; init; } = string.Empty;
     [Required]
-    public Guid ClientId { get; init; }
+    public Guid PersonId { get; init; }
 }

@@ -94,7 +94,7 @@ public class VehiclesController(IVehicleService vehicleService) : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.BadRequest)]
     public async Task<IActionResult> UpdateAsync([FromRoute][Required] Guid id, [FromBody, Required] UpdateOneVehicleRequest request, CancellationToken cancellationToken)
     {
-        UpdateOneVehicleInput updateRequest = new(id, request.LicensePlate, request.ManufactureYear, request.Brand, request.Model, request.ClientId);
+        UpdateOneVehicleInput updateRequest = new(id, request.LicensePlate, request.ManufactureYear, request.Brand, request.Model, request.PersonId);
         var result = await vehicleService.UpdateAsync(updateRequest, cancellationToken);
         return result.ToActionResult();
     }

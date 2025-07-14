@@ -12,6 +12,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> dbContextOptions) : DbC
     public DbSet<Supply> Supplies { get; set; }
     public DbSet<AvailableService> AvailableServices { get; set; }
     public DbSet<ServiceOrder> ServiceOrders { get; set; }
+    public DbSet<Quote> Quotes { get; set; }
+    public DbSet<QuoteAvailableService> QuoteServices { get; set; }
+    public DbSet<QuoteSupply> QuoteSupplies { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -22,22 +25,18 @@ public class AppDbContext(DbContextOptions<AppDbContext> dbContextOptions) : DbC
         modelBuilder.ApplyConfiguration(new SupplyConfiguration());
         modelBuilder.ApplyConfiguration(new VehicleConfiguration());
         modelBuilder.ApplyConfiguration(new ServiceOrderConfiguration());
+        modelBuilder.ApplyConfiguration(new QuoteConfiguration());
+        modelBuilder.ApplyConfiguration(new QuoteServiceConfiguration());
+        modelBuilder.ApplyConfiguration(new QuoteSupplyConfiguration());
     }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.LogTo(Console.WriteLine).EnableSensitiveDataLogging();
+    // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    //     => optionsBuilder.LogTo(Console.WriteLine).EnableSensitiveDataLogging();
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
-        var modifiedEntries = ChangeTracker
-        .Entries()
-            .Where(e => e.State == EntityState.Modified && e.Entity is Entity);
-
-        foreach (var entry in modifiedEntries)
-        {
-            ((Entity) entry.Entity).MarkAsUpdated();
-        }
-
+        var modifiedEntries = ChangeTracker.Entries().Where(e => e is { State: EntityState.Modified, Entity: Entity });
+        foreach (var entry in modifiedEntries) ((Entity) entry.Entity).MarkAsUpdated();
         return base.SaveChangesAsync(cancellationToken);
     }
 }

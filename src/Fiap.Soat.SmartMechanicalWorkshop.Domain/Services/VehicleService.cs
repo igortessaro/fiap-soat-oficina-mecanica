@@ -9,17 +9,17 @@ using System.Text.RegularExpressions;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Services;
 
-public class VehicleService(IVehicleRepository repository, IPersonRepository clientRepository, IMapper mapper) : IVehicleService
+public class VehicleService(IVehicleRepository repository, IPersonRepository personRepository, IMapper mapper) : IVehicleService
 {
     public async Task<Response<VehicleDto>> CreateAsync(CreateNewVehicleRequest request, CancellationToken cancellationToken)
     {
-        var foundClient = await clientRepository.GetByIdAsync(request.ClientId, cancellationToken);
-        if (foundClient is null)
+        var foundPerson = await personRepository.GetByIdAsync(request.PersonId, cancellationToken);
+        if (foundPerson is null)
         {
-            return ResponseFactory.Fail<VehicleDto>(new FluentResults.Error("Client not found"), System.Net.HttpStatusCode.NotFound);
+            return ResponseFactory.Fail<VehicleDto>(new FluentResults.Error("Person not found"), System.Net.HttpStatusCode.NotFound);
         }
 
-        if (foundClient.PersonType != EPersonType.Client)
+        if (foundPerson.PersonType != EPersonType.Client)
         {
             return ResponseFactory.Fail<VehicleDto>(new FluentResults.Error("Only clients are allowed to register a vehicle"), System.Net.HttpStatusCode.BadRequest);
         }

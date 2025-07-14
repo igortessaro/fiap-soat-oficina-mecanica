@@ -18,7 +18,7 @@ public class AutoMapperProfiles : Profile
         CreateMap<Paginate<Vehicle>, Paginate<VehicleDto>>().ReverseMap();
         CreateMap<Vehicle, CreateNewVehicleRequest>()
             .ReverseMap()
-            .ConstructUsing(dest => new Vehicle(dest.Model, dest.Brand, dest.ManufactureYear, dest.LicensePlate, dest.ClientId));
+            .ConstructUsing(dest => new Vehicle(dest.Model, dest.Brand, dest.ManufactureYear, dest.LicensePlate, dest.PersonId));
         CreateMap<Vehicle, UpdateOneVehicleRequest>().ReverseMap();
 
         CreateMap<AvailableService, AvailableServiceDto>()

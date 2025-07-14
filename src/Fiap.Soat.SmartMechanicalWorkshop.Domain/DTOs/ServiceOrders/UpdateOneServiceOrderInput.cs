@@ -25,6 +25,12 @@ public record UpdateOneServiceOrderInput
         ServiceOrderStatus = serviceOrderStatus;
     }
 
+    public UpdateOneServiceOrderInput(Guid id, EServiceOrderStatus status)
+    {
+        Id = id;
+        ServiceOrderStatus = status;
+    }
+
     public UpdateOneServiceOrderInput(Guid id)
     {
         Id = id;

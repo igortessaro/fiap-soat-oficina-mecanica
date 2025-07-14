@@ -11,7 +11,7 @@ public abstract class Repository<T>(DbContext context) : IRepository<T> where T 
     private readonly DbContext _context = context;
     private readonly DbSet<T> _dbSet = context.Set<T>();
 
-    public async Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    public virtual async Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         return await _dbSet.FindAsync([id], cancellationToken);
     }
