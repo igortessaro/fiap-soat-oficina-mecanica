@@ -1,7 +1,10 @@
+using Fiap.Soat.MechanicalWorkshop.Application.Commands;
+using Fiap.Soat.MechanicalWorkshop.Application.Notifications;
 using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.ServiceOrders;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.Interfaces;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
@@ -14,7 +17,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Controllers;
 /// </summary>
 [Route("api/v1/[controller]")]
 [ApiController]
-public sealed class ServiceOrdersController(IServiceOrderService service) : ControllerBase
+public sealed class ServiceOrdersController(IServiceOrderService service, IMediator mediator) : ControllerBase
 {
     /// <summary>
     /// Gets a service order by its unique identifier.
@@ -176,7 +179,8 @@ public sealed class ServiceOrdersController(IServiceOrderService service) : Cont
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.BadRequest)]
     public async Task<IActionResult> PatchAsync([FromRoute, Required] Guid id, [FromBody, Required] PatchServiceOrderRequest request, CancellationToken cancellationToken)
     {
-        var result = await service.PatchAsync(new UpdateOneServiceOrderInput(id, request.Status), cancellationToken);
+        var result = await mediator.Send(new ServiceOrderChangeStatusCommand(id, request.Status), cancellationToken);
+        if (result.IsSuccess) await mediator.Publish(new ServiceOrderChangeStatusNotification(id, result.Data), cancellationToken);
         return result.ToActionResult();
     }
 }

@@ -184,6 +184,6 @@ public sealed class ServiceOrderService(
 
         _ = foundServiceOrder.ChangeStatus(input.ServiceOrderStatus!.Value);
         _ = await repository.UpdateAsync(foundServiceOrder, cancellationToken);
-        return ResponseFactory.Ok(mapper.Map<ServiceOrderDto>(foundServiceOrder));
+        return ResponseFactory.Ok(mapper.Map<ServiceOrderDto>(await repository.GetDetailedAsync(input.Id, cancellationToken)));
     }
 }

@@ -12,10 +12,11 @@ public sealed class QuoteSupply
     public Quote Quote { get; private set; } = null!;
     public Supply Supply { get; private set; } = null!;
 
-    public QuoteSupply(Guid quoteId, Guid supplyId, decimal price)
+    public QuoteSupply(Guid quoteId, Guid supplyId, decimal price, int quantity)
     {
         QuoteId = quoteId;
         SupplyId = supplyId;
         Price = price;
+        Quantity = quantity;
     }
 }

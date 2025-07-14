@@ -16,6 +16,7 @@ public static class ServiceExtensions
         iServiceCollection.AddTransient<IServiceOrderService, ServiceOrderService>();
         iServiceCollection.AddSingleton<IEmailService, EmailService>();
         iServiceCollection.AddSingleton<IEmailTemplateProvider, EmailTemplateProvider>();
+        iServiceCollection.AddTransient<IQuoteService, QuoteService>();
 
         return iServiceCollection;
 

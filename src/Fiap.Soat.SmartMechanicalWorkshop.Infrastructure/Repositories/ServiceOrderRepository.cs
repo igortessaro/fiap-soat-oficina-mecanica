@@ -7,6 +7,12 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Repositories;
 
 public sealed class ServiceOrderRepository(AppDbContext appDbContext) : Repository<ServiceOrder>(appDbContext), IServiceOrderRepository
 {
+    public override async Task<ServiceOrder?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
+    {
+        var result = await base.GetByIdAsync(id, cancellationToken);
+        return result?.SyncState();
+    }
+
     public async Task<ServiceOrder?> GetAsync(Guid id, CancellationToken cancellationToken)
     {
         return await Query()

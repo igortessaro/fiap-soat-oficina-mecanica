@@ -5,10 +5,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 
 public class ServiceOrder : Entity
 {
-    private ServiceOrder()
-    {
-        SyncState();
-    }
+    private ServiceOrder() { }
 
     public ServiceOrder(string title, string description, Guid vehicleId, Guid clientId)
         :this()
@@ -21,7 +18,7 @@ public class ServiceOrder : Entity
 
     private ServiceOrderState _state;
 
-    public EServiceOrderStatus Status { get; private set; } = EServiceOrderStatus.Received;
+    public EServiceOrderStatus Status { get; private set; }
     public Guid ClientId { get; private set; }
     public Guid VehicleId { get; private set; }
     public string Title { get; private set; } = string.Empty;
@@ -64,7 +61,7 @@ public class ServiceOrder : Entity
         return this;
     }
 
-    public void SyncState()
+    public ServiceOrder SyncState()
     {
         _state = Status switch
         {
@@ -78,5 +75,7 @@ public class ServiceOrder : Entity
             EServiceOrderStatus.Rejected => new RejectedState(),
             _ => throw new InvalidOperationException("Unknown status")
         };
+
+        return this;
     }
 }

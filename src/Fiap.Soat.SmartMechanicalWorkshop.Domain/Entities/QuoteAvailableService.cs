@@ -1,8 +1,8 @@
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 
-public sealed class QuoteService
+public sealed class QuoteAvailableService
 {
-    private QuoteService() { }
+    private QuoteAvailableService() { }
 
     public Guid Id { get; private set; }
     public Guid QuoteId { get; private set; }
@@ -11,7 +11,7 @@ public sealed class QuoteService
     public Quote Quote { get; private set; } = null!;
     public AvailableService Service { get; private set; } = null!;
 
-    public QuoteService(Guid quoteId, Guid serviceId, decimal price)
+    public QuoteAvailableService(Guid quoteId, Guid serviceId, decimal price)
     {
         QuoteId = quoteId;
         ServiceId = serviceId;

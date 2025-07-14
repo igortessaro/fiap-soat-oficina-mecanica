@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Configurations;
 
-public sealed class QuoteServiceConfiguration : IEntityTypeConfiguration<QuoteService>
+public sealed class QuoteServiceConfiguration : IEntityTypeConfiguration<QuoteAvailableService>
 {
-    public void Configure(EntityTypeBuilder<QuoteService> builder)
+    public void Configure(EntityTypeBuilder<QuoteAvailableService> builder)
     {
         builder.ToTable("quote_services");
         builder.HasKey(x => x.Id);
