@@ -23,8 +23,8 @@ public sealed class QuoteConfiguration : IEntityTypeConfiguration<Quote>
         builder.Property(x => x.Total).HasColumnName("total").HasColumnType("decimal(18,2)").IsRequired();
 
         builder.HasOne(x => x.ServiceOrder)
-            .WithOne()
-            .HasForeignKey<Quote>(x => x.ServiceOrderId)
+            .WithMany(x => x.Quotes)
+            .HasForeignKey(x => x.ServiceOrderId)
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasMany(x => x.Services)
