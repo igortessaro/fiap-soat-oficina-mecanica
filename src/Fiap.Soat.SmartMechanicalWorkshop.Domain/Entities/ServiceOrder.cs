@@ -8,7 +8,7 @@ public class ServiceOrder : Entity
     private ServiceOrder() { }
 
     public ServiceOrder(string title, string description, Guid vehicleId, Guid clientId)
-        :this()
+        : this()
     {
         Title = title;
         Description = description;
