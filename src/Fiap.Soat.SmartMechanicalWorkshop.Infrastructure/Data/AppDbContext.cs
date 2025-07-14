@@ -15,6 +15,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> dbContextOptions) : DbC
     public DbSet<Quote> Quotes { get; set; }
     public DbSet<QuoteAvailableService> QuoteServices { get; set; }
     public DbSet<QuoteSupply> QuoteSupplies { get; set; }
+    public DbSet<ServiceOrderEvent> EventLogs { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -28,6 +29,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> dbContextOptions) : DbC
         modelBuilder.ApplyConfiguration(new QuoteConfiguration());
         modelBuilder.ApplyConfiguration(new QuoteServiceConfiguration());
         modelBuilder.ApplyConfiguration(new QuoteSupplyConfiguration());
+        modelBuilder.ApplyConfiguration(new EventLogConfiguration());
     }
 
     // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

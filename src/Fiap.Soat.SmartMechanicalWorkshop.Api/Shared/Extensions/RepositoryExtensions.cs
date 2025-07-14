@@ -13,6 +13,7 @@ public static class RepositoryExtensions
         _ = serviceCollection.AddScoped<IVehicleRepository, VehicleRepository>();
         _ = serviceCollection.AddScoped<IPersonRepository, PersonRepository>();
         _ = serviceCollection.AddScoped<IQuoteRepository, QuoteRepository>();
+        _ = serviceCollection.AddScoped<IServiceOrderEventRepository, ServiceOrderEventRepository>();
 
         return serviceCollection;
     }

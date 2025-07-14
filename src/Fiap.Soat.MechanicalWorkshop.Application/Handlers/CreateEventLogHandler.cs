@@ -1,14 +1,11 @@
 using Fiap.Soat.MechanicalWorkshop.Application.Notifications;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.Interfaces;
 using MediatR;
-using Microsoft.Extensions.Logging;
 
 namespace Fiap.Soat.MechanicalWorkshop.Application.Handlers;
 
-public sealed class CreateEventLogHandler(ILogger<CreateEventLogHandler> logger) : INotificationHandler<ServiceOrderChangeStatusNotification>
+public sealed class CreateEventLogHandler(IServiceOrderEventService service) : INotificationHandler<ServiceOrderChangeStatusNotification>
 {
-    public Task Handle(ServiceOrderChangeStatusNotification notification, CancellationToken cancellationToken)
-    {
-        logger.LogInformation("Handling {@ServiceOrderChangeStatusNotification}", notification);
-        return Task.CompletedTask;
-    }
+    public Task Handle(ServiceOrderChangeStatusNotification notification, CancellationToken cancellationToken) =>
+        service.CreateAsync(notification.Id, notification.ServiceOrder.Status, cancellationToken);
 }

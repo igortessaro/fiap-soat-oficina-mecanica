@@ -41,6 +41,11 @@ public sealed class ServiceOrderConfiguration : IEntityTypeConfiguration<Service
             .HasForeignKey(x => x.VehicleId)
             .OnDelete(DeleteBehavior.Restrict);
 
+        builder.HasMany(x => x.Events)
+            .WithOne(x => x.ServiceOrder)
+            .HasForeignKey(x => x.ServiceOrderId)
+            .OnDelete(DeleteBehavior.Cascade);
+
         builder.HasMany(x => x.AvailableServices)
             .WithMany(x => x.ServiceOrders)
             .UsingEntity<Dictionary<string, object>>(
