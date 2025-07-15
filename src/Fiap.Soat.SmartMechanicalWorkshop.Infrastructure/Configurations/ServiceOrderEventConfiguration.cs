@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Configurations;
 
-public sealed class EventLogConfiguration : IEntityTypeConfiguration<ServiceOrderEvent>
+public sealed class ServiceOrderEventConfiguration : IEntityTypeConfiguration<ServiceOrderEvent>
 {
     public void Configure(EntityTypeBuilder<ServiceOrderEvent> builder)
     {

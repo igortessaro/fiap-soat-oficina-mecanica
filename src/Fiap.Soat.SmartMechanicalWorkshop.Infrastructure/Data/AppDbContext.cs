@@ -29,7 +29,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> dbContextOptions) : DbC
         modelBuilder.ApplyConfiguration(new QuoteConfiguration());
         modelBuilder.ApplyConfiguration(new QuoteServiceConfiguration());
         modelBuilder.ApplyConfiguration(new QuoteSupplyConfiguration());
-        modelBuilder.ApplyConfiguration(new EventLogConfiguration());
+        modelBuilder.ApplyConfiguration(new ServiceOrderEventConfiguration());
     }
 
     // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
