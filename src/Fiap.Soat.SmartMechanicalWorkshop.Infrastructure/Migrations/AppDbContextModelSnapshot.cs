@@ -188,13 +188,12 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ServiceOrderId")
-                        .IsUnique();
+                    b.HasIndex("ServiceOrderId");
 
                     b.ToTable("quotes", (string)null);
                 });
 
-            modelBuilder.Entity("Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities.QuoteService", b =>
+            modelBuilder.Entity("Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities.QuoteAvailableService", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -302,6 +301,38 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Migrations
                     b.HasIndex("VehicleId");
 
                     b.ToTable("service_orders", (string)null);
+                });
+
+            modelBuilder.Entity("Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities.ServiceOrderEvent", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("created_at");
+
+                    b.Property<Guid>("ServiceOrderId")
+                        .HasColumnType("char(36)")
+                        .HasColumnName("service_order_id");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)")
+                        .HasColumnName("status");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime(6)")
+                        .HasColumnName("updated_at");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ServiceOrderId");
+
+                    b.ToTable("service_order_events", (string)null);
                 });
 
             modelBuilder.Entity("Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities.Supply", b =>
@@ -459,15 +490,15 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Migrations
             modelBuilder.Entity("Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities.Quote", b =>
                 {
                     b.HasOne("Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities.ServiceOrder", "ServiceOrder")
-                        .WithOne()
-                        .HasForeignKey("Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities.Quote", "ServiceOrderId")
+                        .WithMany("Quotes")
+                        .HasForeignKey("ServiceOrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("ServiceOrder");
                 });
 
-            modelBuilder.Entity("Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities.QuoteService", b =>
+            modelBuilder.Entity("Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities.QuoteAvailableService", b =>
                 {
                     b.HasOne("Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities.Quote", "Quote")
                         .WithMany("Services")
@@ -522,6 +553,17 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Migrations
                     b.Navigation("Client");
 
                     b.Navigation("Vehicle");
+                });
+
+            modelBuilder.Entity("Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities.ServiceOrderEvent", b =>
+                {
+                    b.HasOne("Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities.ServiceOrder", "ServiceOrder")
+                        .WithMany("Events")
+                        .HasForeignKey("ServiceOrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ServiceOrder");
                 });
 
             modelBuilder.Entity("Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities.Vehicle", b =>
@@ -585,6 +627,13 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Migrations
                     b.Navigation("Services");
 
                     b.Navigation("Supplies");
+                });
+
+            modelBuilder.Entity("Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities.ServiceOrder", b =>
+                {
+                    b.Navigation("Events");
+
+                    b.Navigation("Quotes");
                 });
 #pragma warning restore 612, 618
         }

@@ -67,6 +67,7 @@ public sealed class ServiceOrdersController(IServiceOrderService service, IMedia
     public async Task<IActionResult> CreateAsync([FromBody][Required] CreateServiceOrderRequest request, CancellationToken cancellationToken)
     {
         var result = await service.CreateAsync(request, cancellationToken);
+        if (result.IsSuccess) await mediator.Publish(new ServiceOrderChangeStatusNotification(result.Data.Id, result.Data), cancellationToken);
         return result.ToActionResult();
     }
 

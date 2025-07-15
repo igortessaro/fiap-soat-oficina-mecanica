@@ -26,6 +26,8 @@ public class ServiceOrder : Entity
     public Person Client { get; private set; } = null!;
     public Vehicle Vehicle { get; private set; } = null!;
     public ICollection<AvailableService> AvailableServices { get; private set; } = [];
+    public ICollection<ServiceOrderEvent> Events { get; private set; } = [];
+    public ICollection<Quote> Quotes { get; private set; } = [];
 
     public ServiceOrder AddAvailableService(AvailableService availableService)
     {

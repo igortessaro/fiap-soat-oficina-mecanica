@@ -7,18 +7,19 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Shared.Extensions;
 
 public static class ServiceExtensions
 {
-    public static IServiceCollection AddServiceExtensions(this IServiceCollection iServiceCollection)
+    public static IServiceCollection AddServiceExtensions(this IServiceCollection serviceCollection)
     {
-        iServiceCollection.AddTransient<IVehicleService, VehicleService>();
-        iServiceCollection.AddTransient<ISupplyService, SupplyService>();
-        iServiceCollection.AddTransient<IAvailableService, AvailableServiceService>();
-        iServiceCollection.AddTransient<IPersonService, PersonService>();
-        iServiceCollection.AddTransient<IServiceOrderService, ServiceOrderService>();
-        iServiceCollection.AddSingleton<IEmailService, EmailService>();
-        iServiceCollection.AddSingleton<IEmailTemplateProvider, EmailTemplateProvider>();
-        iServiceCollection.AddTransient<IQuoteService, QuoteService>();
+        _ = serviceCollection.AddTransient<IVehicleService, VehicleService>();
+        _ = serviceCollection.AddTransient<ISupplyService, SupplyService>();
+        _ = serviceCollection.AddTransient<IAvailableService, AvailableServiceService>();
+        _ = serviceCollection.AddTransient<IPersonService, PersonService>();
+        _ = serviceCollection.AddTransient<IServiceOrderService, ServiceOrderService>();
+        _ = serviceCollection.AddSingleton<IEmailService, EmailService>();
+        _ = serviceCollection.AddSingleton<IEmailTemplateProvider, EmailTemplateProvider>();
+        _ = serviceCollection.AddTransient<IQuoteService, QuoteService>();
+        _ = serviceCollection.AddTransient<IServiceOrderEventService, ServiceOrderEventService>();
 
-        return iServiceCollection;
+        return serviceCollection;
 
     }
 }
