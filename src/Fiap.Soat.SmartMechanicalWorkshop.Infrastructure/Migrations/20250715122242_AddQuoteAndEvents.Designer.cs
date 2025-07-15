@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250714233932_AdjustServiceOrderQuoteRelationship")]
-    partial class AdjustServiceOrderQuoteRelationship
+    [Migration("20250715122242_AddQuoteAndEvents")]
+    partial class AddQuoteAndEvents
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
