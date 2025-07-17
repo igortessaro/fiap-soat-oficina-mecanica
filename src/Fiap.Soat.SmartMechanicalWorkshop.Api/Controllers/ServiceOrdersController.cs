@@ -33,8 +33,8 @@ public sealed class ServiceOrdersController(IServiceOrderService service, IMedia
         Summary = "Get a service order by id and person email",
         Description = "Returns a single service order by its unique identifier and the person's email address."
     )]
-    [ProducesResponseType(typeof(ServiceOrderDto), (int)HttpStatusCode.OK)]
-    [ProducesResponseType(typeof(ProblemDetails), (int)HttpStatusCode.NotFound)]
+    [ProducesResponseType(typeof(ServiceOrderDto), (int) HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.NotFound)]
     public async Task<IActionResult> GetOneByLoginAsync(
         [FromRoute][Required] Guid id,
         [FromQuery][Required] string email,
