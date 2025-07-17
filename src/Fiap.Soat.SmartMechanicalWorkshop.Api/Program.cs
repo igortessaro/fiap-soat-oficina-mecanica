@@ -21,23 +21,6 @@ _ = builder.Host.UseSerilog((context, services, configuration) => configuration
 _ = builder.Logging.ClearProviders();
 _ = builder.Services.AddControllers();
 _ = builder.Services.AddEndpointsApiExplorer();
-_ = builder.Services.AddSwaggerGen(options =>
-{
-    string[] xmlFiles = Directory.GetFiles(AppContext.BaseDirectory, "*.xml", SearchOption.TopDirectoryOnly);
-    foreach (string xmlFile in xmlFiles)
-    {
-        options.IncludeXmlComments(xmlFile, includeControllerXmlComments: true);
-    }
-
-    options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
-    {
-        Title = "SmartMechanicalWorkshop",
-        Version = "v1",
-        Description = "Veja a documentação no [ReDoc](/docs) <br> Repositorio do projeto: [GitHub](https://github.com/igortessaro/fiap-soat-oficina-mecanica)"
-    });
-});
-
-
 _ = builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
@@ -60,6 +43,8 @@ _ = builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(S
 _ = builder.Services.AddHttpContextAccessor();
 _ = builder.Services.AddHealthChecks();
 _ = builder.Services.AddRouting(options => options.LowercaseUrls = true);
+_ = builder.Services.AddAuthenticationExtension(builder.Configuration);
+_ = builder.Services.AddSwaggerExtension(builder.Configuration);
 
 var app = builder.Build();
 if (app.Environment.IsDevelopment())
@@ -101,5 +86,3 @@ finally
 {
     Log.CloseAndFlush();
 }
-
-

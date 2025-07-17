@@ -52,6 +52,8 @@ public sealed class PersonConfiguration : IEntityTypeConfiguration<Person>
             email.Property(a => a.Address)
                 .HasColumnName("email")
                 .HasColumnType("VARCHAR(255)");
+
+            email.HasIndex(a => a.Address).IsUnique();
         });
 
         builder.HasOne(c => c.Address)
@@ -64,6 +66,6 @@ public sealed class PersonConfiguration : IEntityTypeConfiguration<Person>
             .HasForeignKey(v => v.PersonId)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasIndex(x => x.Document).IsUnique();
+        builder.HasIndex(x => x.Document).IsUnique();      
     }
 }

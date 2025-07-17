@@ -14,4 +14,5 @@ public interface IServiceOrderService
     Task<Response<ServiceOrderDto>> ApproveOrderAsync(UpdateOneServiceOrderInput input, CancellationToken cancellationToken);
     Task<Response<ServiceOrderDto>> RejectOrderAsync(UpdateOneServiceOrderInput input, CancellationToken cancellationToken);
     Task<Response<ServiceOrderDto>> PatchAsync(UpdateOneServiceOrderInput input, CancellationToken cancellationToken);
+    Task<Response<ServiceOrderDto>> GetOneByLoginAsync(GetOnePersonByLoginInput getOnePersonByLoginInput, CancellationToken cancellationToken);
 }

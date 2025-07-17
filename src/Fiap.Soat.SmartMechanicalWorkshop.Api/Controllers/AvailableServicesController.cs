@@ -2,6 +2,7 @@ using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.AvailableServices;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.Interfaces;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
@@ -13,6 +14,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Controllers;
 /// Controller for managing available services in the Smart Mechanical Workshop API.
 /// </summary>
 [Route("api/v1/[controller]")]
+[Authorize]
 [ApiController]
 public class AvailableServicesController(IAvailableService service) : ControllerBase
 {
