@@ -1,3 +1,4 @@
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Auth;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Person;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 
@@ -10,4 +11,5 @@ public interface IPersonService
     Task<Response<PersonDto>> GetOneAsync(Guid id, CancellationToken cancellationToken);
     Task<Response<PersonDto>> UpdateAsync(UpdateOnePersonInput input, CancellationToken cancellationToken);
     Task<Response<Paginate<PersonDto>>> GetAllAsync(PaginatedRequest paginatedRequest, CancellationToken cancellationToken);
+    Task<Response<PersonDto>> GetOneByLoginAsync(LoginRequest loginRequest, CancellationToken cancellationToken);
 }

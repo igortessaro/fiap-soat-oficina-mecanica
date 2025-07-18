@@ -37,6 +37,7 @@ public sealed class Response<T>(Result<T> result, HttpStatusCode statusCode)
         => result.IsSuccess ?
             ResponseFactory.Ok(result.StatusCode) :
             ResponseFactory.Fail(result.Reasons.Select(x => x.Message).ToArray(), result.StatusCode);
+
 }
 
 // Versão não genérica para operações que não retornam valor

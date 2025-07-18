@@ -1,10 +1,12 @@
 using AutoMapper;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Auth;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Person;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Repositories;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.Interfaces;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
+using System.Threading;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Services;
 
@@ -60,5 +62,14 @@ public sealed class PersonService(IMapper mapper, IPersonRepository repository) 
         var response = await repository.GetAllAsync(paginatedRequest, cancellationToken);
         var mappedResponse = mapper.Map<Paginate<PersonDto>>(response);
         return ResponseFactory.Ok(mappedResponse);
+    }
+
+    public async Task<Response<PersonDto>> GetOneByLoginAsync(LoginRequest loginRequest, CancellationToken cancellationToken)
+    {
+        Person foundEntity = await repository.GetOneByLoginAsync(loginRequest, cancellationToken);
+
+        return foundEntity != null
+            ? ResponseFactory.Ok(mapper.Map<PersonDto>(foundEntity))
+            : ResponseFactory.Fail<PersonDto>(new FluentResults.Error("Person Not Found"), System.Net.HttpStatusCode.NotFound);
     }
 }

@@ -52,6 +52,8 @@ public sealed class PersonConfiguration : IEntityTypeConfiguration<Person>
             email.Property(a => a.Address)
                 .HasColumnName("email")
                 .HasColumnType("VARCHAR(255)");
+
+            email.HasIndex(a => a.Address).IsUnique();
         });
 
         builder.HasOne(c => c.Address)

@@ -72,6 +72,14 @@ public sealed class ServiceOrderService(
             : ResponseFactory.Fail<ServiceOrderDto>(new FluentResults.Error("Service Order Not Found"), System.Net.HttpStatusCode.NotFound);
     }
 
+    public async Task<Response<ServiceOrderDto>> GetOneByLoginAsync(GetOnePersonByLoginInput getOnePersonByLoginInput, CancellationToken cancellationToken)
+    {
+        ServiceOrder foundEntity = await repository.GetOneByLoginAsync(getOnePersonByLoginInput, cancellationToken);
+        return foundEntity != null
+            ? ResponseFactory.Ok(mapper.Map<ServiceOrderDto>(foundEntity))
+            : ResponseFactory.Fail<ServiceOrderDto>(new FluentResults.Error("Service Order Not Found"), System.Net.HttpStatusCode.NotFound);
+    }
+
     public async Task<Response<ServiceOrderDto>> UpdateAsync(UpdateOneServiceOrderInput input, CancellationToken cancellationToken)
     {
         var foundEntity = await repository.GetAsync(input.Id, cancellationToken);
@@ -186,4 +194,6 @@ public sealed class ServiceOrderService(
         _ = await repository.UpdateAsync(foundServiceOrder, cancellationToken);
         return ResponseFactory.Ok(mapper.Map<ServiceOrderDto>(await repository.GetDetailedAsync(input.Id, cancellationToken)));
     }
+
+
 }
