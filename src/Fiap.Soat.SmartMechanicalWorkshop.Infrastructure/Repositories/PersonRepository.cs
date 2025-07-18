@@ -13,6 +13,6 @@ public sealed class PersonRepository(AppDbContext appDbContext) : Repository<Per
 
     public async Task<Person> GetOneByLoginAsync(LoginRequest loginRequest, CancellationToken cancellationToken)
     {
-        return await Query(true).FirstOrDefaultAsync(item => item.Email.Address.Equals(loginRequest.Email));
+        return await Query(true).FirstOrDefaultAsync(item => item.Email.Address.Equals(loginRequest.Email), cancellationToken);
     }
 }
