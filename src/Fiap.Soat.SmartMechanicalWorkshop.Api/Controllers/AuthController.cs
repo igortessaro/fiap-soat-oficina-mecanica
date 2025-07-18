@@ -1,5 +1,5 @@
 using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared;
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.AvailableServices;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Auth;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.Interfaces;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 using Microsoft.AspNetCore.Mvc;

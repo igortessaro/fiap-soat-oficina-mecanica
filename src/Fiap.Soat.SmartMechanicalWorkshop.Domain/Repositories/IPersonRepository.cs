@@ -1,4 +1,4 @@
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.AvailableServices;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Auth;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Repositories;
