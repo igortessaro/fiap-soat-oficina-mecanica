@@ -2,6 +2,7 @@ using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Vehicles;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.Interfaces;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
@@ -14,6 +15,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Controllers;
 /// </summary>
 [Route("api/v1/[controller]")]
 [ApiController]
+[Authorize]
 [SwaggerTag("Operations related to vehicles.")]
 public class VehiclesController(IVehicleService vehicleService) : ControllerBase
 {

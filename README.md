@@ -49,3 +49,8 @@ Para mais informações, consulte
 
 ## Como rodar o MailHog
 Rode o docker-compose e acesse [http://localhost:8025](http://localhost:8025), onde você poderá visualizar todos os e-mails enviados pela aplicação em tempo real através de uma interface simples e intuitiva.
+
+## Autenticação obrigatória para todos os endpoints
+
+A partir de agora, todos os endpoints da aplicação — como /api/v1/auth/login e /api/v1/servicesorders/search — requerem autenticação para serem acessados. Para isso, você deve gerar um token JWT através do endpoint de login, informando o e-mail de uma pessoa cadastrada com o perfil "employee". Após obter o token, clique em "Authorize" no Swagger e insira o token conforme as instruções. Isso fará com que ele seja automaticamente incluído nos headers das requisições protegidas.
+Além disso, o endpoint de visualização de ordens de serviço por clientes exige dois parâmetros obrigatórios: o ID da ordem e o e-mail da pessoa cadastrada ou vinculada àquela ordem.
