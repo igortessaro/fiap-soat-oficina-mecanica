@@ -7,6 +7,12 @@ public class Person : Entity
 {
     private Person() { }
 
+    public Person(string fullname, string document, EPersonType personType, EEmployeeRole? employeeRole, string email, Phone phone, Address? address)
+    {
+        Address = new Address(string.Empty, string.Empty, string.Empty, string.Empty);
+        Update(fullname, document, personType, employeeRole, email, phone, address);
+    }
+
     public string Document { get; private set; } = string.Empty;
     public string Fullname { get; private set; } = string.Empty;
     public EPersonType PersonType { get; private set; }

@@ -6,7 +6,7 @@ using System.Net.Http.Headers;
 namespace Fiap.Soat.SmartMechanicalWorkshop.Integration.Tests.Tests.People;
 
 [TestCaseOrderer("Namespace.AlphabeticalOrderer", "AssemblyName")]
-public sealed class CreatePersonTest : CustomWebApplicationFactory<Program>
+public sealed class CreatePeopleTests : CustomWebApplicationFactory<Program>
 {
     private const string Endpoint = "/api/v1/people";
 
@@ -23,11 +23,10 @@ public sealed class CreatePersonTest : CustomWebApplicationFactory<Program>
             new CreatePhoneRequest("11", "912345678"),
             new CreateAddressRequest("Rua Exemplo", "São Paulo", "SP", "01234-567"));
         string personJson = Newtonsoft.Json.JsonConvert.SerializeObject(personToCreate);
-        var client = CreateClient();
         var content = new StringContent(personJson, MediaTypeHeaderValue.Parse("application/json"));
 
         // Act
-        var response = await client.PostAsync(Endpoint, content);
+        var response = await Client.PostAsync(Endpoint, content);
 
         // Assert
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);

@@ -1,35 +1,31 @@
+using Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc.Testing;
-using System.Data.Common;
+using Microsoft.EntityFrameworkCore;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Integration.Tests;
 
 public class CustomWebApplicationFactory<TProgram> : WebApplicationFactory<TProgram> where TProgram : class
 {
+    protected readonly HttpClient Client;
+
+    protected CustomWebApplicationFactory()
+    {
+        Client = CreateClient();
+    }
+
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.ConfigureServices(services =>
         {
-            // var dbContextDescriptor = services.SingleOrDefault(d => d.ServiceType == typeof(IDbContextOptionsConfiguration<ApplicationDbContext>));
-            // services.Remove(dbContextDescriptor);
-            // var dbConnectionDescriptor = services.SingleOrDefault(d => d.ServiceType == typeof(DbConnection));
-            // services.Remove(dbConnectionDescriptor);
-            //
-            // // Create open SqliteConnection so EF won't automatically close it.
-            // services.AddSingleton<DbConnection>(container =>
-            // {
-            //     var connection = new SqliteConnection("DataSource=:memory:");
-            //     connection.Open();
-            //
-            //     return connection;
-            // });
-            //
-            // services.AddDbContext<ApplicationDbContext>((container, options) =>
-            // {
-            //     var connection = container.GetRequiredService<DbConnection>();
-            //     options.UseSqlite(connection);
-            // });
+            var descriptor = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<AppDbContext>));
+            if (descriptor != null) services.Remove(descriptor);
+
+            services.AddDbContext<AppDbContext>(options =>
+            {
+                options.UseInMemoryDatabase("TestDb");
+            });
         });
 
-        builder.UseEnvironment("Development");
+        builder.UseEnvironment("IntegrationTest");
     }
 }
