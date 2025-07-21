@@ -9,6 +9,6 @@ public sealed class Response<T>
 
 public sealed class Reason
 {
-    public string Message { get; set; }
-    public Dictionary<string, object> Metadata { get; set; }
+    public string Message { get; set; } = string.Empty;
+    public Dictionary<string, object> Metadata { get; set; } = new Dictionary<string, object>();
 }
