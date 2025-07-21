@@ -5,7 +5,6 @@ using System.Net.Http.Headers;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Integration.Tests.Tests.People;
 
-[TestCaseOrderer("Namespace.AlphabeticalOrderer", "AssemblyName")]
 public sealed class CreatePeopleTests : CustomWebApplicationFactory<Program>
 {
     private const string Endpoint = "/api/v1/people";

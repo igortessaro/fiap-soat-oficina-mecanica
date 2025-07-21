@@ -6,7 +6,6 @@ using System.Net;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Integration.Tests.Tests.ServiceOrders;
 
-[TestCaseOrderer("Namespace.AlphabeticalOrderer", "AssemblyName")]
 public sealed class GetServiceOrdersTests : CustomWebApplicationFactory<Program>
 {
     private const string Endpoint = "/api/v1/serviceorders";

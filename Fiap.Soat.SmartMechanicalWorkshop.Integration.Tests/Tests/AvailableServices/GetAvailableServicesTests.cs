@@ -4,7 +4,6 @@ using System.Net;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Integration.Tests.Tests.AvailableServices;
 
-[TestCaseOrderer("Namespace.AlphabeticalOrderer", "AssemblyName")]
 public sealed class GetAvailableServicesTests : CustomWebApplicationFactory<Program>
 {
     private const string Endpoint = "/api/v1/availableservices";

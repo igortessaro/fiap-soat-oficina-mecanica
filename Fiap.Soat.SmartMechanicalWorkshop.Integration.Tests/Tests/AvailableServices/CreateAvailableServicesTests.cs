@@ -6,7 +6,6 @@ using System.Net.Http.Headers;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Integration.Tests.Tests.AvailableServices;
 
-[TestCaseOrderer("Namespace.AlphabeticalOrderer", "AssemblyName")]
 public sealed class CreateAvailableServicesTests : CustomWebApplicationFactory<Program>
 {
     private const string Endpoint = "/api/v1/availableservices";

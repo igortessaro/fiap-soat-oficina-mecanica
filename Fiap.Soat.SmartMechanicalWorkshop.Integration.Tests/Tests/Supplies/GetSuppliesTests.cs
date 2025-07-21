@@ -4,7 +4,6 @@ using System.Net;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Integration.Tests.Tests.Supplies;
 
-[TestCaseOrderer("Namespace.AlphabeticalOrderer", "AssemblyName")]
 public class GetSuppliesTests : CustomWebApplicationFactory<Program>
 {
     private const string Endpoint = "/api/v1/supplies";
