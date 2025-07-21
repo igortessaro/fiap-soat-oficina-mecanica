@@ -26,7 +26,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{18B86828
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiap.Soat.SmartMechanicalWorkshop.Domain.Tests", "tests\Fiap.Soat.SmartMechanicalWorkshop.Domain.Tests\Fiap.Soat.SmartMechanicalWorkshop.Domain.Tests.csproj", "{A32FE7F8-74B9-475B-A4FA-C4BCCA4C0AED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiap.Soat.SmartMechanicalWorkshop.Integration.Tests", "Fiap.Soat.SmartMechanicalWorkshop.Integration.Tests\Fiap.Soat.SmartMechanicalWorkshop.Integration.Tests.csproj", "{D160A1FA-B3DD-48F9-8E7A-681D85243347}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiap.Soat.SmartMechanicalWorkshop.Integration.Tests", "tests\Fiap.Soat.SmartMechanicalWorkshop.Integration.Tests\Fiap.Soat.SmartMechanicalWorkshop.Integration.Tests.csproj", "{D160A1FA-B3DD-48F9-8E7A-681D85243347}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

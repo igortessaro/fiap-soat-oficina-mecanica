@@ -22,7 +22,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\src\Fiap.Soat.SmartMechanicalWorkshop.Api\Fiap.Soat.SmartMechanicalWorkshop.Api.csproj" />
+      <ProjectReference Include="..\..\src\Fiap.Soat.SmartMechanicalWorkshop.Api\Fiap.Soat.SmartMechanicalWorkshop.Api.csproj" />
     </ItemGroup>
 
 </Project>
