@@ -8,8 +8,8 @@ public static class PeopleHelper
     private static readonly List<Person> People =
     [
         new Person(
-            "12345678901",
             "John Doe",
+            "12345678901",
             EPersonType.Client,
             null,
             "john.doe@example.com",
@@ -17,8 +17,8 @@ public static class PeopleHelper
             new Address("Street 1", "City", "State", "12345-678")
         ),
         new Person(
-            "98765432100",
             "Jane Smith",
+            "98765432100",
             EPersonType.Employee,
             EEmployeeRole.Mechanic,
             "jane.smith@example.com",
