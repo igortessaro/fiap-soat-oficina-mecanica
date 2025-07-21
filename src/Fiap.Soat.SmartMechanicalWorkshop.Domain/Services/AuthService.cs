@@ -10,7 +10,8 @@ using System.Security.Claims;
 using System.Text;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Services;
-public class AuthService(IConfiguration config, IPersonService personService) : IAuthService
+
+public sealed class AuthService(IConfiguration config, IPersonService personService) : IAuthService
 {
     private string GenerateJwtToken(PersonDto person)
     {

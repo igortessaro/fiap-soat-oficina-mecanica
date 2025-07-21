@@ -139,49 +139,6 @@ public sealed class ServiceOrderService(
             : ResponseFactory.Fail(new FluentResults.Error("Not possible to send email"), System.Net.HttpStatusCode.InternalServerError);
     }
 
-    public async Task<Response<ServiceOrderDto>> ApproveOrderAsync(UpdateOneServiceOrderInput input, CancellationToken cancellationToken)
-    {
-        var foundServiceOrder = await repository.GetAsync(input.Id, cancellationToken);
-        if (foundServiceOrder is null)
-        {
-            return ResponseFactory.Fail<ServiceOrderDto>(new FluentResults.Error("Service Order not found"), System.Net.HttpStatusCode.NotFound);
-        }
-
-        if (foundServiceOrder.Status != EServiceOrderStatus.WaitingApproval)
-        {
-            logger.LogWarning($"Service Order with ID {input.Id} is not in WaitingApproval status, current status: {foundServiceOrder.Status}");
-            return ResponseFactory.Fail<ServiceOrderDto>(
-                new FluentResults.Error($"Service Order with ID {input.Id} is not in WaitingApproval status, current status: {foundServiceOrder.Status}"),
-                System.Net.HttpStatusCode.NotAcceptable
-            );
-        }
-
-        return await UpdateAsync(
-            new UpdateOneServiceOrderInput(input.Id, input.ServiceIds, input.Title, input.Description, EServiceOrderStatus.InProgress), cancellationToken);
-    }
-
-    public async Task<Response<ServiceOrderDto>> RejectOrderAsync(UpdateOneServiceOrderInput input, CancellationToken cancellationToken)
-    {
-        var foundServiceOrder = await repository.GetAsync(input.Id, cancellationToken);
-        if (foundServiceOrder is null)
-        {
-            return ResponseFactory.Fail<ServiceOrderDto>(new FluentResults.Error("Service Order not found"), System.Net.HttpStatusCode.NotFound);
-        }
-
-        if (foundServiceOrder.Status != EServiceOrderStatus.WaitingApproval)
-        {
-            string logMessage = $"You can only change status if Service Order were in WaitingApproval status, current status: {foundServiceOrder.Status}";
-            logger.LogWarning(logMessage);
-            return ResponseFactory.Fail<ServiceOrderDto>(
-                new FluentResults.Error(logMessage),
-                System.Net.HttpStatusCode.NotAcceptable
-            );
-        }
-
-        return await UpdateAsync(new UpdateOneServiceOrderInput(input.Id, input.ServiceIds, input.Title, input.Description, EServiceOrderStatus.Rejected),
-            cancellationToken);
-    }
-
     public async Task<Response<ServiceOrderDto>> PatchAsync(UpdateOneServiceOrderInput input, CancellationToken cancellationToken)
     {
         var foundServiceOrder = await repository.GetByIdAsync(input.Id, cancellationToken);
