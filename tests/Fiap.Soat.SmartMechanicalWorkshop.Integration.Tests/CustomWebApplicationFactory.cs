@@ -17,7 +17,8 @@ public class CustomWebApplicationFactory<TProgram> : WebApplicationFactory<TProg
     protected CustomWebApplicationFactory()
     {
         Client = CreateClient();
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("your-very-secure-and-long-key-1234567890"));
+        var jwtSigningKey = Environment.GetEnvironmentVariable("JWT_SIGNING_KEY") ?? "default-test-key-1234567890";
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSigningKey));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(

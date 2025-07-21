@@ -36,6 +36,5 @@ public sealed class GetAvailableServicesTests : CustomWebApplicationFactory<Prog
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        // await Cleanup(dbContext);
     }
 }

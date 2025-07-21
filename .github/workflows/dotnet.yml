@@ -37,4 +37,4 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Run integration tests
-      run: dotnet test Fiap.Soat.SmartMechanicalWorkshop.Integration.Tests/Fiap.Soat.SmartMechanicalWorkshop.Integration.Tests.csproj
+      run: dotnet test tests/Fiap.Soat.SmartMechanicalWorkshop.Integration.Tests/Fiap.Soat.SmartMechanicalWorkshop.Integration.Tests.csproj
