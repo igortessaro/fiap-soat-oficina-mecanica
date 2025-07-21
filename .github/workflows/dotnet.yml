@@ -23,6 +23,8 @@ jobs:
         PATH: ${{ runner.tool_cache }}/dotnet:$PATH
     - name: Build
       run: dotnet build --no-restore
+    - name: Unit Tests
+      run: dotnet test tests/Fiap.Soat.SmartMechanicalWorkshop.Domain.Tests/Fiap.Soat.SmartMechanicalWorkshop.Domain.Tests.csproj
 
   integration-tests:
     if: github.event_name == 'pull_request'
