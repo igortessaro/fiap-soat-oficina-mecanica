@@ -8,9 +8,7 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v4
     - name: Setup .NET
@@ -25,3 +23,18 @@ jobs:
         PATH: ${{ runner.tool_cache }}/dotnet:$PATH
     - name: Build
       run: dotnet build --no-restore
+
+  integration-tests:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 9.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Run integration tests
+      run: dotnet test tests/Fiap.Soat.SmartMechanicalWorkshop.Integration.Tests/Fiap.Soat.SmartMechanicalWorkshop.Integration.Tests.csproj

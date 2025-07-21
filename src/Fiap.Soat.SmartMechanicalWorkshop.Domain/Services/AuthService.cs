@@ -15,20 +15,20 @@ public class AuthService(IConfiguration config, IPersonService personService) : 
     private string GenerateJwtToken(PersonDto person)
     {
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"]));
-        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+        var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(
             issuer: config["Jwt:Issuer"],
             audience: null,
-            claims: new[]
-            {
-                new System.Security.Claims.Claim(ClaimTypes.Name, person.Fullname),
-                 new System.Security.Claims.Claim(ClaimTypes.Email, person.Email.Address),
-                  new System.Security.Claims.Claim("PersonType", person.PersonType.ToString()),
-                new System.Security.Claims.Claim(ClaimTypes.Role, person.EmployeeRole.ToString())
-            },
+            claims:
+            [
+                new Claim(ClaimTypes.Name, person.Fullname),
+                new Claim(ClaimTypes.Email, person.Email.Address),
+                new Claim("PersonType", person.PersonType.ToString()),
+                new Claim(ClaimTypes.Role, person.EmployeeRole.ToString())
+            ],
             expires: DateTime.UtcNow.AddHours(1),
-            signingCredentials: creds
+            signingCredentials: credentials
         );
 
         return new JwtSecurityTokenHandler().WriteToken(token);
@@ -38,7 +38,7 @@ public class AuthService(IConfiguration config, IPersonService personService) : 
     {
         var response = await personService.GetOneByLoginAsync(loginRequest, cancellationToken);
 
-        if (response == null || !response.IsSuccess)
+        if (response is not { IsSuccess: true })
         {
             return ResponseFactory.Fail<string>(new FluentResults.Error("Invalid login credentials"), HttpStatusCode.Unauthorized);
         }

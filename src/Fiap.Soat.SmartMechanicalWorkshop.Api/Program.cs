@@ -8,13 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using Serilog;
 using System.Text.Json.Serialization;
 
-Log.Logger = new LoggerConfiguration()
-    .WriteTo.Console()
-    .CreateBootstrapLogger();
-
 var builder = WebApplication.CreateBuilder(args);
 
-_ = builder.Host.UseSerilog((context, services, configuration) => configuration
+_ = builder.Host.UseSerilog((context, configuration) => configuration
         .ReadFrom.Configuration(context.Configuration)
         .Enrich.FromLogContext());
 
@@ -73,16 +69,6 @@ _ = app.UseHttpsRedirection();
 _ = app.UseAuthorization();
 _ = app.MapControllers();
 
-try
-{
-    Log.Information("Starting up...");
-    await app.RunAsync();
-}
-catch (Exception ex)
-{
-    Log.Fatal(ex, "Application failed to start");
-}
-finally
-{
-    Log.CloseAndFlush();
-}
+await app.RunAsync();
+
+public partial class Program { }

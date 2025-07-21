@@ -4,7 +4,6 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Shared.Extensions
     {
         public static IServiceCollection AddSwaggerExtension(this IServiceCollection services, IConfiguration configuration)
         {
-
             services.AddSwaggerGen(options =>
             {
                 var xmlFiles = Directory.GetFiles(AppContext.BaseDirectory, "*.xml", SearchOption.TopDirectoryOnly);
@@ -28,24 +27,21 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Shared.Extensions
                     In = Microsoft.OpenApi.Models.ParameterLocation.Header,
                     Description = "Insira o token JWT no formato: Bearer {seu token}"
                 });
-
                 options.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
-    {
-        {
-            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
-            {
-                Reference = new Microsoft.OpenApi.Models.OpenApiReference
                 {
-                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            new string[] {}
-        }
-    });
+                    {
+                        new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+                        {
+                            Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                            {
+                                Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        []
+                    }
+                });
             });
-
-
             return services;
         }
     }
