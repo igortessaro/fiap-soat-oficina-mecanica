@@ -123,17 +123,13 @@ public sealed class ServiceOrderService(
     public async Task<Response> SendForApprovalAsync(SendServiceOrderApprovalRequest request, CancellationToken cancellationToken)
     {
         var foundEntity = await repository.GetDetailedAsync(request.Id, cancellationToken);
-
-
         if (foundEntity is null)
         {
             return ResponseFactory.Fail(new FluentResults.Error("Service Order Not Found"), System.Net.HttpStatusCode.NotFound);
         }
 
-
         string html = emailTemplateProvider.GetTemplate(foundEntity);
-
-        bool response = await emailService.SendEmailAsync(foundEntity.Client.Email.Address, "Envio de orçamento de serviço(s)", html);
+        bool response = await emailService.SendEmailAsync(foundEntity.Client.Email, "Envio de orçamento de serviço(s)", html);
         return response
             ? ResponseFactory.Ok(HttpStatusCode.Accepted)
             : ResponseFactory.Fail(new FluentResults.Error("Not possible to send email"), System.Net.HttpStatusCode.InternalServerError);

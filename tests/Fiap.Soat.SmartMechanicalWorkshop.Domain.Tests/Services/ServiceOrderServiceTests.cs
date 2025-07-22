@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using System.Linq.Expressions;
 using System.Net;
+using System.Net.Mail;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Tests.Services;
 
@@ -182,7 +183,7 @@ public sealed class ServiceOrderServiceTests
         var input = _fixture.Build<UpdateOneServiceOrderInput>()
             .With(x => x.ServiceIds, [Guid.NewGuid()])
             .Create();
-        var entity = new Mock<ServiceOrder>() { CallBase = true }.Object;
+        var entity = _fixture.Create<ServiceOrder>();
         _repositoryMock.Setup(r => r.GetAsync(input.Id, It.IsAny<CancellationToken>())).ReturnsAsync(entity);
         _availableServiceRepositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync((AvailableService?) null);
 
@@ -199,7 +200,7 @@ public sealed class ServiceOrderServiceTests
         var input = _fixture.Build<UpdateOneServiceOrderInput>()
             .With(x => x.ServiceIds, [serviceId])
             .Create();
-        var entity = new Mock<ServiceOrder>() { CallBase = true }.Object;
+        var entity = _fixture.Create<ServiceOrder>();
         var availableService = _fixture.Create<AvailableService>();
         var updatedEntity = _fixture.Create<ServiceOrder>();
         var dto = _fixture.Create<ServiceOrderDto>();
@@ -248,6 +249,7 @@ public sealed class ServiceOrderServiceTests
     {
         var request = _fixture.Create<SendServiceOrderApprovalRequest>();
         var entity = _fixture.Create<ServiceOrder>();
+        entity.GetType().GetProperty("Client")!.SetValue(entity, _fixture.Create<Person>());
         _repositoryMock.Setup(r => r.GetDetailedAsync(request.Id, It.IsAny<CancellationToken>())).ReturnsAsync(entity);
         _emailTemplateProviderMock.Setup(e => e.GetTemplate(entity)).Returns("html");
         _emailServiceMock.Setup(e => e.SendEmailAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(true);
@@ -263,6 +265,7 @@ public sealed class ServiceOrderServiceTests
     {
         var request = _fixture.Create<SendServiceOrderApprovalRequest>();
         var entity = _fixture.Create<ServiceOrder>();
+        entity.GetType().GetProperty("Client")!.SetValue(entity, _fixture.Create<Person>());
         _repositoryMock.Setup(r => r.GetDetailedAsync(request.Id, It.IsAny<CancellationToken>())).ReturnsAsync(entity);
         _emailTemplateProviderMock.Setup(e => e.GetTemplate(entity)).Returns("html");
         _emailServiceMock.Setup(e => e.SendEmailAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(false);
