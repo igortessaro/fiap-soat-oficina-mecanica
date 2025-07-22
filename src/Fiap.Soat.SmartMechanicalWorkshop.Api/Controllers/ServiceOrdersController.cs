@@ -168,46 +168,6 @@ public sealed class ServiceOrdersController(IServiceOrderService service, IMedia
         return result.ToActionResult();
     }
 
-    /// <summary>
-    /// Approves a service order via approval link.
-    /// </summary>
-    /// <param name="id">Service order unique identifier.</param>
-    /// <param name="cancellationToken">Cancellation token.</param>
-    [HttpPost("{id:guid}/approve")]
-    [SwaggerOperation(
-        Summary = "Approve a service order via email link",
-        Description = "Approves the service order by updating its status when accessed from an e-mail approval link."
-    )]
-    [ProducesResponseType((int) HttpStatusCode.OK)]
-    [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.NotFound)]
-    public async Task<IActionResult> ApproveAsync([FromRoute, Required] Guid id, CancellationToken cancellationToken)
-    {
-        UpdateOneServiceOrderInput input = new(id);
-
-        var result = await service.ApproveOrderAsync(input, cancellationToken);
-        return result.ToActionResult();
-    }
-
-    /// <summary>
-    /// Rejects a service order via rejection link.
-    /// </summary>
-    /// <param name="id">Service order unique identifier.</param>
-    /// <param name="cancellationToken">Cancellation token.</param>
-    [HttpPost("{id:guid}/reject")]
-    [SwaggerOperation(
-        Summary = "Reject a service order via email link",
-        Description = "Rejects the service order by updating its status when accessed from an e-mail rejection link."
-    )]
-    [ProducesResponseType((int) HttpStatusCode.OK)]
-    [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.NotFound)]
-    public async Task<IActionResult> RejectAsync([FromRoute, Required] Guid id, CancellationToken cancellationToken)
-    {
-        UpdateOneServiceOrderInput input = new(id);
-
-        var result = await service.RejectOrderAsync(input, cancellationToken);
-        return result.ToActionResult();
-    }
-
     [HttpPatch("{id:guid}")]
     [SwaggerOperation(Summary = "Patch a service order", Description = "Updates an existing service order by its unique identifier with partial data.")]
     [ProducesResponseType(typeof(ServiceOrderDto), (int) HttpStatusCode.OK)]

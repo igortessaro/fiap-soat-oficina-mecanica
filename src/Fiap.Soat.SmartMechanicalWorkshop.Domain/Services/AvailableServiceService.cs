@@ -8,7 +8,7 @@ using FluentResults;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Services;
 
-public class AvailableServiceService(
+public sealed class AvailableServiceService(
     IMapper mapper,
     IAvailableServiceRepository repository,
     ISupplyRepository supplyRepository

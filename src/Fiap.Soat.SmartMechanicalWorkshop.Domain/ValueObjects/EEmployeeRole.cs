@@ -6,5 +6,4 @@ public enum EEmployeeRole
     VehicleInspector,
     TireAndAlignmentTechnician,
     Detailer
-
 }
