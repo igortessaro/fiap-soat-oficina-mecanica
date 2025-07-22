@@ -68,7 +68,7 @@ public sealed class PersonServiceTests
     {
         // Arrange
         var id = Guid.NewGuid();
-        _repositoryMock.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync((Person?)null);
+        _repositoryMock.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync((Person?) null);
 
         // Act
         var result = await _service.DeleteAsync(id, CancellationToken.None);
@@ -101,7 +101,7 @@ public sealed class PersonServiceTests
     {
         // Arrange
         var id = Guid.NewGuid();
-        _repositoryMock.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync((Person?)null);
+        _repositoryMock.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync((Person?) null);
 
         // Act
         var result = await _service.GetOneAsync(id, CancellationToken.None);
@@ -142,7 +142,7 @@ public sealed class PersonServiceTests
     {
         // Arrange
         var input = _fixture.Create<UpdateOnePersonInput>();
-        _repositoryMock.Setup(r => r.GetAsync(input.Id, It.IsAny<CancellationToken>())).ReturnsAsync((Person?)null);
+        _repositoryMock.Setup(r => r.GetAsync(input.Id, It.IsAny<CancellationToken>())).ReturnsAsync((Person?) null);
 
         // Act
         var result = await _service.UpdateAsync(input, CancellationToken.None);
@@ -195,7 +195,7 @@ public sealed class PersonServiceTests
     {
         // Arrange
         var loginRequest = _fixture.Create<LoginRequest>();
-        _repositoryMock.Setup(r => r.GetOneByLoginAsync(loginRequest, It.IsAny<CancellationToken>())).ReturnsAsync((Person)null!);
+        _repositoryMock.Setup(r => r.GetOneByLoginAsync(loginRequest, It.IsAny<CancellationToken>())).ReturnsAsync((Person) null!);
 
         // Act
         var result = await _service.GetOneByLoginAsync(loginRequest, CancellationToken.None);

@@ -6,8 +6,8 @@ using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.Interfaces;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 using FluentAssertions;
-using Moq;
 using Microsoft.Extensions.Configuration;
+using Moq;
 using System.Net;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Tests.Services;

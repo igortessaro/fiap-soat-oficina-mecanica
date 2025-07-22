@@ -81,7 +81,7 @@ public sealed class ServiceOrderServiceTests
         _mapperMock.Setup(m => m.Map<ServiceOrder>(request)).Returns(entity);
         _personRepositoryMock.Setup(r => r.AnyAsync(It.IsAny<Expression<Func<Person, bool>>>(), It.IsAny<CancellationToken>())).ReturnsAsync(true);
         _vehicleRepositoryMock.Setup(r => r.AnyAsync(It.IsAny<Expression<Func<Vehicle, bool>>>(), It.IsAny<CancellationToken>())).ReturnsAsync(true);
-        _availableServiceRepositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync((AvailableService?)null);
+        _availableServiceRepositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync((AvailableService?) null);
 
         var result = await _service.CreateAsync(request, CancellationToken.None);
 
@@ -129,7 +129,7 @@ public sealed class ServiceOrderServiceTests
     public async Task DeleteAsync_ShouldReturnNotFound_WhenNotFound()
     {
         var id = Guid.NewGuid();
-        _repositoryMock.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync((ServiceOrder?)null);
+        _repositoryMock.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync((ServiceOrder?) null);
 
         var result = await _service.DeleteAsync(id, CancellationToken.None);
 
@@ -156,7 +156,7 @@ public sealed class ServiceOrderServiceTests
     public async Task GetOneAsync_ShouldReturnNotFound_WhenNotFound()
     {
         var id = Guid.NewGuid();
-        _repositoryMock.Setup(r => r.GetDetailedAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync((ServiceOrder?)null);
+        _repositoryMock.Setup(r => r.GetDetailedAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync((ServiceOrder?) null);
 
         var result = await _service.GetOneAsync(id, CancellationToken.None);
 
@@ -168,7 +168,7 @@ public sealed class ServiceOrderServiceTests
     public async Task UpdateAsync_ShouldReturnNotFound_WhenNotFound()
     {
         var input = _fixture.Create<UpdateOneServiceOrderInput>();
-        _repositoryMock.Setup(r => r.GetAsync(input.Id, It.IsAny<CancellationToken>())).ReturnsAsync((ServiceOrder?)null);
+        _repositoryMock.Setup(r => r.GetAsync(input.Id, It.IsAny<CancellationToken>())).ReturnsAsync((ServiceOrder?) null);
 
         var result = await _service.UpdateAsync(input, CancellationToken.None);
 
@@ -184,7 +184,7 @@ public sealed class ServiceOrderServiceTests
             .Create();
         var entity = new Mock<ServiceOrder>() { CallBase = true }.Object;
         _repositoryMock.Setup(r => r.GetAsync(input.Id, It.IsAny<CancellationToken>())).ReturnsAsync(entity);
-        _availableServiceRepositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync((AvailableService?)null);
+        _availableServiceRepositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync((AvailableService?) null);
 
         var result = await _service.UpdateAsync(input, CancellationToken.None);
 
@@ -235,7 +235,7 @@ public sealed class ServiceOrderServiceTests
     public async Task SendForApprovalAsync_ShouldReturnNotFound_WhenNotFound()
     {
         var request = _fixture.Create<SendServiceOrderApprovalRequest>();
-        _repositoryMock.Setup(r => r.GetDetailedAsync(request.Id, It.IsAny<CancellationToken>())).ReturnsAsync((ServiceOrder?)null);
+        _repositoryMock.Setup(r => r.GetDetailedAsync(request.Id, It.IsAny<CancellationToken>())).ReturnsAsync((ServiceOrder?) null);
 
         var result = await _service.SendForApprovalAsync(request, CancellationToken.None);
 
@@ -277,7 +277,7 @@ public sealed class ServiceOrderServiceTests
     public async Task PatchAsync_ShouldReturnNotFound_WhenNotFound()
     {
         var input = _fixture.Create<UpdateOneServiceOrderInput>();
-        _repositoryMock.Setup(r => r.GetByIdAsync(input.Id, It.IsAny<CancellationToken>())).ReturnsAsync((ServiceOrder?)null);
+        _repositoryMock.Setup(r => r.GetByIdAsync(input.Id, It.IsAny<CancellationToken>())).ReturnsAsync((ServiceOrder?) null);
 
         var result = await _service.PatchAsync(input, CancellationToken.None);
 

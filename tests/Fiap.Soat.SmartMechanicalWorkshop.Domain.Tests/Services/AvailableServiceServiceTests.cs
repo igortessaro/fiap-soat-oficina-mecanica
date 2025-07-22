@@ -57,7 +57,7 @@ public sealed class AvailableServiceServiceTests
         var entity = _fixture.Create<AvailableService>();
 
         _mapperMock.Setup(m => m.Map<AvailableService>(request)).Returns(entity);
-        _supplyRepositoryMock.Setup(s => s.GetByIdAsync(supplyId, It.IsAny<CancellationToken>())).ReturnsAsync((Supply?)null);
+        _supplyRepositoryMock.Setup(s => s.GetByIdAsync(supplyId, It.IsAny<CancellationToken>())).ReturnsAsync((Supply?) null);
 
         // Act
         var result = await _service.CreateAsync(request, CancellationToken.None);
@@ -112,7 +112,7 @@ public sealed class AvailableServiceServiceTests
     {
         // Arrange
         var id = Guid.NewGuid();
-        _repositoryMock.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync((AvailableService?)null);
+        _repositoryMock.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync((AvailableService?) null);
 
         // Act
         var result = await _service.DeleteAsync(id, CancellationToken.None);
@@ -165,7 +165,7 @@ public sealed class AvailableServiceServiceTests
     {
         // Arrange
         var id = Guid.NewGuid();
-        _repositoryMock.Setup(r => r.GetAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync((AvailableService?)null);
+        _repositoryMock.Setup(r => r.GetAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync((AvailableService?) null);
 
         // Act
         var result = await _service.GetOneAsync(id, CancellationToken.None);
@@ -180,7 +180,7 @@ public sealed class AvailableServiceServiceTests
     {
         // Arrange
         var input = _fixture.Create<UpdateOneAvailableServiceInput>();
-        _repositoryMock.Setup(r => r.GetAsync(input.Id, It.IsAny<CancellationToken>())).ReturnsAsync((AvailableService?)null);
+        _repositoryMock.Setup(r => r.GetAsync(input.Id, It.IsAny<CancellationToken>())).ReturnsAsync((AvailableService?) null);
 
         // Act
         var result = await _service.UpdateAsync(input, CancellationToken.None);
@@ -199,7 +199,7 @@ public sealed class AvailableServiceServiceTests
             .Create();
         var entity = _fixture.Create<AvailableService>();
         _repositoryMock.Setup(r => r.GetAsync(input.Id, It.IsAny<CancellationToken>())).ReturnsAsync(entity);
-        _supplyRepositoryMock.Setup(s => s.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync((Supply?)null);
+        _supplyRepositoryMock.Setup(s => s.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync((Supply?) null);
 
         // Act
         var result = await _service.UpdateAsync(input, CancellationToken.None);
