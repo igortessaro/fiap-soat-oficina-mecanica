@@ -2,7 +2,7 @@ using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Person;
 
-public record UpdateOnePersonInput(Guid Id, string Fullname, string Document, EPersonType PersonType, EEmployeeRole? EmployeeRole, string Email, UpdateOnePhoneInput? Phone, UpdateOneAddressInput? Address);
+public record UpdateOnePersonInput(Guid Id, string Fullname, string Document, EPersonType PersonType, EEmployeeRole? EmployeeRole, string Email,string Password, UpdateOnePhoneInput? Phone, UpdateOneAddressInput? Address);
 
 public record UpdateOnePhoneInput(string AreaCode, string Number)
 {
