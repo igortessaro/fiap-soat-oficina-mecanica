@@ -7,9 +7,11 @@ using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Vehicles;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Shared.Mappings;
 
+[ExcludeFromCodeCoverage]
 public class AutoMapperProfiles : Profile
 {
     public AutoMapperProfiles()

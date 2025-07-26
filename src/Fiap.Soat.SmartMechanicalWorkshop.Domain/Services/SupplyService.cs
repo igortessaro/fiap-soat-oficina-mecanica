@@ -8,7 +8,7 @@ using System.Net;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Services;
 
-public class SupplyService(ISupplyRepository repository, IMapper mapper) : ISupplyService
+public sealed class SupplyService(ISupplyRepository repository, IMapper mapper) : ISupplyService
 {
     public async Task<Response<SupplyDto>> CreateAsync(CreateNewSupplyRequest request, CancellationToken cancellationToken)
     {

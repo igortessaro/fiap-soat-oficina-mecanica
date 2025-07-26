@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Services;
 
-public class VehicleService(IVehicleRepository repository, IPersonRepository personRepository, IMapper mapper) : IVehicleService
+public sealed class VehicleService(IVehicleRepository repository, IPersonRepository personRepository, IMapper mapper) : IVehicleService
 {
     public async Task<Response<VehicleDto>> CreateAsync(CreateNewVehicleRequest request, CancellationToken cancellationToken)
     {
