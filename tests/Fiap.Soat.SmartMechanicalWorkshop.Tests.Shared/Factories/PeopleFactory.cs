@@ -16,7 +16,7 @@ public static class PeopleFactory
         var faker = new Faker("pt_BR");
         return new Person(
             faker.Name.FullName(),
-            "",
+            faker.Random.Replace("###.###.###-##"),
             personType,
             employeeRole,
             faker.Internet.Email(),
