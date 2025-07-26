@@ -17,8 +17,8 @@ public record LicensePlate
     {
         if (string.IsNullOrWhiteSpace(Value)) return false;
 
-        var oldPattern = new Regex(@"^[A-Z]{3}-?[0-9]{4}$");
-        var newMercosulPattern = new Regex(@"^[A-Z]{3}[0-9][A-Z][0-9]{2}$");
+        var oldPattern = new Regex(@"^[A-Z]{3}-?[0-9]{4}$", RegexOptions.NonBacktracking);
+        var newMercosulPattern = new Regex(@"^[A-Z]{3}[0-9][A-Z][0-9]{2}$", RegexOptions.NonBacktracking);
 
         return oldPattern.IsMatch(Value) || newMercosulPattern.IsMatch(Value);
     }

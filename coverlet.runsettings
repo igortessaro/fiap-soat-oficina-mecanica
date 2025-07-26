@@ -7,6 +7,9 @@
           <Format>opencover</Format>
           <Exclude>[*.Tests]*</Exclude>
           <Exclude>[*.Integration.Tests]*</Exclude>
+          <Exclude>[*.Tests.Shared]*</Exclude>
+          <ExcludeByFile>**/Configurations/**</ExcludeByFile>
+          <ExcludeByFile>**/Migrations/**</ExcludeByFile>
           <ExcludeByAttribute>Obsolete,GeneratedCodeAttribute,CompilerGeneratedAttribute</ExcludeByAttribute>
           <ExcludeByFile>**/Migrations/**</ExcludeByFile>
         </Configuration>
