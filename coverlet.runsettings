@@ -10,8 +10,7 @@
           <Exclude>[*.Tests.Shared]*</Exclude>
           <ExcludeByFile>**/Configurations/**</ExcludeByFile>
           <ExcludeByFile>**/Migrations/**</ExcludeByFile>
-          <ExcludeByAttribute>Obsolete,GeneratedCodeAttribute,CompilerGeneratedAttribute</ExcludeByAttribute>
-          <ExcludeByFile>**/Migrations/**</ExcludeByFile>
+          <ExcludeByAttribute>Obsolete,GeneratedCodeAttribute,CompilerGeneratedAttribute,ExcludeFromCodeCoverageAttribute</ExcludeByAttribute>
         </Configuration>
       </DataCollector>
     </DataCollectors>
