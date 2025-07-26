@@ -1,10 +1,12 @@
 using Bogus;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
+using System.Diagnostics.CodeAnalysis;
 using Person = Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities.Person;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Tests.Shared.Factories;
 
+[ExcludeFromCodeCoverage]
 public static class PeopleFactory
 {
     public static Person CreateClient() => Create(EPersonType.Client, null);

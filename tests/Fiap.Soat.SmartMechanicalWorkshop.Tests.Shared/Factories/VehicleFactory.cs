@@ -1,9 +1,11 @@
 using Bogus;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Tests.Shared.Factories;
 
+[ExcludeFromCodeCoverage]
 public static class VehicleFactory
 {
     public static List<Vehicle> VehiclesList { get; } = new Faker<Vehicle>("pt_BR")

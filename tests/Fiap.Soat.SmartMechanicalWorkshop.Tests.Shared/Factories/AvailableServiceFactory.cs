@@ -1,7 +1,9 @@
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Tests.Shared.Factories;
 
+[ExcludeFromCodeCoverage]
 public static class AvailableServiceFactory
 {
     private static readonly List<AvailableService> Services =
