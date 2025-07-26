@@ -1,8 +1,8 @@
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 
-namespace Fiap.Soat.SmartMechanicalWorkshop.Integration.Tests.Helpers;
+namespace Fiap.Soat.SmartMechanicalWorkshop.Tests.Shared.Factories;
 
-public static class AvailableServiceHelper
+public static class AvailableServiceFactory
 {
     private static readonly List<AvailableService> Services =
     [

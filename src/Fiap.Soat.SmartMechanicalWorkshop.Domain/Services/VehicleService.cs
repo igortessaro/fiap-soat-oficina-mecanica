@@ -24,27 +24,14 @@ public sealed class VehicleService(IVehicleRepository repository, IPersonReposit
             return ResponseFactory.Fail<VehicleDto>(new FluentResults.Error("Only clients are allowed to register a vehicle"), System.Net.HttpStatusCode.BadRequest);
         }
 
-        if (!IsValidLicensePlate(request.LicensePlate))
+        var mapperEntity = mapper.Map<Vehicle>(request);
+        if (!mapperEntity.LicensePlate.IsValid())
         {
             return ResponseFactory.Fail<VehicleDto>(new FluentResults.Error("Invalid license plate format"), System.Net.HttpStatusCode.BadRequest);
         }
 
-        var mapperEntity = mapper.Map<Vehicle>(request);
         var createdEntity = await repository.AddAsync(mapperEntity, cancellationToken);
         return ResponseFactory.Ok(mapper.Map<VehicleDto>(createdEntity), System.Net.HttpStatusCode.Created);
-    }
-
-    private bool IsValidLicensePlate(string licensePlate)
-    {
-        if (string.IsNullOrWhiteSpace(licensePlate))
-            return false;
-
-        licensePlate = licensePlate.Trim().ToUpper();
-
-        var oldPattern = new Regex(@"^[A-Z]{3}-?[0-9]{4}$");
-        var newMercosulPattern = new Regex(@"^[A-Z]{3}[0-9][A-Z][0-9]{2}$");
-
-        return oldPattern.IsMatch(licensePlate) || newMercosulPattern.IsMatch(licensePlate);
     }
 
     public async Task<Response> DeleteAsync(Guid id, CancellationToken cancellationToken)
@@ -79,6 +66,11 @@ public sealed class VehicleService(IVehicleRepository repository, IPersonReposit
         }
 
         _ = foundEntity.Update(input.ManufactureYear, input.LicensePlate, input.Brand, input.Model);
+        if (!foundEntity.LicensePlate.IsValid())
+        {
+            return ResponseFactory.Fail<VehicleDto>(new FluentResults.Error("Invalid license plate format"), System.Net.HttpStatusCode.BadRequest);
+        }
+
         var updatedEntity = await repository.UpdateAsync(foundEntity, cancellationToken);
         return ResponseFactory.Ok(mapper.Map<VehicleDto>(updatedEntity));
     }

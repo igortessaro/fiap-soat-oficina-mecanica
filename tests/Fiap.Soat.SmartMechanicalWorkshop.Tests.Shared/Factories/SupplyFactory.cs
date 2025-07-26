@@ -1,8 +1,8 @@
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 
-namespace Fiap.Soat.SmartMechanicalWorkshop.Integration.Tests.Helpers;
+namespace Fiap.Soat.SmartMechanicalWorkshop.Tests.Shared.Factories;
 
-public static class SupplyHelper
+public static class SupplyFactory
 {
     private static readonly List<Supply> SupplyList =
     [

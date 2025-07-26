@@ -31,6 +31,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\src\Fiap.Soat.SmartMechanicalWorkshop.Domain\Fiap.Soat.SmartMechanicalWorkshop.Domain.csproj" />
+      <ProjectReference Include="..\Fiap.Soat.SmartMechanicalWorkshop.Tests.Shared\Fiap.Soat.SmartMechanicalWorkshop.Tests.Shared.csproj" />
     </ItemGroup>
 
 </Project>
