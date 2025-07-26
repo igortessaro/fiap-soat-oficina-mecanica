@@ -1,3 +1,5 @@
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
+
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 
 public class Vehicle : Entity
@@ -9,11 +11,11 @@ public class Vehicle : Entity
         Model = model;
         Brand = brand;
         ManufactureYear = manufactureYear;
-        LicensePlate = licensePlate.Trim().ToUpper();
+        LicensePlate = licensePlate;
         PersonId = personId;
     }
 
-    public string LicensePlate { get; private set; } = string.Empty;
+    public LicensePlate LicensePlate { get; private set; } = null!;
     public int ManufactureYear { get; private set; }
     public string Brand { get; private set; } = string.Empty;
     public string Model { get; private set; } = string.Empty;
@@ -24,7 +26,7 @@ public class Vehicle : Entity
     public Vehicle Update(int? manufactureYear, string licensePlate, string brand, string model)
     {
         if (manufactureYear.HasValue) ManufactureYear = manufactureYear.Value;
-        if (!string.IsNullOrEmpty(licensePlate)) LicensePlate = licensePlate.Trim().ToUpper();
+        if (!string.IsNullOrEmpty(licensePlate)) LicensePlate = licensePlate;
         if (!string.IsNullOrEmpty(brand)) Brand = brand;
         if (!string.IsNullOrEmpty(model)) Model = model;
         return this;

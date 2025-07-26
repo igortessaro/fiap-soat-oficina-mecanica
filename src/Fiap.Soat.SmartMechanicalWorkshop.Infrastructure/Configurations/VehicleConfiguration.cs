@@ -14,11 +14,14 @@ public sealed class VehicleConfiguration : IEntityTypeConfiguration<Vehicle>
         builder.Property(x => x.CreatedAt).HasColumnName("created_at").IsRequired();
         builder.Property(x => x.UpdatedAt).HasColumnName("updated_at").IsRequired();
 
-        builder.Property(v => v.LicensePlate)
-            .HasColumnName("license_plate")
-            .HasColumnType("VARCHAR(20)")
-            .HasMaxLength(20)
-            .IsRequired();
+        builder.OwnsOne(c => c.LicensePlate, lp =>
+        {
+            lp.Property(a => a.Value)
+                .HasColumnName("license_plate")
+                .HasColumnType("VARCHAR(20)");
+
+            lp.HasIndex(a => a.Value).IsUnique();
+        });
 
         builder.Property(v => v.Model)
             .HasColumnName("model")
@@ -45,7 +48,5 @@ public sealed class VehicleConfiguration : IEntityTypeConfiguration<Vehicle>
             .WithMany(c => c.Vehicles)
             .HasForeignKey(v => v.PersonId)
             .OnDelete(DeleteBehavior.Cascade);
-
-        builder.HasIndex(x => x.LicensePlate).IsUnique();
     }
 }

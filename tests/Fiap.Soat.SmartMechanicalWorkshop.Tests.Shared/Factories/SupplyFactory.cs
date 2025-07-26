@@ -1,8 +1,10 @@
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
+using System.Diagnostics.CodeAnalysis;
 
-namespace Fiap.Soat.SmartMechanicalWorkshop.Integration.Tests.Helpers;
+namespace Fiap.Soat.SmartMechanicalWorkshop.Tests.Shared.Factories;
 
-public static class SupplyHelper
+[ExcludeFromCodeCoverage]
+public static class SupplyFactory
 {
     private static readonly List<Supply> SupplyList =
     [

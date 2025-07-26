@@ -1,7 +1,5 @@
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 using Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Data;
-using Fiap.Soat.SmartMechanicalWorkshop.Integration.Tests.Helpers;
+using Fiap.Soat.SmartMechanicalWorkshop.Tests.Shared.Factories;
 using System.Net;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Integration.Tests.Tests.Vehicles;
@@ -29,17 +27,10 @@ public sealed class GetVehiclesTests : CustomWebApplicationFactory<Program>
         // Arrange
         await using var scope = Services.CreateAsyncScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        var client = new Person(
-            "Client A",
-            "999.999.999-99",
-            EPersonType.Client,
-            null,
-            "client@email.com",
-            new Phone("55", "99999999"),
-            new Address("Street", "City", "State", "99999-999"));
+        var client = PeopleFactory.CreateClient();
         await dbContext.People.AddAsync(client);
         await dbContext.SaveChangesAsync();
-        var vehicle = VehicleHelper.VehiclesList[0];
+        var vehicle = VehicleFactory.CreateVehicle();
         vehicle.GetType().GetProperty("PersonId")!.SetValue(vehicle, client.Id);
         await dbContext.Vehicles.AddAsync(vehicle);
         await dbContext.SaveChangesAsync();

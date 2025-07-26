@@ -8,6 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Bogus" Version="35.6.3" />
         <PackageReference Include="coverlet.collector" Version="6.0.4">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -30,6 +31,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\src\Fiap.Soat.SmartMechanicalWorkshop.Api\Fiap.Soat.SmartMechanicalWorkshop.Api.csproj" />
+      <ProjectReference Include="..\Fiap.Soat.SmartMechanicalWorkshop.Tests.Shared\Fiap.Soat.SmartMechanicalWorkshop.Tests.Shared.csproj" />
     </ItemGroup>
 
 </Project>

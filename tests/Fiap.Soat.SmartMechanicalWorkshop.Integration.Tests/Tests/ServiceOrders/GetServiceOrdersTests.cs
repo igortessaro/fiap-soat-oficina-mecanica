@@ -1,7 +1,7 @@
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 using Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Data;
-using Fiap.Soat.SmartMechanicalWorkshop.Integration.Tests.Helpers;
+using Fiap.Soat.SmartMechanicalWorkshop.Tests.Shared.Factories;
 using System.Net;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Integration.Tests.Tests.ServiceOrders;
@@ -42,7 +42,7 @@ public sealed class GetServiceOrdersTests : CustomWebApplicationFactory<Program>
         var vehicle = new Vehicle("Model 001", "Brand 001", DateTime.UtcNow.Year, "ABC1234", client.Id);
         await dbContext.Vehicles.AddAsync(vehicle);
         await dbContext.SaveChangesAsync();
-        var serviceOrder = ServiceOrderHelper.ServiceOrders[0];
+        var serviceOrder = ServiceOrderFactory.ServiceOrders[0];
         serviceOrder.GetType().GetProperty("ClientId")!.SetValue(serviceOrder, client.Id);
         serviceOrder.GetType().GetProperty("VehicleId")!.SetValue(serviceOrder, vehicle.Id);
         await dbContext.ServiceOrders.AddAsync(serviceOrder);

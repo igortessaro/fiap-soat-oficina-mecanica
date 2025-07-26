@@ -1,3 +1,4 @@
+using Bogus;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 using Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -13,6 +14,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Integration.Tests;
 public class CustomWebApplicationFactory<TProgram> : WebApplicationFactory<TProgram> where TProgram : class
 {
     protected readonly HttpClient Client;
+    protected readonly Faker Faker = new Faker("pt_BR");
 
     protected CustomWebApplicationFactory()
     {
