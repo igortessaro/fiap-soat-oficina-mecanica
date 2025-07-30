@@ -5,7 +5,6 @@ using Fiap.Soat.SmartMechanicalWorkshop.Domain.Repositories;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.ExternalServices;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.Interfaces;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 using Microsoft.Extensions.Logging;
 using System.Net;
 
@@ -15,6 +14,7 @@ public sealed class ServiceOrderService(
     ILogger<ServiceOrderService> logger,
     IMapper mapper,
     IServiceOrderRepository repository,
+    IServiceOrderEventRepository serviceOrderEventRepository,
     IPersonRepository personRepository,
     IVehicleRepository vehicleRepository,
     IAvailableServiceRepository availableServiceRepository,
@@ -74,7 +74,7 @@ public sealed class ServiceOrderService(
 
     public async Task<Response<ServiceOrderDto>> GetOneByLoginAsync(GetOnePersonByLoginInput getOnePersonByLoginInput, CancellationToken cancellationToken)
     {
-        ServiceOrder foundEntity = await repository.GetOneByLoginAsync(getOnePersonByLoginInput, cancellationToken);
+        var foundEntity = await repository.GetOneByLoginAsync(getOnePersonByLoginInput, cancellationToken);
         return foundEntity != null
             ? ResponseFactory.Ok(mapper.Map<ServiceOrderDto>(foundEntity))
             : ResponseFactory.Fail<ServiceOrderDto>(new FluentResults.Error("Service Order Not Found"), System.Net.HttpStatusCode.NotFound);
@@ -148,5 +148,18 @@ public sealed class ServiceOrderService(
         return ResponseFactory.Ok(mapper.Map<ServiceOrderDto>(await repository.GetDetailedAsync(input.Id, cancellationToken)));
     }
 
+    public async Task<Response<TimeSpan>> GetAverageExecution(CancellationToken cancellationToken)
+    {
+        var serviceOrderEventsGrouped = await serviceOrderEventRepository.GetServiceOrderEvents(cancellationToken);
+        long timeSpans = 0;
 
+        foreach (var item in serviceOrderEventsGrouped)
+        {
+            timeSpans += (item.Last().CreatedAt - item.First().CreatedAt).Ticks;
+        }
+
+        var averageTime = new TimeSpan(timeSpans / serviceOrderEventsGrouped.Count);
+
+        return ResponseFactory.Ok(averageTime);
+    }
 }

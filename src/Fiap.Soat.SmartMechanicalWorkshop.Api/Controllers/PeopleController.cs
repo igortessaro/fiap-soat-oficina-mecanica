@@ -99,7 +99,7 @@ public sealed class PeopleController(IPersonService service) : ControllerBase
     [Authorize]
     public async Task<IActionResult> UpdateAsync([FromRoute, Required] Guid id, [FromBody, Required] UpdateOnePersonRequest request, CancellationToken cancellationToken)
     {
-        UpdateOnePersonInput input = new(id, request.Fullname, request.Document, request.PersonType, request.EmployeeRole, request.Email,request.Password, request.Phone, request.Address);
+        UpdateOnePersonInput input = new(id, request.Fullname, request.Document, request.PersonType, request.EmployeeRole, request.Email, request.Password, request.Phone, request.Address);
         var result = await service.UpdateAsync(input, cancellationToken);
         return result.ToActionResult();
     }

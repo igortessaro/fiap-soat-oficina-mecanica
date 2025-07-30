@@ -7,7 +7,7 @@ public class Person : Entity
 {
     private Person() { }
 
-    public Person(string fullname, string document, EPersonType personType, EEmployeeRole? employeeRole, string email,string password,  Phone phone, Address? address)
+    public Person(string fullname, string document, EPersonType personType, EEmployeeRole? employeeRole, string email, string password, Phone phone, Address? address)
     {
         Address = new Address(string.Empty, string.Empty, string.Empty, string.Empty);
         Update(fullname, document, personType, employeeRole, email, password, phone, address);
@@ -24,7 +24,7 @@ public class Person : Entity
     public Address Address { get; private set; } = null!;
     public ICollection<Vehicle> Vehicles { get; private set; } = [];
 
-    public Person Update(string fullname, string document, EPersonType personType, EEmployeeRole? employeeRole, string email,string password, Phone phone, Address? address)
+    public Person Update(string fullname, string document, EPersonType personType, EEmployeeRole? employeeRole, string email, string password, Phone phone, Address? address)
     {
         if (!string.IsNullOrEmpty(document)) Document = document;
         if (!string.IsNullOrEmpty(fullname)) Fullname = fullname;

@@ -16,7 +16,7 @@ public abstract class Repository<T>(DbContext context) : IRepository<T> where T 
         return await _dbSet.FindAsync([id], cancellationToken);
     }
 
-    public Task<Paginate<T>> GetAllAsync(PaginatedRequest paginatedRequest, CancellationToken cancellationToken) =>
+    public virtual Task<Paginate<T>> GetAllAsync(PaginatedRequest paginatedRequest, CancellationToken cancellationToken) =>
         GetAllAsync(_dbSet, paginatedRequest, cancellationToken);
 
     public Task<Paginate<T>> GetAllAsync(Expression<Func<T, bool>> predicate, PaginatedRequest paginatedRequest, CancellationToken cancellationToken) =>
@@ -63,7 +63,7 @@ public abstract class Repository<T>(DbContext context) : IRepository<T> where T 
 
     protected IQueryable<T> Query(bool noTracking = true) => noTracking ? _dbSet.AsQueryable().AsNoTracking() : _dbSet.AsQueryable();
 
-    private async Task<Paginate<T>> GetAllAsync(IQueryable<T> query, PaginatedRequest paginatedRequest, CancellationToken cancellationToken)
+    protected async Task<Paginate<T>> GetAllAsync(IQueryable<T> query, PaginatedRequest paginatedRequest, CancellationToken cancellationToken)
     {
         int totalCount = await query.AsNoTracking().CountAsync(cancellationToken);
         if (paginatedRequest.PageNumber == 0)

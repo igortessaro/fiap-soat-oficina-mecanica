@@ -168,8 +168,18 @@ public sealed class ServiceOrdersController(IServiceOrderService service, IMedia
         return result.ToActionResult();
     }
 
+    /// <summary>
+    /// Partially updates the status of a service order by its unique identifier.
+    /// </summary>
+    /// <param name="id">The unique identifier of the service order to update.</param>
+    /// <param name="request">The patch request containing the new status.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>The updated service order if successful, otherwise an error response.</returns>
     [HttpPatch("{id:guid}")]
-    [SwaggerOperation(Summary = "Patch a service order", Description = "Updates an existing service order by its unique identifier with partial data.")]
+    [SwaggerOperation(
+        Summary = "Patch a service order",
+        Description = "Updates an existing service order by its unique identifier with partial data."
+    )]
     [ProducesResponseType(typeof(ServiceOrderDto), (int) HttpStatusCode.OK)]
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.BadRequest)]
@@ -178,6 +188,26 @@ public sealed class ServiceOrdersController(IServiceOrderService service, IMedia
     {
         var result = await mediator.Send(new ServiceOrderChangeStatusCommand(id, request.Status), cancellationToken);
         if (result.IsSuccess) await mediator.Publish(new ServiceOrderChangeStatusNotification(id, result.Data), cancellationToken);
+        return result.ToActionResult();
+    }
+
+    /// <summary>
+    /// Gets the average execution time of service orders.
+    /// </summary>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>The average execution time as a TimeSpan.</returns>
+    [HttpGet("average-execution")]
+    [SwaggerOperation(
+        Summary = "Get average execution time of service orders",
+        Description = "Returns the average execution time for all service orders."
+    )]
+    [ProducesResponseType(typeof(Response<TimeSpan>), (int) HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.BadRequest)]
+    [Authorize]
+    public async Task<IActionResult> GetAverageExecution(CancellationToken cancellationToken)
+    {
+        Response<TimeSpan> result = await service.GetAverageExecution(cancellationToken);
         return result.ToActionResult();
     }
 }

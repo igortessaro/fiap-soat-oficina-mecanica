@@ -51,7 +51,7 @@ public sealed class PersonService(IMapper mapper, IPersonRepository repository) 
         var phone = mapper.Map<Phone>(input.Phone);
         var address = mapper.Map<Address>(input.Address);
 
-        var updatePerson = foundEntity.Update(input.Fullname, input.Document, input.PersonType, input.EmployeeRole, input.Email,input.Password, phone, address);
+        var updatePerson = foundEntity.Update(input.Fullname, input.Document, input.PersonType, input.EmployeeRole, input.Email, input.Password, phone, address);
         foundEntity.Validate();
         var updatedEntity = await repository.UpdateAsync(updatePerson, cancellationToken);
         return ResponseFactory.Ok(mapper.Map<PersonDto>(updatedEntity));
