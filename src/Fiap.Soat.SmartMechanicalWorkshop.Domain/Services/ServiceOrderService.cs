@@ -153,6 +153,10 @@ public sealed class ServiceOrderService(
         var serviceOrderEventsGrouped = await serviceOrderEventRepository.GetServiceOrderEvents(cancellationToken);
         long timeSpans = 0;
 
+        if(serviceOrderEventsGrouped.Count == 0)
+        {
+            return ResponseFactory.Ok(TimeSpan.Zero);
+        }
         foreach (var item in serviceOrderEventsGrouped)
         {
             timeSpans += (item.Last().CreatedAt - item.First().CreatedAt).Ticks;
