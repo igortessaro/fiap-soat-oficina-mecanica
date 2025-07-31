@@ -1,5 +1,14 @@
 # fiap-soat-oficina-mecanicca
 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=igortessaro_fiap-soat-oficina-mecanica&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=igortessaro_fiap-soat-oficina-mecanica)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=igortessaro_fiap-soat-oficina-mecanica&metric=coverage)](https://sonarcloud.io/summary/new_code?id=igortessaro_fiap-soat-oficina-mecanica)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=igortessaro_fiap-soat-oficina-mecanica&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=igortessaro_fiap-soat-oficina-mecanica)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=igortessaro_fiap-soat-oficina-mecanica&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=igortessaro_fiap-soat-oficina-mecanica)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=igortessaro_fiap-soat-oficina-mecanica&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=igortessaro_fiap-soat-oficina-mecanica)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=igortessaro_fiap-soat-oficina-mecanica&metric=bugs)](https://sonarcloud.io/summary/new_code?id=igortessaro_fiap-soat-oficina-mecanica)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=igortessaro_fiap-soat-oficina-mecanica&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=igortessaro_fiap-soat-oficina-mecanica)
+
+
 ## Docker
 
 Para rodar a aplicação usando o docker compose, você deve executar o comando baixo na pasta raiz do projeto:

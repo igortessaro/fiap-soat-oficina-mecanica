@@ -1,6 +1,6 @@
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.AvailableServices;
 using Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Data;
-using Fiap.Soat.SmartMechanicalWorkshop.Integration.Tests.Helpers;
+using Fiap.Soat.SmartMechanicalWorkshop.Tests.Shared.Factories;
 using System.Net;
 using System.Net.Http.Headers;
 
@@ -16,7 +16,7 @@ public sealed class CreateAvailableServicesTests : CustomWebApplicationFactory<P
         // Arrange
         await using var scope = Services.CreateAsyncScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        var supplies = SupplyHelper.Supplies.Take(3).ToList();
+        var supplies = SupplyFactory.Supplies.Take(3).ToList();
         await dbContext.Supplies.AddRangeAsync(supplies);
         await dbContext.SaveChangesAsync();
         var supplyIds = supplies.Select(x => x.Id).ToList();

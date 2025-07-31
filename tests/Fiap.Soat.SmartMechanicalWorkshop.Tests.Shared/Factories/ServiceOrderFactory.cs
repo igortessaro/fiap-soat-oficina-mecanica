@@ -1,8 +1,10 @@
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
+using System.Diagnostics.CodeAnalysis;
 
-namespace Fiap.Soat.SmartMechanicalWorkshop.Integration.Tests.Helpers;
+namespace Fiap.Soat.SmartMechanicalWorkshop.Tests.Shared.Factories;
 
-public static class ServiceOrderHelper
+[ExcludeFromCodeCoverage]
+public static class ServiceOrderFactory
 {
     private static readonly List<ServiceOrder> Orders =
     [

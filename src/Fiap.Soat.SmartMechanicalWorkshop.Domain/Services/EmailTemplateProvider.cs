@@ -6,7 +6,6 @@ using System.Text;
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Services;
 public class EmailTemplateProvider(IConfiguration configuration) : IEmailTemplateProvider
 {
-
     public string GetTemplate(ServiceOrder serviceOrder)
     {
         string? emailBaseUrl = configuration["Email:BaseUrl"];

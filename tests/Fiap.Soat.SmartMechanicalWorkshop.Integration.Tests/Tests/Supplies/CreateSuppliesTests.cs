@@ -12,7 +12,6 @@ public sealed class CreateSuppliesTests : CustomWebApplicationFactory<Program>
     public async Task A0001_CreateAsync_WhenCreateAvailableService_ShouldReturn201()
     {
         // Arrange
-        await using var scope = Services.CreateAsyncScope();
         var toCreate = new CreateNewSupplyRequest() { Name = "Integration Tests", Price = 99, Quantity = 0 };
         string json = Newtonsoft.Json.JsonConvert.SerializeObject(toCreate);
         var content = new StringContent(json, MediaTypeHeaderValue.Parse("application/json"));

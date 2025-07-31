@@ -1,11 +1,13 @@
 using Microsoft.EntityFrameworkCore.Migrations;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 #nullable disable
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Migrations
 {
     /// <inheritdoc />
+    [ExcludeFromCodeCoverage]
     public partial class AddQuoteAndEvents : Migration
     {
         /// <inheritdoc />

@@ -10,7 +10,14 @@
     <ItemGroup>
         <PackageReference Include="AutoFixture" Version="4.18.1" />
         <PackageReference Include="AutoMapper" Version="14.0.0" />
-        <PackageReference Include="coverlet.collector" Version="6.0.2" />
+        <PackageReference Include="coverlet.collector" Version="6.0.4">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="coverlet.msbuild" Version="6.0.4">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="FluentAssertions" Version="8.5.0" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
         <PackageReference Include="Moq" Version="4.20.72" />
@@ -24,6 +31,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\src\Fiap.Soat.SmartMechanicalWorkshop.Domain\Fiap.Soat.SmartMechanicalWorkshop.Domain.csproj" />
+      <ProjectReference Include="..\Fiap.Soat.SmartMechanicalWorkshop.Tests.Shared\Fiap.Soat.SmartMechanicalWorkshop.Tests.Shared.csproj" />
     </ItemGroup>
 
 </Project>

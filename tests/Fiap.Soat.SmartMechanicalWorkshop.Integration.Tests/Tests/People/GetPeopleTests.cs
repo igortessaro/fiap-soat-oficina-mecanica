@@ -1,6 +1,5 @@
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 using Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Data;
-using Fiap.Soat.SmartMechanicalWorkshop.Integration.Tests.Helpers;
+using Fiap.Soat.SmartMechanicalWorkshop.Tests.Shared.Factories;
 using System.Net;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Integration.Tests.Tests.People;
@@ -28,7 +27,7 @@ public sealed class GetPeopleTests : CustomWebApplicationFactory<Program>
         // Arrange
         await using var scope = Services.CreateAsyncScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        var client = PeopleHelper.PeopleList.First(x => x.PersonType == EPersonType.Client);
+        var client = PeopleFactory.CreateClient();
         await dbContext.People.AddRangeAsync(client);
         await dbContext.SaveChangesAsync();
 
