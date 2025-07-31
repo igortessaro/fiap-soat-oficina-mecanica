@@ -4,5 +4,5 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Repositories;
 
 public interface IServiceOrderEventRepository : IRepository<ServiceOrderEvent>
 {
-    Task<List<IGrouping<Guid, ServiceOrderEvent>>> GetServiceOrderEvents(CancellationToken cancellationToken);
+    Task<TimeSpan> GetAverageExecutionTime(CancellationToken cancellationToken);
 }

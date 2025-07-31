@@ -148,21 +148,9 @@ public sealed class ServiceOrderService(
         return ResponseFactory.Ok(mapper.Map<ServiceOrderDto>(await repository.GetDetailedAsync(input.Id, cancellationToken)));
     }
 
-    public async Task<Response<TimeSpan>> GetAverageExecution(CancellationToken cancellationToken)
+    public async Task<Response<TimeSpan>> GetAverageExecutionTime(CancellationToken cancellationToken)
     {
-        var serviceOrderEventsGrouped = await serviceOrderEventRepository.GetServiceOrderEvents(cancellationToken);
-        long timeSpans = 0;
-
-        if(serviceOrderEventsGrouped.Count == 0)
-        {
-            return ResponseFactory.Ok(TimeSpan.Zero);
-        }
-        foreach (var item in serviceOrderEventsGrouped)
-        {
-            timeSpans += (item.Last().CreatedAt - item.First().CreatedAt).Ticks;
-        }
-
-        var averageTime = new TimeSpan(timeSpans / serviceOrderEventsGrouped.Count);
+        var averageTime = await serviceOrderEventRepository.GetAverageExecutionTime(cancellationToken);
 
         return ResponseFactory.Ok(averageTime);
     }

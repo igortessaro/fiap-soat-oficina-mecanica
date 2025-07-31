@@ -25,8 +25,8 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Controllers
             Summary = "Authenticate user",
             Description = "Authenticates a user and returns a JWT token if successful."
         )]
-        [SwaggerResponse(200, "Returns JWT token on successful authentication.", typeof(object))]
-        [SwaggerResponse(404, "Returns error details if authentication fails.", typeof(Response<string>))]
+        [SwaggerResponse(200, "Returns JWT token on successful authentication.", typeof(Response<string>))]
+        [SwaggerResponse(404, "Returns when user/password is not found", typeof(NotFoundResult))]
         public async Task<IActionResult> Login([FromBody] LoginRequest login, CancellationToken cancellationToken)
         {
             var response = await authService.Login(login, cancellationToken);

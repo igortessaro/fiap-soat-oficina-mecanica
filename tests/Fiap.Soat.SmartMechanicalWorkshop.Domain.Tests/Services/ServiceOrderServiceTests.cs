@@ -7,17 +7,15 @@ using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.ExternalServices;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.Interfaces;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System.Linq.Expressions;
 using System.Net;
-using System.Net.Mail;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Tests.Services;
 
-public sealed class ServiceOrderServiceTests
+public sealed partial class ServiceOrderServiceTests
 {
     private readonly IFixture _fixture = new Fixture();
     private readonly Mock<ILogger<ServiceOrderService>> _loggerMock = new();
@@ -292,71 +290,14 @@ public sealed class ServiceOrderServiceTests
     }
 
     [Fact]
-    public async Task GetAverageExecution_ReturnsZero_WhenNoEvents()
+    public async Task GetExecutionTimeAsync_ShouldReturnZero_WhenNotFound()
     {
-        // Arrange
+        var input = _fixture.Create<UpdateOneServiceOrderInput>();
+        _repositoryEventsMock.Setup(r => r.GetAverageExecutionTime(It.IsAny<CancellationToken>())).ReturnsAsync(TimeSpan.Zero);
 
-        _repositoryEventsMock
-            .Setup(r => r.GetServiceOrderEvents(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new List<IGrouping<Guid, ServiceOrderEvent>>());
+        var result = await _service.GetAverageExecutionTime( CancellationToken.None);
 
-      
-        // Act
-        var result = await _service.GetAverageExecution(CancellationToken.None);
-
-        // Assert
-        result.IsSuccess.Should().BeTrue();
+        result.StatusCode.Should().Be(HttpStatusCode.OK);
         result.Data.Should().Be(TimeSpan.Zero);
-    }
-
-    [Fact]
-    public async Task GetAverageExecution_ReturnsAverageTime_WhenEventsExist()
-    {
-        // Arrange
-        var now = DateTime.UtcNow;
-        var group1 = new List<ServiceOrderEvent>
-        {
-            new ServiceOrderEvent(Guid.NewGuid(), EServiceOrderStatus.Received) ,
-            new ServiceOrderEvent(Guid.NewGuid(), EServiceOrderStatus.Delivered) ,
-        };
-        var group2 = new List<ServiceOrderEvent>
-        {
-            new ServiceOrderEvent(Guid.NewGuid(), EServiceOrderStatus.Received),
-            new ServiceOrderEvent(Guid.NewGuid(), EServiceOrderStatus.Delivered) ,
-        };
-
-        var grouped = new List<IGrouping<Guid, ServiceOrderEvent>>
-        {
-            new TestGrouping(group1[0].ServiceOrderId, group1),
-            new TestGrouping(group2[0].ServiceOrderId, group2)
-        };
-
-        _repositoryEventsMock
-            .Setup(r => r.GetServiceOrderEvents(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(grouped);
-
-
-
-        // Act
-        var result = await _service.GetAverageExecution(CancellationToken.None);
-
-        // Assert
-        result.IsSuccess.Should().BeTrue();
-        var expectedTicks = ((group1.Last().CreatedAt - group1.First().CreatedAt).Ticks +
-                             (group2.Last().CreatedAt - group2.First().CreatedAt).Ticks) / 2;
-        result.Data.Ticks.Should().Be(expectedTicks);
-    }
-
-    private class TestGrouping : IGrouping<Guid, ServiceOrderEvent>
-    {
-        private readonly IEnumerable<ServiceOrderEvent> _events;
-        public TestGrouping(Guid key, IEnumerable<ServiceOrderEvent> events)
-        {
-            Key = key;
-            _events = events;
-        }
-        public Guid Key { get; }
-        public IEnumerator<ServiceOrderEvent> GetEnumerator() => _events.GetEnumerator();
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => _events.GetEnumerator();
     }
 }

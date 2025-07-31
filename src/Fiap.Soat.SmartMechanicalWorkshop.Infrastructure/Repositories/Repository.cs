@@ -2,6 +2,7 @@ using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Repositories;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 using Microsoft.EntityFrameworkCore;
+using System.Data.Common;
 using System.Linq.Expressions;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Repositories;
@@ -10,6 +11,11 @@ public abstract class Repository<T>(DbContext context) : IRepository<T> where T 
 {
     private readonly DbContext _context = context;
     private readonly DbSet<T> _dbSet = context.Set<T>();
+
+    public DbConnection GetDbConnection()
+    {
+        return context.Database.GetDbConnection(); 
+    }
 
     public virtual async Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {

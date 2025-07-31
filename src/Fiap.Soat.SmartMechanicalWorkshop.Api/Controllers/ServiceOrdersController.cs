@@ -196,7 +196,7 @@ public sealed class ServiceOrdersController(IServiceOrderService service, IMedia
     /// </summary>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>The average execution time as a TimeSpan.</returns>
-    [HttpGet("average-execution")]
+    [HttpGet("average-execution-time")]
     [SwaggerOperation(
         Summary = "Get average execution time of service orders",
         Description = "Returns the average execution time for all service orders."
@@ -205,9 +205,9 @@ public sealed class ServiceOrdersController(IServiceOrderService service, IMedia
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.BadRequest)]
     [Authorize]
-    public async Task<IActionResult> GetAverageExecution(CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAverageExecutionTime(CancellationToken cancellationToken)
     {
-        Response<TimeSpan> result = await service.GetAverageExecution(cancellationToken);
+        Response<TimeSpan> result = await service.GetAverageExecutionTime(cancellationToken);
         return result.ToActionResult();
     }
 }
