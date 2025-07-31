@@ -295,7 +295,7 @@ public sealed partial class ServiceOrderServiceTests
         var input = _fixture.Create<UpdateOneServiceOrderInput>();
         _repositoryEventsMock.Setup(r => r.GetAverageExecutionTime(It.IsAny<CancellationToken>())).ReturnsAsync(TimeSpan.Zero);
 
-        var result = await _service.GetAverageExecutionTime( CancellationToken.None);
+        var result = await _service.GetAverageExecutionTime(CancellationToken.None);
 
         result.StatusCode.Should().Be(HttpStatusCode.OK);
         result.Data.Should().Be(TimeSpan.Zero);

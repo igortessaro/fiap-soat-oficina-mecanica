@@ -14,7 +14,7 @@ public abstract class Repository<T>(DbContext context) : IRepository<T> where T 
 
     public DbConnection GetDbConnection()
     {
-        return context.Database.GetDbConnection(); 
+        return context.Database.GetDbConnection();
     }
 
     public virtual async Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken)

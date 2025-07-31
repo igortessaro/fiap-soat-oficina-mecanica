@@ -30,9 +30,9 @@ FROM (
         COUNT(CASE WHEN Status = 'Delivered' THEN 1 END) > 0
 ) AS TimeDiffs;
 ";
-        var result =  await command.ExecuteScalarAsync(); 
+        var result = await command.ExecuteScalarAsync();
 
-        var decimalResult = Math.Round((decimal)result);
+        var decimalResult = Math.Round((decimal) result);
 
         return TimeSpan.FromTicks((long) decimalResult);
     }
