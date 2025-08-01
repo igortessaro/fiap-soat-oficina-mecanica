@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Person;
 
-public record CreatePersonRequest([Required][MaxLength(255)] string Fullname, [Required][MaxLength(100)] string Document, [Required] EPersonType PersonType, EEmployeeRole? EmployeeRole, [Required][MaxLength(255)] string Email, CreatePhoneRequest Phone, CreateAddressRequest Address);
+public record CreatePersonRequest([Required][MaxLength(255)] string Fullname, [Required][MaxLength(100)] string Document, [Required] EPersonType PersonType, EEmployeeRole? EmployeeRole, [Required][MaxLength(255)] string Email, [Required][MaxLength(255)] string Password, CreatePhoneRequest Phone, CreateAddressRequest Address);
 
 public record CreatePhoneRequest(
     [Required][MaxLength(5)] string AreaCode,

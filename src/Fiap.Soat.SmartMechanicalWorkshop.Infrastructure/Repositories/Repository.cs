@@ -2,6 +2,7 @@ using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Repositories;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 using Microsoft.EntityFrameworkCore;
+using System.Data.Common;
 using System.Linq.Expressions;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Repositories;
@@ -11,12 +12,17 @@ public abstract class Repository<T>(DbContext context) : IRepository<T> where T 
     private readonly DbContext _context = context;
     private readonly DbSet<T> _dbSet = context.Set<T>();
 
+    public DbConnection GetDbConnection()
+    {
+        return context.Database.GetDbConnection();
+    }
+
     public virtual async Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
     {
         return await _dbSet.FindAsync([id], cancellationToken);
     }
 
-    public Task<Paginate<T>> GetAllAsync(PaginatedRequest paginatedRequest, CancellationToken cancellationToken) =>
+    public virtual Task<Paginate<T>> GetAllAsync(PaginatedRequest paginatedRequest, CancellationToken cancellationToken) =>
         GetAllAsync(_dbSet, paginatedRequest, cancellationToken);
 
     public Task<Paginate<T>> GetAllAsync(Expression<Func<T, bool>> predicate, PaginatedRequest paginatedRequest, CancellationToken cancellationToken) =>
@@ -63,7 +69,7 @@ public abstract class Repository<T>(DbContext context) : IRepository<T> where T 
 
     protected IQueryable<T> Query(bool noTracking = true) => noTracking ? _dbSet.AsQueryable().AsNoTracking() : _dbSet.AsQueryable();
 
-    private async Task<Paginate<T>> GetAllAsync(IQueryable<T> query, PaginatedRequest paginatedRequest, CancellationToken cancellationToken)
+    protected async Task<Paginate<T>> GetAllAsync(IQueryable<T> query, PaginatedRequest paginatedRequest, CancellationToken cancellationToken)
     {
         int totalCount = await query.AsNoTracking().CountAsync(cancellationToken);
         if (paginatedRequest.PageNumber == 0)

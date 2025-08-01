@@ -12,15 +12,15 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using System.Linq.Expressions;
 using System.Net;
-using System.Net.Mail;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Tests.Services;
 
-public sealed class ServiceOrderServiceTests
+public sealed partial class ServiceOrderServiceTests
 {
     private readonly IFixture _fixture = new Fixture();
     private readonly Mock<ILogger<ServiceOrderService>> _loggerMock = new();
     private readonly Mock<IMapper> _mapperMock = new();
+    private readonly Mock<IServiceOrderEventRepository> _repositoryEventsMock = new();
     private readonly Mock<IServiceOrderRepository> _repositoryMock = new();
     private readonly Mock<IPersonRepository> _personRepositoryMock = new();
     private readonly Mock<IVehicleRepository> _vehicleRepositoryMock = new();
@@ -35,6 +35,7 @@ public sealed class ServiceOrderServiceTests
             _loggerMock.Object,
             _mapperMock.Object,
             _repositoryMock.Object,
+            _repositoryEventsMock.Object,
             _personRepositoryMock.Object,
             _vehicleRepositoryMock.Object,
             _availableServiceRepositoryMock.Object,
@@ -286,5 +287,17 @@ public sealed class ServiceOrderServiceTests
 
         result.StatusCode.Should().Be(HttpStatusCode.NotFound);
         result.IsSuccess.Should().BeFalse();
+    }
+
+    [Fact]
+    public async Task GetExecutionTimeAsync_ShouldReturnZero_WhenNotFound()
+    {
+        var input = _fixture.Create<UpdateOneServiceOrderInput>();
+        _repositoryEventsMock.Setup(r => r.GetAverageExecutionTime(It.IsAny<CancellationToken>())).ReturnsAsync(TimeSpan.Zero);
+
+        var result = await _service.GetAverageExecutionTime(CancellationToken.None);
+
+        result.StatusCode.Should().Be(HttpStatusCode.OK);
+        result.Data.Should().Be(TimeSpan.Zero);
     }
 }

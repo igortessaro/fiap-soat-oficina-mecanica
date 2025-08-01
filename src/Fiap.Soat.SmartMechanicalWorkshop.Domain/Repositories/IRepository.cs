@@ -1,10 +1,12 @@
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
+using System.Data.Common;
 using System.Linq.Expressions;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Repositories;
 
 public interface IRepository<T> where T : class
 {
+    DbConnection GetDbConnection();
     Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
     Task<Paginate<T>> GetAllAsync(PaginatedRequest paginatedRequest, CancellationToken cancellationToken);
     Task<Paginate<T>> GetAllAsync(Expression<Func<T, bool>> predicate, PaginatedRequest paginatedRequest, CancellationToken cancellationToken);

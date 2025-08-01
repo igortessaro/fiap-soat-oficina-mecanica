@@ -7,10 +7,10 @@ public class Person : Entity
 {
     private Person() { }
 
-    public Person(string fullname, string document, EPersonType personType, EEmployeeRole? employeeRole, string email, Phone phone, Address? address)
+    public Person(string fullname, string document, EPersonType personType, EEmployeeRole? employeeRole, string email, string password, Phone phone, Address? address)
     {
         Address = new Address(string.Empty, string.Empty, string.Empty, string.Empty);
-        Update(fullname, document, personType, employeeRole, email, phone, address);
+        Update(fullname, document, personType, employeeRole, email, password, phone, address);
     }
 
     public string Document { get; private set; } = string.Empty;
@@ -19,14 +19,16 @@ public class Person : Entity
     public EEmployeeRole? EmployeeRole { get; private set; }
     public Phone Phone { get; private set; } = null!;
     public Email Email { get; private set; } = null!;
+    public string Password { get; private set; } = null!;
     public Guid AddressId { get; private set; }
     public Address Address { get; private set; } = null!;
     public ICollection<Vehicle> Vehicles { get; private set; } = [];
 
-    public Person Update(string fullname, string document, EPersonType personType, EEmployeeRole? employeeRole, string email, Phone phone, Address? address)
+    public Person Update(string fullname, string document, EPersonType personType, EEmployeeRole? employeeRole, string email, string password, Phone phone, Address? address)
     {
         if (!string.IsNullOrEmpty(document)) Document = document;
         if (!string.IsNullOrEmpty(fullname)) Fullname = fullname;
+        if (!string.IsNullOrEmpty(password)) Password = password;
         PersonType = personType;
         EmployeeRole = employeeRole;
         UpdatePhone(phone);

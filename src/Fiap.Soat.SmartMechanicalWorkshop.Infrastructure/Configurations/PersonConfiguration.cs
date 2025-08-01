@@ -31,6 +31,12 @@ public sealed class PersonConfiguration : IEntityTypeConfiguration<Person>
             .HasMaxLength(100)
             .IsRequired();
 
+        builder.Property(x => x.Password)
+            .HasColumnName("password")
+            .HasConversion<string>()
+            .HasMaxLength(100)
+            .IsRequired();
+
         builder.Property(x => x.EmployeeRole)
              .HasColumnName("employee_role")
              .HasConversion<string>()

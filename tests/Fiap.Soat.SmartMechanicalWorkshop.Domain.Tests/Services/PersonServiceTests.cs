@@ -121,11 +121,12 @@ public sealed class PersonServiceTests
         var personDto = _fixture.Create<PersonDto>();
         var phone = _fixture.Create<Phone>();
         var address = _fixture.Create<Address>();
+        var password = "_fixture.Create<Address>()";
 
         _repositoryMock.Setup(r => r.GetAsync(input.Id, It.IsAny<CancellationToken>())).ReturnsAsync(person);
         _mapperMock.Setup(m => m.Map<Phone>(input.Phone)).Returns(phone);
         _mapperMock.Setup(m => m.Map<Address>(input.Address)).Returns(address);
-        person = person.Update(input.Fullname, input.Document, input.PersonType, input.EmployeeRole, input.Email, phone, address);
+        person = person.Update(input.Fullname, input.Document, input.PersonType, input.EmployeeRole, input.Email, password, phone, address);
         _repositoryMock.Setup(r => r.UpdateAsync(It.IsAny<Person>(), It.IsAny<CancellationToken>())).ReturnsAsync(updatedPerson);
         _mapperMock.Setup(m => m.Map<PersonDto>(updatedPerson)).Returns(personDto);
 
