@@ -9,7 +9,7 @@ public class AvailableServiceRepository(AppDbContext appDbContext) : Repository<
 {
     public async Task<AvailableService?> GetAsync(Guid id, CancellationToken cancellationToken)
     {
-        return await Query()
+        return await Query(false)
             .Include(x => x.Supplies)
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
     }

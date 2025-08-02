@@ -17,6 +17,11 @@ public sealed class AvailableServiceService(
     public async Task<Response<AvailableServiceDto>> CreateAsync(CreateAvailableServiceRequest request, CancellationToken cancellationToken)
     {
         var entity = mapper.Map<AvailableService>(request);
+        if (await repository.AnyAsync(x => request.Name.ToLower().Equals(x.Name.ToLower()), cancellationToken))
+        {
+            return ResponseFactory.Fail<AvailableServiceDto>(new Error($"AvailableService with name {request.Name} already exists"), System.Net.HttpStatusCode.Conflict);
+        }
+
         if (!request.SuppliesIds.Any())
         {
             return ResponseFactory.Ok(mapper.Map<AvailableServiceDto>(await repository.AddAsync(entity, cancellationToken)), System.Net.HttpStatusCode.Created);
@@ -63,12 +68,15 @@ public sealed class AvailableServiceService(
         found.Supplies.Clear();
 
         if (input.SuppliesIds != null)
+        {
             foreach (var supply in input.SuppliesIds)
             {
                 var foundSupply = await supplyRepository.GetByIdAsync(supply, cancellationToken);
-                if (foundSupply is null) return ResponseFactory.Fail<AvailableServiceDto>(new Error($"Supply with ID {supply} not found"), System.Net.HttpStatusCode.NotFound);
+                if (foundSupply is null)
+                    return ResponseFactory.Fail<AvailableServiceDto>(new Error($"Supply with ID {supply} not found"), System.Net.HttpStatusCode.NotFound);
                 _ = found.AddSupply(foundSupply);
             }
+        }
 
         var updated = await repository.UpdateAsync(found.Update(input.Name, input.Price), cancellationToken);
         return ResponseFactory.Ok(mapper.Map<AvailableServiceDto>(updated));

@@ -4,6 +4,7 @@ using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Repositories;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.Interfaces;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
+using FluentResults;
 using System.Net;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Services;
@@ -14,7 +15,7 @@ public sealed class SupplyService(ISupplyRepository repository, IMapper mapper) 
     {
         if (await repository.AnyAsync(x => request.Name.ToLower().Equals(x.Name.ToLower()), cancellationToken))
         {
-            return ResponseFactory.Fail<SupplyDto>(new FluentResults.Error("Supply with the same name already exists"), HttpStatusCode.BadRequest);
+            return ResponseFactory.Fail<SupplyDto>(new Error($"Supply with name {request.Name} already exists"), System.Net.HttpStatusCode.Conflict);
         }
 
         var mapperEntity = mapper.Map<Supply>(request);
