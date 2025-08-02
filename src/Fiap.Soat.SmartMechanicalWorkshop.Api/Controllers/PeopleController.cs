@@ -15,7 +15,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Controllers;
 /// </summary>
 [Route("api/v1/[controller]")]
 [ApiController]
-
+[Authorize]
 public sealed class PeopleController(IPersonService service) : ControllerBase
 {
     /// <summary>
@@ -28,7 +28,6 @@ public sealed class PeopleController(IPersonService service) : ControllerBase
     [SwaggerOperation(Summary = "Get a person by ID", Description = "Returns a single person by its unique identifier.")]
     [ProducesResponseType(typeof(PersonDto), (int) HttpStatusCode.OK)]
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.NotFound)]
-    [Authorize]
     public async Task<IActionResult> GetOneAsync([FromRoute][Required] Guid id, CancellationToken cancellationToken)
     {
         var result = await service.GetOneAsync(id, cancellationToken);
@@ -44,7 +43,6 @@ public sealed class PeopleController(IPersonService service) : ControllerBase
     [HttpGet]
     [SwaggerOperation(Summary = "Get all people (paginated)", Description = "Returns a paginated list of people.")]
     [ProducesResponseType(typeof(Paginate<PersonDto>), (int) HttpStatusCode.OK)]
-    [Authorize]
     public async Task<IActionResult> GetAllAsync([FromQuery][Required] PaginatedRequest paginatedRequest, CancellationToken cancellationToken)
     {
         var result = await service.GetAllAsync(paginatedRequest, cancellationToken);
@@ -77,7 +75,6 @@ public sealed class PeopleController(IPersonService service) : ControllerBase
     [SwaggerOperation(Summary = "Delete a person", Description = "Deletes a person by its unique identifier.")]
     [ProducesResponseType((int) HttpStatusCode.NoContent)]
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.NotFound)]
-    [Authorize]
     public async Task<IActionResult> DeleteAsync([FromRoute][Required] Guid id, CancellationToken cancellationToken)
     {
         var result = await service.DeleteAsync(id, cancellationToken);
@@ -96,7 +93,6 @@ public sealed class PeopleController(IPersonService service) : ControllerBase
     [ProducesResponseType(typeof(PersonDto), (int) HttpStatusCode.OK)]
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.BadRequest)]
-    [Authorize]
     public async Task<IActionResult> UpdateAsync([FromRoute, Required] Guid id, [FromBody, Required] UpdateOnePersonRequest request, CancellationToken cancellationToken)
     {
         UpdateOnePersonInput input = new(id, request.Fullname, request.Document, request.PersonType, request.EmployeeRole, request.Email, request.Password, request.Phone, request.Address);

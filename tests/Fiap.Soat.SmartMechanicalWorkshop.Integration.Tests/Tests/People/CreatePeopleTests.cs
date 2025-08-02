@@ -18,8 +18,8 @@ public sealed class CreatePeopleTests : CustomWebApplicationFactory<Program>
             "12345678901",
             EPersonType.Client,
             null,
-            string.Empty,
             "integration.test@person.com",
+            "Password123!",
             new CreatePhoneRequest("11", "912345678"),
             new CreateAddressRequest("Rua Exemplo", "São Paulo", "SP", "01234-567"));
         string personJson = Newtonsoft.Json.JsonConvert.SerializeObject(personToCreate);
