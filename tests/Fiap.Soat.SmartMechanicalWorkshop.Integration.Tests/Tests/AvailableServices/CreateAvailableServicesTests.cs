@@ -20,7 +20,7 @@ public sealed class CreateAvailableServicesTests : CustomWebApplicationFactory<P
         await dbContext.Supplies.AddRangeAsync(supplies);
         await dbContext.SaveChangesAsync();
         var supplyIds = supplies.Select(x => x.Id).ToList();
-        var toCreate = new CreateAvailableServiceRequest("Troca de Óleo", (decimal) 102.09, supplyIds);
+        var toCreate = new CreateAvailableServiceRequest("Available Service Integration Tests", (decimal) 102.09, supplyIds);
         string json = Newtonsoft.Json.JsonConvert.SerializeObject(toCreate);
         var content = new StringContent(json, MediaTypeHeaderValue.Parse("application/json"));
 

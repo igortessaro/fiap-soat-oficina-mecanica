@@ -29,7 +29,7 @@ public class AvailableService : Entity
         return this;
     }
 
-    public AvailableService SetSupplies(List<Supply> supplies)
+    public AvailableService AddSupplies(IReadOnlyList<Supply> supplies)
     {
         Supplies.Clear();
         if (!supplies.Any()) return this;

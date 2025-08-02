@@ -9,8 +9,20 @@ public class AvailableServiceRepository(AppDbContext appDbContext) : Repository<
 {
     public async Task<AvailableService?> GetAsync(Guid id, CancellationToken cancellationToken)
     {
-        return await Query(false)
+        return await Query()
             .Include(x => x.Supplies)
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+    }
+
+    public async Task<AvailableService> UpdateAsync(Guid id, string name, decimal? price, IReadOnlyList<Supply> supplies, CancellationToken cancellationToken)
+    {
+        var entity = await Query(false)
+            .Include(x => x.Supplies)
+            .SingleAsync(x => x.Id == id, cancellationToken);
+
+        _ = entity.Update(name, price);
+        _ = entity.AddSupplies(supplies);
+        _ = await UpdateAsync(entity, cancellationToken);
+        return entity;
     }
 }

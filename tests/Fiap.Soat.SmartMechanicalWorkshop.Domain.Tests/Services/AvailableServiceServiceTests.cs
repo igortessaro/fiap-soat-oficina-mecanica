@@ -224,7 +224,7 @@ public sealed class AvailableServiceServiceTests
 
         _repositoryMock.Setup(r => r.GetAsync(input.Id, It.IsAny<CancellationToken>())).ReturnsAsync(entity);
         _supplyRepositoryMock.Setup(s => s.GetByIdAsync(supplyId, It.IsAny<CancellationToken>())).ReturnsAsync(supply);
-        _repositoryMock.Setup(r => r.UpdateAsync(It.IsAny<AvailableService>(), It.IsAny<CancellationToken>())).ReturnsAsync(updatedEntity);
+        _repositoryMock.Setup(r => r.UpdateAsync(input.Id, input.Name, input.Price, It.IsAny<IReadOnlyList<Supply>>(), It.IsAny<CancellationToken>())).ReturnsAsync(updatedEntity);
         _mapperMock.Setup(m => m.Map<AvailableServiceDto>(updatedEntity)).Returns(dto);
 
         // Act

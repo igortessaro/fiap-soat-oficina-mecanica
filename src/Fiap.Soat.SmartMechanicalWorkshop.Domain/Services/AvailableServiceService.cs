@@ -65,20 +65,25 @@ public sealed class AvailableServiceService(
     {
         var found = await repository.GetAsync(input.Id, cancellationToken);
         if (found is null) return ResponseFactory.Fail<AvailableServiceDto>(new Error("AvailableService not found"), System.Net.HttpStatusCode.NotFound);
-        found.Supplies.Clear();
-
-        if (input.SuppliesIds != null)
+        if (!input.Name.Equals(found.Name, StringComparison.CurrentCultureIgnoreCase) &&
+            await repository.AnyAsync(x => input.Name.ToLower().Equals(x.Name.ToLower()), cancellationToken))
         {
-            foreach (var supply in input.SuppliesIds)
-            {
-                var foundSupply = await supplyRepository.GetByIdAsync(supply, cancellationToken);
-                if (foundSupply is null)
-                    return ResponseFactory.Fail<AvailableServiceDto>(new Error($"Supply with ID {supply} not found"), System.Net.HttpStatusCode.NotFound);
-                _ = found.AddSupply(foundSupply);
-            }
+            return ResponseFactory.Fail<AvailableServiceDto>(new Error($"AvailableService with name {input.Name} already exists"), System.Net.HttpStatusCode.Conflict);
         }
 
-        var updated = await repository.UpdateAsync(found.Update(input.Name, input.Price), cancellationToken);
+        var supplies = new List<Supply>();
+        foreach (var supply in input.SuppliesIds ?? [])
+        {
+            var foundSupply = await supplyRepository.GetByIdAsync(supply, cancellationToken);
+            if (foundSupply is null)
+            {
+                return ResponseFactory.Fail<AvailableServiceDto>(new Error($"Supply with ID {supply} not found"), System.Net.HttpStatusCode.NotFound);
+            }
+
+            supplies.Add(foundSupply);
+        }
+
+        var updated = await repository.UpdateAsync(input.Id, input.Name, input.Price, supplies, cancellationToken);
         return ResponseFactory.Ok(mapper.Map<AvailableServiceDto>(updated));
     }
 }
