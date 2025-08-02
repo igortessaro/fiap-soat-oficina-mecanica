@@ -12,6 +12,11 @@ public sealed class SupplyService(ISupplyRepository repository, IMapper mapper) 
 {
     public async Task<Response<SupplyDto>> CreateAsync(CreateNewSupplyRequest request, CancellationToken cancellationToken)
     {
+        if (await repository.AnyAsync(x => request.Name.ToLower().Equals(x.Name.ToLower()), cancellationToken))
+        {
+            return ResponseFactory.Fail<SupplyDto>(new FluentResults.Error("Supply with the same name already exists"), HttpStatusCode.BadRequest);
+        }
+
         var mapperEntity = mapper.Map<Supply>(request);
         var createdEntity = await repository.AddAsync(mapperEntity, cancellationToken);
         return ResponseFactory.Ok(mapper.Map<SupplyDto>(createdEntity), HttpStatusCode.Created);
