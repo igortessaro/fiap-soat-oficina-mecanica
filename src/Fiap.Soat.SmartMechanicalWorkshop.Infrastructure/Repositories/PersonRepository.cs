@@ -11,8 +11,6 @@ public sealed class PersonRepository(AppDbContext appDbContext) : Repository<Per
     public Task<Person?> GetAsync(Guid id, CancellationToken cancellationToken) =>
         Query(false).Include(x => x.Address).FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
-    public async Task<Person> GetOneByLoginAsync(LoginRequest loginRequest, CancellationToken cancellationToken)
-    {
-        return await Query(true).FirstOrDefaultAsync(item => item.Email.Address.Equals(loginRequest.Email) && item.Password.Equals(loginRequest.Password), cancellationToken);
-    }
+    public Task<Person?> GetOneByLoginAsync(LoginRequest loginRequest, CancellationToken cancellationToken) =>
+        Query().FirstOrDefaultAsync(item => item.Email.Address.Equals(loginRequest.Email) && item.Password.Equals(loginRequest.Password), cancellationToken);
 }

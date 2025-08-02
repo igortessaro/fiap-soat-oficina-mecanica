@@ -66,7 +66,7 @@ public sealed class PersonService(IMapper mapper, IPersonRepository repository) 
 
     public async Task<Response<PersonDto>> GetOneByLoginAsync(LoginRequest loginRequest, CancellationToken cancellationToken)
     {
-        Person foundEntity = await repository.GetOneByLoginAsync(loginRequest, cancellationToken);
+        Person? foundEntity = await repository.GetOneByLoginAsync(loginRequest, cancellationToken);
 
         return foundEntity != null
             ? ResponseFactory.Ok(mapper.Map<PersonDto>(foundEntity))

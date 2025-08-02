@@ -14,7 +14,7 @@ public abstract class Repository<T>(DbContext context) : IRepository<T> where T 
 
     public DbConnection GetDbConnection()
     {
-        return context.Database.GetDbConnection();
+        return _context.Database.GetDbConnection();
     }
 
     public virtual async Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken)
@@ -69,7 +69,7 @@ public abstract class Repository<T>(DbContext context) : IRepository<T> where T 
 
     protected IQueryable<T> Query(bool noTracking = true) => noTracking ? _dbSet.AsQueryable().AsNoTracking() : _dbSet.AsQueryable();
 
-    protected async Task<Paginate<T>> GetAllAsync(IQueryable<T> query, PaginatedRequest paginatedRequest, CancellationToken cancellationToken)
+    protected static async Task<Paginate<T>> GetAllAsync(IQueryable<T> query, PaginatedRequest paginatedRequest, CancellationToken cancellationToken)
     {
         int totalCount = await query.AsNoTracking().CountAsync(cancellationToken);
         if (paginatedRequest.PageNumber == 0)

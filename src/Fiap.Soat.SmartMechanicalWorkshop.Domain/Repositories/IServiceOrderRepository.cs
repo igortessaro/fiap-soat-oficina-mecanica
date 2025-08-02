@@ -7,5 +7,5 @@ public interface IServiceOrderRepository : IRepository<ServiceOrder>
 {
     Task<ServiceOrder?> GetAsync(Guid id, CancellationToken cancellationToken);
     Task<ServiceOrder?> GetDetailedAsync(Guid id, CancellationToken cancellationToken);
-    Task<ServiceOrder> GetOneByLoginAsync(GetOnePersonByLoginInput getOnePersonByLoginInput, CancellationToken cancellationToken);
+    Task<ServiceOrder?> GetOneByLoginAsync(GetOnePersonByLoginInput loginInput, CancellationToken cancellationToken);
 }
