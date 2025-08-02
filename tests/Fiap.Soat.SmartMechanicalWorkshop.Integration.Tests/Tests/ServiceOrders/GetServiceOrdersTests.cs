@@ -34,6 +34,7 @@ public sealed class GetServiceOrdersTests : CustomWebApplicationFactory<Program>
             "999.999.999-99",
             EPersonType.Client,
             null,
+            string.Empty,
             "client@email.com",
             new Phone("55", "99999999"),
             new Address("Street", "City", "State", "99999-999"));

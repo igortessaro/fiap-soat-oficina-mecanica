@@ -22,6 +22,7 @@ public static class PeopleFactory
             personType,
             employeeRole,
             faker.Internet.Email(),
+            faker.Internet.Password(),
             new Phone(faker.Phone.PhoneNumber()),
             new Address(faker.Address.StreetName(), faker.Address.City(), faker.Address.State(), faker.Address.ZipCode()));
     }
