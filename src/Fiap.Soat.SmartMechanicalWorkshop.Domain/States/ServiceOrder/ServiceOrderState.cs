@@ -4,6 +4,6 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.States.ServiceOrder;
 
 public abstract class ServiceOrderState
 {
-    public abstract EServiceOrderStatus Status { get; }
-    public abstract void ChangeStatus(Entities.ServiceOrder serviceOrder, EServiceOrderStatus status);
+    public abstract ServiceOrderStatus Status { get; }
+    public abstract void ChangeStatus(Entities.ServiceOrder serviceOrder, ServiceOrderStatus status);
 }

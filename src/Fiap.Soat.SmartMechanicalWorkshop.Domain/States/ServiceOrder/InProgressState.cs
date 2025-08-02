@@ -5,10 +5,10 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.States.ServiceOrder;
 
 public sealed class InProgressState : ServiceOrderState
 {
-    public override EServiceOrderStatus Status => EServiceOrderStatus.InProgress;
-    public override void ChangeStatus(Entities.ServiceOrder serviceOrder, EServiceOrderStatus status)
+    public override ServiceOrderStatus Status => ServiceOrderStatus.InProgress;
+    public override void ChangeStatus(Entities.ServiceOrder serviceOrder, ServiceOrderStatus status)
     {
-        if (status != EServiceOrderStatus.Completed)
+        if (status != ServiceOrderStatus.Completed)
         {
             throw new DomainException("Uma ordem de serviço em progresso só pode ser alterada para concluída.");
         }

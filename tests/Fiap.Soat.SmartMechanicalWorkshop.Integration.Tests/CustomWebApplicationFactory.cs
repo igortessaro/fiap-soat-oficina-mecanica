@@ -30,8 +30,8 @@ public class CustomWebApplicationFactory<TProgram> : WebApplicationFactory<TProg
             [
                 new Claim(ClaimTypes.Name, "Test User"),
                 new Claim(ClaimTypes.Email, "testuser@email.com"),
-                new Claim("PersonType", nameof(EPersonType.Client)),
-                new Claim(ClaimTypes.Role, nameof(EEmployeeRole.VehicleInspector))
+                new Claim("PersonType", nameof(PersonType.Client)),
+                new Claim(ClaimTypes.Role, nameof(EmployeeRole.VehicleInspector))
             ],
             expires: DateTime.UtcNow.AddHours(1),
             signingCredentials: credentials

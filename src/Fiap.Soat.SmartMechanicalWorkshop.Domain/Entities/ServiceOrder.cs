@@ -18,7 +18,7 @@ public class ServiceOrder : Entity
 
     private ServiceOrderState _state;
 
-    public EServiceOrderStatus Status { get; private set; }
+    public ServiceOrderStatus Status { get; private set; }
     public Guid ClientId { get; private set; }
     public Guid VehicleId { get; private set; }
     public string Title { get; private set; } = string.Empty;
@@ -42,7 +42,7 @@ public class ServiceOrder : Entity
         return this;
     }
 
-    public ServiceOrder Update(string? title, string? description, EServiceOrderStatus? serviceOrderStatus)
+    public ServiceOrder Update(string? title, string? description, ServiceOrderStatus? serviceOrderStatus)
     {
         if (!string.IsNullOrEmpty(title)) Title = title;
         if (!string.IsNullOrEmpty(description)) Description = description;
@@ -57,7 +57,7 @@ public class ServiceOrder : Entity
         return this;
     }
 
-    public ServiceOrder ChangeStatus(EServiceOrderStatus newStatus)
+    public ServiceOrder ChangeStatus(ServiceOrderStatus newStatus)
     {
         _state.ChangeStatus(this, newStatus);
         return this;
@@ -67,14 +67,14 @@ public class ServiceOrder : Entity
     {
         _state = Status switch
         {
-            EServiceOrderStatus.Received => new ReceivedState(),
-            EServiceOrderStatus.UnderDiagnosis => new UnderDiagnosisState(),
-            EServiceOrderStatus.WaitingApproval => new WaitingApprovalState(),
-            EServiceOrderStatus.InProgress => new InProgressState(),
-            EServiceOrderStatus.Completed => new CompletedState(),
-            EServiceOrderStatus.Delivered => new DeliveredState(),
-            EServiceOrderStatus.Cancelled => new CancelledState(),
-            EServiceOrderStatus.Rejected => new RejectedState(),
+            ServiceOrderStatus.Received => new ReceivedState(),
+            ServiceOrderStatus.UnderDiagnosis => new UnderDiagnosisState(),
+            ServiceOrderStatus.WaitingApproval => new WaitingApprovalState(),
+            ServiceOrderStatus.InProgress => new InProgressState(),
+            ServiceOrderStatus.Completed => new CompletedState(),
+            ServiceOrderStatus.Delivered => new DeliveredState(),
+            ServiceOrderStatus.Cancelled => new CancelledState(),
+            ServiceOrderStatus.Rejected => new RejectedState(),
             _ => throw new InvalidOperationException("Unknown status")
         };
 

@@ -8,7 +8,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.ServiceOrders;
 public record ServiceOrderDto
 {
     public Guid Id { get; init; }
-    public EServiceOrderStatus Status { get; init; }
+    public ServiceOrderStatus Status { get; init; }
     public string Title { get; init; } = string.Empty;
     public string Description { get; init; } = string.Empty;
     public Guid PersonId { get; init; }

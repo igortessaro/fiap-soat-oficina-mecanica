@@ -5,5 +5,5 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.ServiceOrders;
 
 public class GetServiceOrdersRequest : PaginatedRequest
 {
-    public EServiceOrderStatus? Status { get; set; }
+    public ServiceOrderStatus? Status { get; set; }
 }

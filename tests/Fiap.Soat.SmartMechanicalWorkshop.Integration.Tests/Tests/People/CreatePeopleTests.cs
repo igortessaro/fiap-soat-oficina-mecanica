@@ -1,3 +1,4 @@
+using Bogus.Extensions.Brazil;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Person;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 using System.Net;
@@ -13,10 +14,11 @@ public sealed class CreatePeopleTests : CustomWebApplicationFactory<Program>
     public async Task UC0001_CreateAsync_WhenCreatePerson_ShouldReturn201()
     {
         // Arrange
+        var faker = new Bogus.Faker();
         var personToCreate = new CreatePersonRequest(
             "Integration Test Person",
-            "12345678901",
-            EPersonType.Client,
+            faker.Person.Cpf(),
+            PersonType.Client,
             null,
             "integration.test@person.com",
             "Password123!",

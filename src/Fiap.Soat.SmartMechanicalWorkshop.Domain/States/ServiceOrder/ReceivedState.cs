@@ -5,10 +5,10 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.States.ServiceOrder;
 
 public sealed class ReceivedState : ServiceOrderState
 {
-    public override EServiceOrderStatus Status => EServiceOrderStatus.Received;
-    public override void ChangeStatus(Entities.ServiceOrder serviceOrder, EServiceOrderStatus status)
+    public override ServiceOrderStatus Status => ServiceOrderStatus.Received;
+    public override void ChangeStatus(Entities.ServiceOrder serviceOrder, ServiceOrderStatus status)
     {
-        if (status != EServiceOrderStatus.UnderDiagnosis)
+        if (status != ServiceOrderStatus.UnderDiagnosis)
         {
             throw new DomainException("Uma ordem de serviço recebida só pode ser alterada para sob diagnóstico.");
         }

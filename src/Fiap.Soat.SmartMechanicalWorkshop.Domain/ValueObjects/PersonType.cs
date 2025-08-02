@@ -1,5 +1,5 @@
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
-public enum EPersonType
+public enum PersonType
 {
     Client, Employee
 }

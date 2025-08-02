@@ -32,7 +32,7 @@ public sealed class AuthServiceTests
         // Arrange
         var loginRequest = _fixture.Create<LoginRequest>();
         var personDto = _fixture.Build<PersonDto>()
-            .With(x => x.EmployeeRole, EEmployeeRole.Detailer)
+            .With(x => x.EmployeeRole, EmployeeRole.Detailer)
             .Create();
         var response = ResponseFactory.Ok(personDto);
 

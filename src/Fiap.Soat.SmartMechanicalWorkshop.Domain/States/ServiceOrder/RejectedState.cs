@@ -5,10 +5,10 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.States.ServiceOrder;
 
 public sealed class RejectedState : ServiceOrderState
 {
-    public override EServiceOrderStatus Status => EServiceOrderStatus.Rejected;
-    public override void ChangeStatus(Entities.ServiceOrder serviceOrder, EServiceOrderStatus status)
+    public override ServiceOrderStatus Status => ServiceOrderStatus.Rejected;
+    public override void ChangeStatus(Entities.ServiceOrder serviceOrder, ServiceOrderStatus status)
     {
-        if (status != EServiceOrderStatus.WaitingApproval)
+        if (status != ServiceOrderStatus.WaitingApproval)
         {
             throw new DomainException("Uma ordem de serviço rejeitada só pode ser alterada para agurdando aprovação.");
         }

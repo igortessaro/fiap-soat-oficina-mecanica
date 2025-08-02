@@ -24,7 +24,7 @@ public sealed class ServiceOrderEventServiceTests
     {
         // Arrange
         var serviceOrderId = Guid.NewGuid();
-        var status = _fixture.Create<EServiceOrderStatus>();
+        var status = _fixture.Create<ServiceOrderStatus>();
         var eventEntity = new ServiceOrderEvent(serviceOrderId, status);
 
         _repositoryMock
