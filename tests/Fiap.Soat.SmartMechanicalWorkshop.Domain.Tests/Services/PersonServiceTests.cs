@@ -1,5 +1,7 @@
 using AutoFixture;
 using AutoMapper;
+using Bogus;
+using Bogus.Extensions.Brazil;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Auth;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Person;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
@@ -7,9 +9,11 @@ using Fiap.Soat.SmartMechanicalWorkshop.Domain.Repositories;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
+using Fiap.Soat.SmartMechanicalWorkshop.Tests.Shared.Factories;
 using FluentAssertions;
 using Moq;
 using System.Net;
+using Person = Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities.Person;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Tests.Services;
 
@@ -30,10 +34,10 @@ public sealed class PersonServiceTests
     {
         // Arrange
         var request = _fixture.Build<CreatePersonRequest>()
-            .With(x => x.PersonType, EPersonType.Client)
+            .With(x => x.PersonType, PersonType.Client)
             .Without(x => x.EmployeeRole)
             .Create();
-        var person = _fixture.Create<Person>();
+        var person = PeopleFactory.CreateClient();
         var personDto = _fixture.Create<PersonDto>();
 
         _mapperMock.Setup(m => m.Map<Person>(request)).Returns(person);
@@ -115,18 +119,23 @@ public sealed class PersonServiceTests
     public async Task UpdateAsync_ShouldReturnUpdatedPerson_WhenExists()
     {
         // Arrange
-        var input = _fixture.Create<UpdateOnePersonInput>();
-        var person = _fixture.Create<Person>();
+        var faker = new Faker("pt_BR");
+        var input = _fixture.Build<UpdateOnePersonInput>()
+            .With(x => x.PersonType, PersonType.Employee)
+            .With(x => x.EmployeeRole, EmployeeRole.Detailer)
+            .With(x => x.Document, faker.Person.Cpf())
+            .With(x => x.Email, faker.Internet.Email())
+            .Create();
         var updatedPerson = _fixture.Create<Person>();
         var personDto = _fixture.Create<PersonDto>();
         var phone = _fixture.Create<Phone>();
         var address = _fixture.Create<Address>();
-        var password = "_fixture.Create<Address>()";
+        string? password = faker.Internet.Password();
+        var person = _fixture.Create<Person>().Update(input.Fullname, input.Document, input.PersonType, input.EmployeeRole, input.Email, password, phone, address);
 
         _repositoryMock.Setup(r => r.GetAsync(input.Id, It.IsAny<CancellationToken>())).ReturnsAsync(person);
         _mapperMock.Setup(m => m.Map<Phone>(input.Phone)).Returns(phone);
         _mapperMock.Setup(m => m.Map<Address>(input.Address)).Returns(address);
-        person = person.Update(input.Fullname, input.Document, input.PersonType, input.EmployeeRole, input.Email, password, phone, address);
         _repositoryMock.Setup(r => r.UpdateAsync(It.IsAny<Person>(), It.IsAny<CancellationToken>())).ReturnsAsync(updatedPerson);
         _mapperMock.Setup(m => m.Map<PersonDto>(updatedPerson)).Returns(personDto);
 

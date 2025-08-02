@@ -5,4 +5,4 @@ using MediatR;
 
 namespace Fiap.Soat.MechanicalWorkshop.Application.Commands;
 
-public record ServiceOrderChangeStatusCommand(Guid Id, EServiceOrderStatus Status) : IRequest<Response<ServiceOrderDto>>;
+public record ServiceOrderChangeStatusCommand(Guid Id, ServiceOrderStatus Status) : IRequest<Response<ServiceOrderDto>>;

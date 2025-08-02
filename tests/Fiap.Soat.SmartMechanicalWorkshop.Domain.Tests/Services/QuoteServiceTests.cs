@@ -30,7 +30,7 @@ public sealed class QuoteServiceTests
     {
         // Arrange
         var serviceOrder = _fixture.Build<ServiceOrderDto>()
-            .With(x => x.Status, EServiceOrderStatus.Delivered)
+            .With(x => x.Status, ServiceOrderStatus.Delivered)
             .Create();
 
         // Act
@@ -46,7 +46,7 @@ public sealed class QuoteServiceTests
     {
         // Arrange
         var serviceOrder = _fixture.Build<ServiceOrderDto>()
-            .With(x => x.Status, EServiceOrderStatus.WaitingApproval)
+            .With(x => x.Status, ServiceOrderStatus.WaitingApproval)
             .With(x => x.AvailableServices, Array.Empty<AvailableServiceDto>())
             .Create();
 
@@ -66,7 +66,7 @@ public sealed class QuoteServiceTests
             .With(x => x.Supplies, _fixture.CreateMany<SupplyDto>(2).ToArray())
             .Create();
         var serviceOrder = _fixture.Build<ServiceOrderDto>()
-            .With(x => x.Status, EServiceOrderStatus.WaitingApproval)
+            .With(x => x.Status, ServiceOrderStatus.WaitingApproval)
             .With(x => x.AvailableServices, [availableService])
             .Create();
 

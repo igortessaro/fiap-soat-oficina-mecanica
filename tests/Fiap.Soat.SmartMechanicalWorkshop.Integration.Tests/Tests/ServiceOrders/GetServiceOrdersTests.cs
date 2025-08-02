@@ -32,7 +32,7 @@ public sealed class GetServiceOrdersTests : CustomWebApplicationFactory<Program>
         var client = new Person(
             "Client Service Order",
             "999.999.999-99",
-            EPersonType.Client,
+            PersonType.Client,
             null,
             string.Empty,
             "client@email.com",

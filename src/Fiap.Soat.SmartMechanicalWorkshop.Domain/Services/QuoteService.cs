@@ -12,7 +12,7 @@ public sealed class QuoteService(ILogger<QuoteService> logger, IQuoteRepository 
 {
     public async Task<Response<Quote>> CreateAsync(ServiceOrderDto serviceOrder, CancellationToken cancellationToken)
     {
-        if (serviceOrder.Status != EServiceOrderStatus.WaitingApproval)
+        if (serviceOrder.Status != ServiceOrderStatus.WaitingApproval)
         {
             logger.LogInformation("Service order with Id {ServiceOrderId} is not in WaitingApproval status, no quote will be created", serviceOrder.Id);
             return ResponseFactory.Fail<Quote>(new FluentResults.Error("Is only allowed to quote waiting approval service orders"), System.Net.HttpStatusCode.BadRequest);

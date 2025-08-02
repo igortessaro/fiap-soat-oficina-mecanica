@@ -8,7 +8,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Services;
 
 public sealed class ServiceOrderEventService(IServiceOrderEventRepository repository) : IServiceOrderEventService
 {
-    public async Task<Response> CreateAsync(Guid serviceOrderId, EServiceOrderStatus status, CancellationToken cancellationToken)
+    public async Task<Response> CreateAsync(Guid serviceOrderId, ServiceOrderStatus status, CancellationToken cancellationToken)
     {
         _ = await repository.AddAsync(new ServiceOrderEvent(serviceOrderId, status), cancellationToken);
         return ResponseFactory.Ok();

@@ -1,3 +1,5 @@
+using System.Text.RegularExpressions;
+
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 
 public record Email
@@ -10,6 +12,14 @@ public record Email
     }
 
     public string Address { get; private set; } = string.Empty;
+
+    public bool IsValid()
+    {
+        if (string.IsNullOrWhiteSpace(Address)) return false;
+
+        const string emailPattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+        return Regex.IsMatch(Address, emailPattern);
+    }
 
     public static implicit operator Email(string address) => new Email(address);
     public static implicit operator string(Email email) => email.Address;

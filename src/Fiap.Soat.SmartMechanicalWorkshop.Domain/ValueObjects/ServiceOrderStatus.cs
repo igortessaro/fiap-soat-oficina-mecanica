@@ -1,6 +1,6 @@
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 
-public enum EServiceOrderStatus
+public enum ServiceOrderStatus
 {
     Received, UnderDiagnosis, WaitingApproval, InProgress, Completed, Delivered, Cancelled, Rejected
 }

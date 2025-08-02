@@ -2,7 +2,7 @@ using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Person;
 
-public record PersonDto(Guid Id, string Fullname, string Document, EPersonType PersonType, EEmployeeRole? EmployeeRole, PhoneDto Phone, EmailDto Email, AddressDto Address);
+public record PersonDto(Guid Id, string Fullname, string Document, PersonType PersonType, EmployeeRole? EmployeeRole, PhoneDto Phone, EmailDto Email, AddressDto Address);
 
 public record PhoneDto(string AreaCode, string Number);
 

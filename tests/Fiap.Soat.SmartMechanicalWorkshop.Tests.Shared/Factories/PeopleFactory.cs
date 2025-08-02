@@ -1,4 +1,5 @@
 using Bogus;
+using Bogus.Extensions.Brazil;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 using System.Diagnostics.CodeAnalysis;
@@ -9,16 +10,16 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Tests.Shared.Factories;
 [ExcludeFromCodeCoverage]
 public static class PeopleFactory
 {
-    public static Person CreateClient() => Create(EPersonType.Client, null);
+    public static Person CreateClient() => Create(PersonType.Client, null);
 
-    public static Person CreateDetailerEmployee() => Create(EPersonType.Employee, EEmployeeRole.Detailer);
+    public static Person CreateDetailerEmployee() => Create(PersonType.Employee, EmployeeRole.Detailer);
 
-    private static Person Create(EPersonType personType, EEmployeeRole? employeeRole)
+    private static Person Create(PersonType personType, EmployeeRole? employeeRole)
     {
         var faker = new Faker("pt_BR");
         return new Person(
             faker.Name.FullName(),
-            faker.Random.Replace("###.###.###-##"),
+            faker.Person.Cpf(),
             personType,
             employeeRole,
             faker.Internet.Email(),

@@ -19,11 +19,6 @@ public sealed class PersonConfiguration : IEntityTypeConfiguration<Person>
             .HasColumnType("VARCHAR(255)")
             .HasMaxLength(255)
             .IsRequired();
-        builder.Property(x => x.Document)
-            .HasColumnName("document")
-            .HasColumnType("VARCHAR(100)")
-            .HasMaxLength(100)
-            .IsRequired();
 
         builder.Property(x => x.PersonType)
             .HasColumnName("person_type")
@@ -62,6 +57,17 @@ public sealed class PersonConfiguration : IEntityTypeConfiguration<Person>
             email.HasIndex(a => a.Address).IsUnique();
         });
 
+        builder.OwnsOne(d => d.Document, document =>
+        {
+            document.Property(x => x.Value)
+                .HasColumnName("document")
+                .HasColumnType("VARCHAR(100)")
+                .HasMaxLength(100)
+                .IsRequired();
+
+            document.HasIndex(x => x.Value).IsUnique();
+        });
+
         builder.HasOne(c => c.Address)
             .WithOne(a => a.Person)
             .HasForeignKey<Person>(c => c.AddressId)
@@ -71,7 +77,5 @@ public sealed class PersonConfiguration : IEntityTypeConfiguration<Person>
             .WithOne(x => x.Person)
             .HasForeignKey(v => v.PersonId)
             .OnDelete(DeleteBehavior.Cascade);
-
-        builder.HasIndex(x => x.Document).IsUnique();
     }
 }

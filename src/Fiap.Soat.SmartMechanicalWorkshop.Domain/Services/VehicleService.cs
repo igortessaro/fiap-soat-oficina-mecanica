@@ -19,7 +19,7 @@ public sealed class VehicleService(IVehicleRepository repository, IPersonReposit
             return ResponseFactory.Fail<VehicleDto>(new FluentResults.Error("Person not found"), System.Net.HttpStatusCode.NotFound);
         }
 
-        if (foundPerson.PersonType != EPersonType.Client)
+        if (foundPerson.PersonType != PersonType.Client)
         {
             return ResponseFactory.Fail<VehicleDto>(new FluentResults.Error("Only clients are allowed to register a vehicle"), System.Net.HttpStatusCode.BadRequest);
         }

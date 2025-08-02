@@ -5,10 +5,10 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.States.ServiceOrder;
 
 public sealed class CancelledState : ServiceOrderState
 {
-    public override EServiceOrderStatus Status => EServiceOrderStatus.Cancelled;
-    public override void ChangeStatus(Entities.ServiceOrder serviceOrder, EServiceOrderStatus status)
+    public override ServiceOrderStatus Status => ServiceOrderStatus.Cancelled;
+    public override void ChangeStatus(Entities.ServiceOrder serviceOrder, ServiceOrderStatus status)
     {
-        if (status != EServiceOrderStatus.Delivered)
+        if (status != ServiceOrderStatus.Delivered)
         {
             throw new DomainException("Uma ordem de serviço cancelada só pode ser alterada para entregue.");
         }
