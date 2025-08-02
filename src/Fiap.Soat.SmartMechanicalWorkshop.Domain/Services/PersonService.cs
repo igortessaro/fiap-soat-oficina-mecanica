@@ -34,7 +34,7 @@ public sealed class PersonService(IMapper mapper, IPersonRepository repository) 
 
     public async Task<Response<PersonDto>> GetOneAsync(Guid id, CancellationToken cancellationToken)
     {
-        var foundEntity = await repository.GetByIdAsync(id, cancellationToken);
+        var foundEntity = await repository.GetDetailedByIdAsync(id, cancellationToken);
         return foundEntity != null
             ? ResponseFactory.Ok(mapper.Map<PersonDto>(foundEntity))
             : ResponseFactory.Fail<PersonDto>(new FluentResults.Error("Person Not Found"), System.Net.HttpStatusCode.NotFound);
@@ -59,7 +59,7 @@ public sealed class PersonService(IMapper mapper, IPersonRepository repository) 
 
     public async Task<Response<Paginate<PersonDto>>> GetAllAsync(PaginatedRequest paginatedRequest, CancellationToken cancellationToken)
     {
-        var response = await repository.GetAllAsync(paginatedRequest, cancellationToken);
+        var response = await repository.GetAllAsync([nameof(Person.Vehicles)], paginatedRequest, cancellationToken);
         var mappedResponse = mapper.Map<Paginate<PersonDto>>(response);
         return ResponseFactory.Ok(mappedResponse);
     }

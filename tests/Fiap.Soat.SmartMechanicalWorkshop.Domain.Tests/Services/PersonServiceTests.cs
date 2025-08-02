@@ -89,7 +89,7 @@ public sealed class PersonServiceTests
         var id = Guid.NewGuid();
         var person = _fixture.Create<Person>();
         var personDto = _fixture.Create<PersonDto>();
-        _repositoryMock.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync(person);
+        _repositoryMock.Setup(r => r.GetDetailedByIdAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync(person);
         _mapperMock.Setup(m => m.Map<PersonDto>(person)).Returns(personDto);
 
         // Act
@@ -131,7 +131,8 @@ public sealed class PersonServiceTests
         var phone = _fixture.Create<Phone>();
         var address = _fixture.Create<Address>();
         string? password = faker.Internet.Password();
-        var person = _fixture.Create<Person>().Update(input.Fullname, input.Document, input.PersonType, input.EmployeeRole, input.Email, password, phone, address);
+        var person = _fixture.Create<Person>()
+            .Update(input.Fullname, input.Document, input.PersonType, input.EmployeeRole, input.Email, password, phone, address);
 
         _repositoryMock.Setup(r => r.GetAsync(input.Id, It.IsAny<CancellationToken>())).ReturnsAsync(person);
         _mapperMock.Setup(m => m.Map<Phone>(input.Phone)).Returns(phone);
@@ -170,7 +171,8 @@ public sealed class PersonServiceTests
         var paginate = _fixture.Create<Paginate<Person>>();
         var paginateDto = _fixture.Create<Paginate<PersonDto>>();
 
-        _repositoryMock.Setup(r => r.GetAllAsync(paginatedRequest, It.IsAny<CancellationToken>())).ReturnsAsync(paginate);
+        _repositoryMock.Setup(r => r.GetAllAsync(new List<string>() { nameof(Person.Vehicles) }, paginatedRequest, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(paginate);
         _mapperMock.Setup(m => m.Map<Paginate<PersonDto>>(paginate)).Returns(paginateDto);
 
         // Act

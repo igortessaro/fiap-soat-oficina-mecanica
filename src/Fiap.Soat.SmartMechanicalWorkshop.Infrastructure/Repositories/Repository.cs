@@ -22,8 +22,21 @@ public abstract class Repository<T>(DbContext context) : IRepository<T> where T 
         return await _dbSet.FindAsync([id], cancellationToken);
     }
 
+    public virtual Task<T?> GetDetailedByIdAsync(Guid id, CancellationToken cancellationToken)
+    {
+        return _dbSet.AsNoTracking().FirstOrDefaultAsync(item => item.Id == id, cancellationToken);
+    }
+
     public virtual Task<Paginate<T>> GetAllAsync(PaginatedRequest paginatedRequest, CancellationToken cancellationToken) =>
         GetAllAsync(_dbSet, paginatedRequest, cancellationToken);
+
+    public virtual Task<Paginate<T>> GetAllAsync(IReadOnlyList<string> includes, PaginatedRequest paginatedRequest,
+        CancellationToken cancellationToken)
+    {
+        var query = _dbSet.AsQueryable();
+        query = includes.Aggregate(query, (current, include) => current.Include(include));
+        return GetAllAsync(query, paginatedRequest, cancellationToken);
+    }
 
     public Task<Paginate<T>> GetAllAsync(Expression<Func<T, bool>> predicate, PaginatedRequest paginatedRequest, CancellationToken cancellationToken) =>
         GetAllAsync(_dbSet.Where(predicate), paginatedRequest, cancellationToken);
@@ -69,7 +82,7 @@ public abstract class Repository<T>(DbContext context) : IRepository<T> where T 
 
     protected IQueryable<T> Query(bool noTracking = true) => noTracking ? _dbSet.AsQueryable().AsNoTracking() : _dbSet.AsQueryable();
 
-    protected static async Task<Paginate<T>> GetAllAsync(IQueryable<T> query, PaginatedRequest paginatedRequest, CancellationToken cancellationToken)
+    private static async Task<Paginate<T>> GetAllAsync(IQueryable<T> query, PaginatedRequest paginatedRequest, CancellationToken cancellationToken)
     {
         int totalCount = await query.AsNoTracking().CountAsync(cancellationToken);
         if (paginatedRequest.PageNumber == 0)

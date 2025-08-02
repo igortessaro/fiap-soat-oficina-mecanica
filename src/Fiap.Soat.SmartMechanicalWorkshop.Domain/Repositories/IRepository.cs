@@ -8,7 +8,9 @@ public interface IRepository<T> where T : class
 {
     DbConnection GetDbConnection();
     Task<T?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
+    Task<T?> GetDetailedByIdAsync(Guid id, CancellationToken cancellationToken);
     Task<Paginate<T>> GetAllAsync(PaginatedRequest paginatedRequest, CancellationToken cancellationToken);
+    Task<Paginate<T>> GetAllAsync(IReadOnlyList<string> includes, PaginatedRequest paginatedRequest, CancellationToken cancellationToken);
     Task<Paginate<T>> GetAllAsync(Expression<Func<T, bool>> predicate, PaginatedRequest paginatedRequest, CancellationToken cancellationToken);
     Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken);
     Task<T?> FindSingleAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken);

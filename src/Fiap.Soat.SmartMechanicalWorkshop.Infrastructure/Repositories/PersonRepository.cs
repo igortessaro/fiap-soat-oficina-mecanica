@@ -9,7 +9,12 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Repositories;
 public sealed class PersonRepository(AppDbContext appDbContext) : Repository<Person>(appDbContext), IPersonRepository
 {
     public Task<Person?> GetAsync(Guid id, CancellationToken cancellationToken) =>
-        Query(false).Include(x => x.Address).FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+        Query(false)
+            .Include(x => x.Address)
+            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+
+    public override Task<Person?> GetDetailedByIdAsync(Guid id, CancellationToken cancellationToken) =>
+        Query().Include(x => x.Vehicles).FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
     public Task<Person?> GetOneByLoginAsync(LoginRequest loginRequest, CancellationToken cancellationToken) =>
         Query().FirstOrDefaultAsync(item => item.Email.Address.Equals(loginRequest.Email) && item.Password.Equals(loginRequest.Password), cancellationToken);
