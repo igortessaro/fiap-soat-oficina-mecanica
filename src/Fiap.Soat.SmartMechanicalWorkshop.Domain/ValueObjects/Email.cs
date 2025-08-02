@@ -17,8 +17,8 @@ public record Email
     {
         if (string.IsNullOrWhiteSpace(Address)) return false;
 
-        const string emailPattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
-        return Regex.IsMatch(Address, emailPattern);
+        var emailRegex = new Regex(@"^[^@\s]+@[^@\s]+\.[^@\s]+$", RegexOptions.NonBacktracking);
+        return emailRegex.IsMatch(Address);
     }
 
     public static implicit operator Email(string address) => new Email(address);
