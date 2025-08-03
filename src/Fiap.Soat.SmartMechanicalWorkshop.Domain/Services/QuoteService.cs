@@ -40,7 +40,7 @@ public sealed class QuoteService(IMapper mapper, IQuoteRepository quoteRepositor
 
         if (status == quote.Status)
         {
-            return ResponseFactory.Fail<QuoteDto>(new  FluentResults.Error($"Quote is already {status.ToString()}"), System.Net.HttpStatusCode.BadRequest);
+            return ResponseFactory.Fail<QuoteDto>(new FluentResults.Error($"Quote is already {status.ToString()}"), System.Net.HttpStatusCode.BadRequest);
         }
 
         if (quote.Status != QuoteStatus.Pending)
@@ -48,7 +48,7 @@ public sealed class QuoteService(IMapper mapper, IQuoteRepository quoteRepositor
             return ResponseFactory.Fail<QuoteDto>(new FluentResults.Error($"Quote is not in {nameof(QuoteStatus.Pending)} status"), System.Net.HttpStatusCode.BadRequest);
         }
 
-        switch(status)
+        switch (status)
         {
             case QuoteStatus.Approved:
                 _ = quote.Approve();
