@@ -27,7 +27,7 @@ public class SuppliesController(ISupplyService supplyService) : ControllerBase
     [HttpGet("{id:guid}")]
     [ProducesResponseType(typeof(SupplyDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetOneAsync([FromRoute] [Required] Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetOneAsync([FromRoute][Required] Guid id, CancellationToken cancellationToken)
     {
         var result = await supplyService.GetOneAsync(id, cancellationToken);
         return result.ToActionResult();
@@ -42,7 +42,7 @@ public class SuppliesController(ISupplyService supplyService) : ControllerBase
     /// <response code="200">Returns the paginated list of supplies.</response>
     [HttpGet]
     [ProducesResponseType(typeof(Paginate<SupplyDto>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetAllAsync([FromQuery] [Required] PaginatedRequest paginatedRequest, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAllAsync([FromQuery][Required] PaginatedRequest paginatedRequest, CancellationToken cancellationToken)
     {
         var result = await supplyService.GetAllAsync(paginatedRequest, cancellationToken);
         return result.ToActionResult();
@@ -59,7 +59,7 @@ public class SuppliesController(ISupplyService supplyService) : ControllerBase
     [HttpPost]
     [ProducesResponseType(typeof(SupplyDto), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> CreateAsync([FromBody] [Required] CreateNewSupplyRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> CreateAsync([FromBody][Required] CreateNewSupplyRequest request, CancellationToken cancellationToken)
     {
         var result = await supplyService.CreateAsync(request, cancellationToken);
         return result.ToActionResult();
@@ -76,7 +76,7 @@ public class SuppliesController(ISupplyService supplyService) : ControllerBase
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> DeleteAsync([FromRoute] [Required] Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> DeleteAsync([FromRoute][Required] Guid id, CancellationToken cancellationToken)
     {
         var result = await supplyService.DeleteAsync(id, cancellationToken);
         return result.ToActionResult();
@@ -94,7 +94,7 @@ public class SuppliesController(ISupplyService supplyService) : ControllerBase
     [HttpPut("{id:guid}")]
     [ProducesResponseType(typeof(SupplyDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> UpdateAsync([FromRoute] [Required] Guid id, [FromBody] [Required] UpdateOneSupplyRequest request,
+    public async Task<IActionResult> UpdateAsync([FromRoute][Required] Guid id, [FromBody][Required] UpdateOneSupplyRequest request,
         CancellationToken cancellationToken)
     {
         UpdateOneSupplyInput updateRequest = new() { Id = id, Quantity = request.Quantity, Price = request.Price, Name = request.Name };
