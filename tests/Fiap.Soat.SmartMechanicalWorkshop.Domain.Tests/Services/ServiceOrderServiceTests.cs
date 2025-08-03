@@ -12,15 +12,15 @@ using System.Net;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Tests.Services;
 
-public sealed partial class ServiceOrderServiceTests
+public sealed class ServiceOrderServiceTests
 {
+    private readonly Mock<IAvailableServiceRepository> _availableServiceRepositoryMock = new();
     private readonly IFixture _fixture = new Fixture();
     private readonly Mock<IMapper> _mapperMock = new();
-    private readonly Mock<IServiceOrderRepository> _repositoryMock = new();
     private readonly Mock<IPersonRepository> _personRepositoryMock = new();
-    private readonly Mock<IVehicleRepository> _vehicleRepositoryMock = new();
-    private readonly Mock<IAvailableServiceRepository> _availableServiceRepositoryMock = new();
+    private readonly Mock<IServiceOrderRepository> _repositoryMock = new();
     private readonly ServiceOrderService _service;
+    private readonly Mock<IVehicleRepository> _vehicleRepositoryMock = new();
 
     public ServiceOrderServiceTests()
     {
@@ -197,7 +197,9 @@ public sealed partial class ServiceOrderServiceTests
 
         _repositoryMock.Setup(r => r.GetAsync(input.Id, It.IsAny<CancellationToken>())).ReturnsAsync(entity);
         _availableServiceRepositoryMock.Setup(r => r.GetByIdAsync(serviceId, It.IsAny<CancellationToken>())).ReturnsAsync(availableService);
-        _repositoryMock.Setup(r => r.UpdateAsync(input.Id, input.Title, input.Description, It.IsAny<IReadOnlyList<AvailableService>>(), It.IsAny<CancellationToken>())).ReturnsAsync(updatedEntity);
+        _repositoryMock.Setup(r =>
+                r.UpdateAsync(input.Id, input.Title, input.Description, It.IsAny<IReadOnlyList<AvailableService>>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(updatedEntity);
         _mapperMock.Setup(m => m.Map<ServiceOrderDto>(updatedEntity)).Returns(dto);
 
         var result = await _service.UpdateAsync(input, CancellationToken.None);
@@ -213,7 +215,8 @@ public sealed partial class ServiceOrderServiceTests
         var paginate = _fixture.Create<Paginate<ServiceOrder>>();
         var paginateDto = _fixture.Create<Paginate<ServiceOrderDto>>();
 
-        _repositoryMock.Setup(r => r.GetAllAsync(It.IsAny<IReadOnlyList<string>>(), paginatedRequest, It.IsAny<CancellationToken>())).ReturnsAsync(paginate);
+        _repositoryMock.Setup(r => r.GetAllAsync(It.IsAny<IReadOnlyList<string>>(), paginatedRequest, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(paginate);
         _mapperMock.Setup(m => m.Map<Paginate<ServiceOrderDto>>(paginate)).Returns(paginateDto);
 
         var result = await _service.GetAllAsync(null, paginatedRequest, CancellationToken.None);

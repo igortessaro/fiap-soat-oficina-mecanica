@@ -1,5 +1,4 @@
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.ServiceOrders;
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 

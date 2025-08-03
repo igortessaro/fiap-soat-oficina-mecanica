@@ -30,8 +30,8 @@ public sealed class SupplyConfiguration : IEntityTypeConfiguration<Supply>
             .IsRequired();
 
         builder.HasMany(x => x.AvailableServices)
-               .WithMany(x => x.Supplies)
-               .UsingEntity(j => j.ToTable("available_services_supply"));
+            .WithMany(x => x.Supplies)
+            .UsingEntity(j => j.ToTable("available_services_supply"));
 
         builder.HasIndex(x => x.Name).IsUnique();
     }

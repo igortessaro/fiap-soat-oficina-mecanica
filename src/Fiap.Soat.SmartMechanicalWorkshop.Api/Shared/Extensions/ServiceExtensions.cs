@@ -21,6 +21,5 @@ public static class ServiceExtensions
         _ = serviceCollection.AddTransient<IAuthService, AuthService>();
 
         return serviceCollection;
-
     }
 }

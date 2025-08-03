@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using System.Text;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Services;
+
 public class EmailTemplateProvider(IConfiguration configuration) : IEmailTemplateProvider
 {
     public string GetTemplate(ServiceOrder serviceOrder)
@@ -27,6 +28,7 @@ public class EmailTemplateProvider(IConfiguration configuration) : IEmailTemplat
                 {
                     servicesHtml.AppendLine($"<li>{supply.Name} (Qtd: {supply.Quantity}) - R$ {supply.Price:F2}</li>");
                 }
+
                 servicesHtml.AppendLine("</ul>");
             }
 
@@ -65,7 +67,7 @@ public class EmailTemplateProvider(IConfiguration configuration) : IEmailTemplat
 <br>
 <h2>Serviços solicitados:</h2>
 <ul>
-   {servicesHtml.ToString()}
+   {servicesHtml}
 </ul>
 
 

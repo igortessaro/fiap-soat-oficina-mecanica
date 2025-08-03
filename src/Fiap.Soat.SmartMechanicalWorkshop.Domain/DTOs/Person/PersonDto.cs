@@ -3,7 +3,16 @@ using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Person;
 
-public record PersonDto(Guid Id, string Fullname, string Document, PersonType PersonType, EmployeeRole? EmployeeRole, string Phone, string Email, AddressDto Address, IReadOnlyList<VehicleDto> Vehicles);
+public record PersonDto(
+    Guid Id,
+    string Fullname,
+    string Document,
+    PersonType PersonType,
+    EmployeeRole? EmployeeRole,
+    string Phone,
+    string Email,
+    AddressDto Address,
+    IReadOnlyList<VehicleDto> Vehicles);
 
 public record PhoneDto(string AreaCode, string Number);
 

@@ -6,6 +6,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.States.ServiceOrder;
 public sealed class ReceivedState : ServiceOrderState
 {
     public override ServiceOrderStatus Status => ServiceOrderStatus.Received;
+
     public override void ChangeStatus(Entities.ServiceOrder serviceOrder, ServiceOrderStatus status)
     {
         if (status != ServiceOrderStatus.UnderDiagnosis)

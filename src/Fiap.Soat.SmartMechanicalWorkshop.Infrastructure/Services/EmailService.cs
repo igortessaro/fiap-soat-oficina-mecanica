@@ -1,6 +1,5 @@
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.ExternalServices;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using System.Net.Mail;
 
@@ -29,12 +28,7 @@ public class EmailService : IEmailService
             UseDefaultCredentials = true
         };
 
-        using var message = new MailMessage(fromAddress, toAddress)
-        {
-            Subject = subject,
-            Body = htmlBody,
-            IsBodyHtml = true
-        };
+        using var message = new MailMessage(fromAddress, toAddress) { Subject = subject, Body = htmlBody, IsBodyHtml = true };
 
         try
         {
@@ -48,5 +42,3 @@ public class EmailService : IEmailService
         }
     }
 }
-
-

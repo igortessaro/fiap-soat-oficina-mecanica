@@ -1,6 +1,7 @@
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Vehicles;
 using Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Data;
 using Fiap.Soat.SmartMechanicalWorkshop.Tests.Shared.Factories;
+using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http.Headers;
 
@@ -24,7 +25,7 @@ public sealed class CreateVehiclesTests : CustomWebApplicationFactory<Program>
             ManufactureYear = DateTime.Now.Year,
             Brand = Faker.Vehicle.Manufacturer()
         };
-        string json = Newtonsoft.Json.JsonConvert.SerializeObject(request);
+        string json = JsonConvert.SerializeObject(request);
         var content = new StringContent(json, MediaTypeHeaderValue.Parse("application/json"));
 
         // Act
@@ -55,7 +56,7 @@ public sealed class CreateVehiclesTests : CustomWebApplicationFactory<Program>
             ManufactureYear = DateTime.Now.Year,
             Brand = Faker.Vehicle.Manufacturer()
         };
-        string json = Newtonsoft.Json.JsonConvert.SerializeObject(request);
+        string json = JsonConvert.SerializeObject(request);
         var content = new StringContent(json, MediaTypeHeaderValue.Parse("application/json"));
 
         // Act
@@ -86,7 +87,7 @@ public sealed class CreateVehiclesTests : CustomWebApplicationFactory<Program>
             ManufactureYear = DateTime.Now.Year,
             Brand = Faker.Vehicle.Manufacturer()
         };
-        string json = Newtonsoft.Json.JsonConvert.SerializeObject(request);
+        string json = JsonConvert.SerializeObject(request);
         var content = new StringContent(json, MediaTypeHeaderValue.Parse("application/json"));
 
         // Act
@@ -116,7 +117,7 @@ public sealed class CreateVehiclesTests : CustomWebApplicationFactory<Program>
             ManufactureYear = DateTime.Now.Year,
             Brand = Faker.Vehicle.Manufacturer()
         };
-        string json = Newtonsoft.Json.JsonConvert.SerializeObject(request);
+        string json = JsonConvert.SerializeObject(request);
         var content = new StringContent(json, MediaTypeHeaderValue.Parse("application/json"));
 
         // Act

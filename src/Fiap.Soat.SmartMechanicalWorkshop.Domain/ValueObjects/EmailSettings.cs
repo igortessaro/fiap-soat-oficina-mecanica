@@ -1,4 +1,5 @@
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
+
 public class EmailSettings
 {
     public string SenderAddress { get; set; } = string.Empty;

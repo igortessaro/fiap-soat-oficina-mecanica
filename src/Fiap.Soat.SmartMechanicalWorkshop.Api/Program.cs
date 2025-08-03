@@ -11,8 +11,8 @@ using System.Text.Json.Serialization;
 var builder = WebApplication.CreateBuilder(args);
 
 _ = builder.Host.UseSerilog((context, configuration) => configuration
-        .ReadFrom.Configuration(context.Configuration)
-        .Enrich.FromLogContext());
+    .ReadFrom.Configuration(context.Configuration)
+    .Enrich.FromLogContext());
 
 _ = builder.Logging.ClearProviders();
 _ = builder.Services.AddControllers();

@@ -4,7 +4,7 @@ using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Repositories;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.Interfaces;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
-using FluentResults;
+using System.Net;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Services;
 
@@ -19,31 +19,39 @@ public sealed class AvailableServiceService(
         var entity = mapper.Map<AvailableService>(request);
         if (await repository.AnyAsync(x => request.Name.ToLower().Equals(x.Name.ToLower()), cancellationToken))
         {
-            return ResponseFactory.Fail<AvailableServiceDto>(new Error($"AvailableService with name {request.Name} already exists"), System.Net.HttpStatusCode.Conflict);
+            return ResponseFactory.Fail<AvailableServiceDto>($"AvailableService with name {request.Name} already exists", HttpStatusCode.Conflict);
         }
 
         if (!request.SuppliesIds.Any())
         {
-            return ResponseFactory.Ok(mapper.Map<AvailableServiceDto>(await repository.AddAsync(entity, cancellationToken)), System.Net.HttpStatusCode.Created);
+            return ResponseFactory.Ok(mapper.Map<AvailableServiceDto>(await repository.AddAsync(entity, cancellationToken)), HttpStatusCode.Created);
         }
 
         foreach (var supply in request.SuppliesIds)
         {
             var foundSupply = await supplyRepository.GetByIdAsync(supply, cancellationToken);
-            if (foundSupply is null) return ResponseFactory.Fail<AvailableServiceDto>(new Error($"Supply with ID {supply} not found"), System.Net.HttpStatusCode.NotFound);
+            if (foundSupply is null)
+            {
+                return ResponseFactory.Fail<AvailableServiceDto>($"Supply with ID {supply} not found", HttpStatusCode.NotFound);
+            }
+
             _ = entity.AddSupply(foundSupply);
         }
 
         var created = await repository.AddAsync(entity, cancellationToken);
-        return ResponseFactory.Ok(mapper.Map<AvailableServiceDto>(created), System.Net.HttpStatusCode.Created);
+        return ResponseFactory.Ok(mapper.Map<AvailableServiceDto>(created), HttpStatusCode.Created);
     }
 
     public async Task<Response> DeleteAsync(Guid id, CancellationToken cancellationToken)
     {
         var found = await repository.GetByIdAsync(id, cancellationToken);
-        if (found is null) return ResponseFactory.Fail(new Error("AvailableService not found"), System.Net.HttpStatusCode.NotFound);
+        if (found is null)
+        {
+            return ResponseFactory.Fail("AvailableService not found", HttpStatusCode.NotFound);
+        }
+
         await repository.DeleteAsync(found, cancellationToken);
-        return ResponseFactory.Ok(System.Net.HttpStatusCode.NoContent);
+        return ResponseFactory.Ok(HttpStatusCode.NoContent);
     }
 
     public async Task<Response<Paginate<AvailableServiceDto>>> GetAllAsync(PaginatedRequest paginatedRequest, CancellationToken cancellationToken)
@@ -58,17 +66,21 @@ public sealed class AvailableServiceService(
         var found = await repository.GetAsync(id, cancellationToken);
         return found != null
             ? ResponseFactory.Ok(mapper.Map<AvailableServiceDto>(found))
-            : ResponseFactory.Fail<AvailableServiceDto>(new Error("AvailableService Not Found"), System.Net.HttpStatusCode.NotFound);
+            : ResponseFactory.Fail<AvailableServiceDto>("AvailableService Not Found", HttpStatusCode.NotFound);
     }
 
     public async Task<Response<AvailableServiceDto>> UpdateAsync(UpdateOneAvailableServiceInput input, CancellationToken cancellationToken)
     {
         var found = await repository.GetAsync(input.Id, cancellationToken);
-        if (found is null) return ResponseFactory.Fail<AvailableServiceDto>(new Error("AvailableService not found"), System.Net.HttpStatusCode.NotFound);
+        if (found is null)
+        {
+            return ResponseFactory.Fail<AvailableServiceDto>("AvailableService not found", HttpStatusCode.NotFound);
+        }
+
         if (!input.Name.Equals(found.Name, StringComparison.CurrentCultureIgnoreCase) &&
             await repository.AnyAsync(x => input.Name.ToLower().Equals(x.Name.ToLower()), cancellationToken))
         {
-            return ResponseFactory.Fail<AvailableServiceDto>(new Error($"AvailableService with name {input.Name} already exists"), System.Net.HttpStatusCode.Conflict);
+            return ResponseFactory.Fail<AvailableServiceDto>($"AvailableService with name {input.Name} already exists", HttpStatusCode.Conflict);
         }
 
         var supplies = new List<Supply>();
@@ -77,7 +89,7 @@ public sealed class AvailableServiceService(
             var foundSupply = await supplyRepository.GetByIdAsync(supply, cancellationToken);
             if (foundSupply is null)
             {
-                return ResponseFactory.Fail<AvailableServiceDto>(new Error($"Supply with ID {supply} not found"), System.Net.HttpStatusCode.NotFound);
+                return ResponseFactory.Fail<AvailableServiceDto>($"Supply with ID {supply} not found", HttpStatusCode.NotFound);
             }
 
             supplies.Add(foundSupply);

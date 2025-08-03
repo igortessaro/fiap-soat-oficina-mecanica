@@ -1,6 +1,7 @@
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.AvailableServices;
 using Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Data;
 using Fiap.Soat.SmartMechanicalWorkshop.Tests.Shared.Factories;
+using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http.Headers;
 
@@ -21,7 +22,7 @@ public sealed class CreateAvailableServicesTests : CustomWebApplicationFactory<P
         await dbContext.SaveChangesAsync();
         var supplyIds = supplies.Select(x => x.Id).ToList();
         var toCreate = new CreateAvailableServiceRequest("Available Service Integration Tests", (decimal) 102.09, supplyIds);
-        string json = Newtonsoft.Json.JsonConvert.SerializeObject(toCreate);
+        string json = JsonConvert.SerializeObject(toCreate);
         var content = new StringContent(json, MediaTypeHeaderValue.Parse("application/json"));
 
         // Act

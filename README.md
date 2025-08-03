@@ -8,7 +8,6 @@
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=igortessaro_fiap-soat-oficina-mecanica&metric=bugs)](https://sonarcloud.io/summary/new_code?id=igortessaro_fiap-soat-oficina-mecanica)
 [![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=igortessaro_fiap-soat-oficina-mecanica&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=igortessaro_fiap-soat-oficina-mecanica)
 
-
 ## Docker
 
 Para rodar a aplicação usando o docker compose, você deve executar o comando baixo na pasta raiz do projeto:
@@ -47,7 +46,8 @@ dotnet ef database update --project src/Fiap.Soat.SmartMechanicalWorkshop.Infras
 #### 4. Dicas
 
 - Sempre confira se as entidades e configurações do seu DbContext estão corretas antes de criar uma migration.
-- Caso altere ou adicione Value Objects (como Phone ou Address), lembre-se de configurar corretamente como tipos próprios (owned types) no método `OnModelCreating` do seu DbContext.
+- Caso altere ou adicione Value Objects (como Phone ou Address), lembre-se de configurar corretamente como tipos próprios (owned types) no método
+  `OnModelCreating` do seu DbContext.
 - Para desfazer a última migration (caso necessário, antes de aplicar no banco):
 
 ```bash
@@ -57,9 +57,15 @@ dotnet ef migrations remove --project src/Fiap.Soat.SmartMechanicalWorkshop.Infr
 Para mais informações, consulte
 
 ## Como rodar o MailHog
-Rode o docker-compose e acesse [http://localhost:8025](http://localhost:8025), onde você poderá visualizar todos os e-mails enviados pela aplicação em tempo real através de uma interface simples e intuitiva.
+
+Rode o docker-compose e acesse [http://localhost:8025](http://localhost:8025), onde você poderá visualizar todos os e-mails enviados pela aplicação em
+tempo real através de uma interface simples e intuitiva.
 
 ## Autenticação obrigatória para todos os endpoints
 
-A partir de agora, todos os endpoints da aplicação — como /api/v1/auth/login e /api/v1/servicesorders/search — requerem autenticação para serem acessados. Para isso, você deve gerar um token JWT através do endpoint de login, informando o e-mail de uma pessoa cadastrada com o perfil "employee". Após obter o token, clique em "Authorize" no Swagger e insira o token conforme as instruções. Isso fará com que ele seja automaticamente incluído nos headers das requisições protegidas.
-Além disso, o endpoint de visualização de ordens de serviço por clientes exige dois parâmetros obrigatórios: o ID da ordem e o e-mail da pessoa cadastrada ou vinculada àquela ordem.
+A partir de agora, todos os endpoints da aplicação — como /api/v1/auth/login e /api/v1/servicesorders/search — requerem autenticação para serem acessados.
+Para isso, você deve gerar um token JWT através do endpoint de login, informando o e-mail de uma pessoa cadastrada com o perfil "employee". Após obter o
+token, clique em "Authorize" no Swagger e insira o token conforme as instruções. Isso fará com que ele seja automaticamente incluído nos headers das
+requisições protegidas.
+Além disso, o endpoint de visualização de ordens de serviço por clientes exige dois parâmetros obrigatórios: o ID da ordem e o e-mail da pessoa cadastrada
+ou vinculada àquela ordem.

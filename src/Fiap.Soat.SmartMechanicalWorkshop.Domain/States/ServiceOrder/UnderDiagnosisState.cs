@@ -6,6 +6,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.States.ServiceOrder;
 public class UnderDiagnosisState : ServiceOrderState
 {
     public override ServiceOrderStatus Status => ServiceOrderStatus.UnderDiagnosis;
+
     public override void ChangeStatus(Entities.ServiceOrder serviceOrder, ServiceOrderStatus status)
     {
         _ = status switch

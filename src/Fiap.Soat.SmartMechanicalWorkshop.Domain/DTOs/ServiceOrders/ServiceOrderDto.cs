@@ -18,5 +18,4 @@ public record ServiceOrderDto
     public ICollection<AvailableServiceDto> AvailableServices { get; init; } = [];
     public ICollection<ServiceOrderEventDto> Events { get; init; } = [];
     public ICollection<QuoteDto> Quotes { get; init; } = [];
-
 }

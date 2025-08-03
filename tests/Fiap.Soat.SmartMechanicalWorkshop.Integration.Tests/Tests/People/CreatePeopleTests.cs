@@ -1,6 +1,8 @@
+using Bogus;
 using Bogus.Extensions.Brazil;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Person;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
+using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http.Headers;
 
@@ -14,7 +16,7 @@ public sealed class CreatePeopleTests : CustomWebApplicationFactory<Program>
     public async Task UC0001_CreateAsync_WhenCreatePerson_ShouldReturn201()
     {
         // Arrange
-        var faker = new Bogus.Faker();
+        var faker = new Faker();
         var personToCreate = new CreatePersonRequest(
             "Integration Test Person",
             faker.Person.Cpf(),
@@ -24,7 +26,7 @@ public sealed class CreatePeopleTests : CustomWebApplicationFactory<Program>
             "Password123!",
             new CreatePhoneRequest("11", "912345678"),
             new CreateAddressRequest("Rua Exemplo", "São Paulo", "SP", "01234-567"));
-        string personJson = Newtonsoft.Json.JsonConvert.SerializeObject(personToCreate);
+        string personJson = JsonConvert.SerializeObject(personToCreate);
         var content = new StringContent(personJson, MediaTypeHeaderValue.Parse("application/json"));
 
         // Act

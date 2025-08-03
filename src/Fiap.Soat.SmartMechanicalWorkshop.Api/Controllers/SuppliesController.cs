@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Controllers;
 
 /// <summary>
-/// Controller for managing supplies.
+///     Controller for managing supplies.
 /// </summary>
 [Route("api/v1/[controller]")]
 [ApiController]
@@ -17,7 +17,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Controllers;
 public class SuppliesController(ISupplyService supplyService) : ControllerBase
 {
     /// <summary>
-    /// Gets a supply by its unique identifier.
+    ///     Gets a supply by its unique identifier.
     /// </summary>
     /// <param name="id">The unique identifier of the supply.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
@@ -27,14 +27,14 @@ public class SuppliesController(ISupplyService supplyService) : ControllerBase
     [HttpGet("{id:guid}")]
     [ProducesResponseType(typeof(SupplyDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetOneAsync([FromRoute][Required] Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetOneAsync([FromRoute] [Required] Guid id, CancellationToken cancellationToken)
     {
-        Response<SupplyDto> result = await supplyService.GetOneAsync(id, cancellationToken);
+        var result = await supplyService.GetOneAsync(id, cancellationToken);
         return result.ToActionResult();
     }
 
     /// <summary>
-    /// Gets a paginated list of all supplies.
+    ///     Gets a paginated list of all supplies.
     /// </summary>
     /// <param name="paginatedRequest">Pagination parameters.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
@@ -42,14 +42,14 @@ public class SuppliesController(ISupplyService supplyService) : ControllerBase
     /// <response code="200">Returns the paginated list of supplies.</response>
     [HttpGet]
     [ProducesResponseType(typeof(Paginate<SupplyDto>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetAllAsync([FromQuery][Required] PaginatedRequest paginatedRequest, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAllAsync([FromQuery] [Required] PaginatedRequest paginatedRequest, CancellationToken cancellationToken)
     {
-        Response<Paginate<SupplyDto>> result = await supplyService.GetAllAsync(paginatedRequest, cancellationToken);
+        var result = await supplyService.GetAllAsync(paginatedRequest, cancellationToken);
         return result.ToActionResult();
     }
 
     /// <summary>
-    /// Creates a new supply.
+    ///     Creates a new supply.
     /// </summary>
     /// <param name="request">The supply to create.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
@@ -59,14 +59,14 @@ public class SuppliesController(ISupplyService supplyService) : ControllerBase
     [HttpPost]
     [ProducesResponseType(typeof(SupplyDto), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> CreateAsync([FromBody][Required] CreateNewSupplyRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> CreateAsync([FromBody] [Required] CreateNewSupplyRequest request, CancellationToken cancellationToken)
     {
-        Response<SupplyDto> result = await supplyService.CreateAsync(request, cancellationToken);
+        var result = await supplyService.CreateAsync(request, cancellationToken);
         return result.ToActionResult();
     }
 
     /// <summary>
-    /// Deletes a supply by its unique identifier.
+    ///     Deletes a supply by its unique identifier.
     /// </summary>
     /// <param name="id">The unique identifier of the supply.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
@@ -76,14 +76,14 @@ public class SuppliesController(ISupplyService supplyService) : ControllerBase
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> DeleteAsync([FromRoute][Required] Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> DeleteAsync([FromRoute] [Required] Guid id, CancellationToken cancellationToken)
     {
-        Response result = await supplyService.DeleteAsync(id, cancellationToken);
+        var result = await supplyService.DeleteAsync(id, cancellationToken);
         return result.ToActionResult();
     }
 
     /// <summary>
-    /// Updates an existing supply.
+    ///     Updates an existing supply.
     /// </summary>
     /// <param name="id">The unique identifier of the supply.</param>
     /// <param name="request">The updated supply data.</param>
@@ -94,17 +94,12 @@ public class SuppliesController(ISupplyService supplyService) : ControllerBase
     [HttpPut("{id:guid}")]
     [ProducesResponseType(typeof(SupplyDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> UpdateAsync([FromRoute][Required] Guid id, [FromBody, Required] UpdateOneSupplyRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateAsync([FromRoute] [Required] Guid id, [FromBody] [Required] UpdateOneSupplyRequest request,
+        CancellationToken cancellationToken)
     {
-        UpdateOneSupplyInput updateRequest = new()
-        {
-            Id = id,
-            Quantity = request.Quantity,
-            Price = request.Price,
-            Name = request.Name
-        };
+        UpdateOneSupplyInput updateRequest = new() { Id = id, Quantity = request.Quantity, Price = request.Price, Name = request.Name };
 
-        Response<SupplyDto> result = await supplyService.UpdateAsync(updateRequest, cancellationToken);
+        var result = await supplyService.UpdateAsync(updateRequest, cancellationToken);
         return result.ToActionResult();
     }
 }

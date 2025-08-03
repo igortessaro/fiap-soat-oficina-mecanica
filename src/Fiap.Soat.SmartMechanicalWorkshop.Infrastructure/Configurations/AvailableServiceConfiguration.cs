@@ -30,15 +30,15 @@ public sealed class AvailableServiceConfiguration : IEntityTypeConfiguration<Ava
             .UsingEntity<Dictionary<string, object>>(
                 "available_service_supplies", // Nome da tabela de junção
                 j => j.HasOne<Supply>()
-                      .WithMany()
-                      .HasForeignKey("supply_id") // Nome da coluna FK para Supply
-                      .HasConstraintName("fk_available_service_supplies_supply_id")
-                      .OnDelete(DeleteBehavior.Cascade),
+                    .WithMany()
+                    .HasForeignKey("supply_id") // Nome da coluna FK para Supply
+                    .HasConstraintName("fk_available_service_supplies_supply_id")
+                    .OnDelete(DeleteBehavior.Cascade),
                 j => j.HasOne<AvailableService>()
-                      .WithMany()
-                      .HasForeignKey("available_service_id") // Nome da coluna FK para AvailableService
-                      .HasConstraintName("fk_available_service_supplies_available_service_id")
-                      .OnDelete(DeleteBehavior.Cascade),
+                    .WithMany()
+                    .HasForeignKey("available_service_id") // Nome da coluna FK para AvailableService
+                    .HasConstraintName("fk_available_service_supplies_available_service_id")
+                    .OnDelete(DeleteBehavior.Cascade),
                 j =>
                 {
                     j.HasKey("available_service_id", "supply_id");

@@ -8,7 +8,6 @@ using Fiap.Soat.SmartMechanicalWorkshop.Domain.Repositories;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 using FluentAssertions;
-using Microsoft.Extensions.Logging;
 using Moq;
 using System.Net;
 
@@ -77,9 +76,14 @@ public sealed class QuoteServiceTests
 
         var expectedQuote = new Quote(serviceOrder.Id);
         foreach (var svc in serviceOrder.AvailableServices)
+        {
             expectedQuote.AddService(svc.Id, svc.Price);
+        }
+
         foreach (var supply in serviceOrder.AvailableServices.SelectMany(x => x.Supplies))
+        {
             expectedQuote.AddSupply(supply.Id, supply.Price, supply.Quantity);
+        }
 
         _quoteRepositoryMock.Setup(r => r.AddAsync(It.IsAny<Quote>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedQuote);

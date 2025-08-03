@@ -6,6 +6,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.States.ServiceOrder;
 public sealed class InProgressState : ServiceOrderState
 {
     public override ServiceOrderStatus Status => ServiceOrderStatus.InProgress;
+
     public override void ChangeStatus(Entities.ServiceOrder serviceOrder, ServiceOrderStatus status)
     {
         if (status != ServiceOrderStatus.Completed)

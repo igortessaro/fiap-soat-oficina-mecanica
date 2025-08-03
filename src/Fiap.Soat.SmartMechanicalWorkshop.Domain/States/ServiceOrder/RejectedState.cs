@@ -6,6 +6,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.States.ServiceOrder;
 public sealed class RejectedState : ServiceOrderState
 {
     public override ServiceOrderStatus Status => ServiceOrderStatus.Rejected;
+
     public override void ChangeStatus(Entities.ServiceOrder serviceOrder, ServiceOrderStatus status)
     {
         if (status != ServiceOrderStatus.WaitingApproval)

@@ -16,10 +16,10 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Tests.Services;
 
 public sealed class VehicleServiceTests
 {
-    private readonly Fixture _fixture = new Fixture();
-    private readonly Mock<IVehicleRepository> _repositoryMock = new();
-    private readonly Mock<IPersonRepository> _personRepositoryMock = new();
+    private readonly Fixture _fixture = new();
     private readonly Mock<IMapper> _mapperMock = new();
+    private readonly Mock<IPersonRepository> _personRepositoryMock = new();
+    private readonly Mock<IVehicleRepository> _repositoryMock = new();
     private readonly VehicleService _service;
 
     public VehicleServiceTests()

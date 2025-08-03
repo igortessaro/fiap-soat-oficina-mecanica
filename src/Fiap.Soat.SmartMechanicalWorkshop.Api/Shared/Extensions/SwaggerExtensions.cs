@@ -1,48 +1,43 @@
-namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Shared.Extensions
+using Microsoft.OpenApi.Models;
+
+namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Shared.Extensions;
+
+public static class SwaggerExtensions
 {
-    public static class SwaggerExtensions
+    public static IServiceCollection AddSwaggerExtension(this IServiceCollection services, IConfiguration configuration)
     {
-        public static IServiceCollection AddSwaggerExtension(this IServiceCollection services, IConfiguration configuration)
+        services.AddSwaggerGen(options =>
         {
-            services.AddSwaggerGen(options =>
+            string[] xmlFiles = Directory.GetFiles(AppContext.BaseDirectory, "*.xml", SearchOption.TopDirectoryOnly);
+            foreach (string xmlFile in xmlFiles)
             {
-                var xmlFiles = Directory.GetFiles(AppContext.BaseDirectory, "*.xml", SearchOption.TopDirectoryOnly);
-                foreach (var xmlFile in xmlFiles)
-                {
-                    options.IncludeXmlComments(xmlFile, includeControllerXmlComments: true);
-                }
-                options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+                options.IncludeXmlComments(xmlFile, true);
+            }
+
+            options.SwaggerDoc("v1",
+                new OpenApiInfo
                 {
                     Title = "SmartMechanicalWorkshop",
                     Version = "v1",
-                    Description = "Veja a documentação no [ReDoc](/docs) <br> Repositorio do projeto: [GitHub](https://github.com/igortessaro/fiap-soat-oficina-mecanica)"
+                    Description =
+                        "Veja a documentação no [ReDoc](/docs) <br> Repositorio do projeto: [GitHub](https://github.com/igortessaro/fiap-soat-oficina-mecanica)"
                 });
-                // Adiciona suporte para o header Authorization
-                options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+            // Adiciona suporte para o header Authorization
+            options.AddSecurityDefinition("Bearer",
+                new OpenApiSecurityScheme
                 {
                     Name = "Authorization",
-                    Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
+                    Type = SecuritySchemeType.ApiKey,
                     Scheme = "Bearer",
                     BearerFormat = "JWT",
-                    In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+                    In = ParameterLocation.Header,
                     Description = "Insira o token JWT no formato: Bearer {seu token}"
                 });
-                options.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
-                {
-                    {
-                        new Microsoft.OpenApi.Models.OpenApiSecurityScheme
-                        {
-                            Reference = new Microsoft.OpenApi.Models.OpenApiReference
-                            {
-                                Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
-                                Id = "Bearer"
-                            }
-                        },
-                        []
-                    }
-                });
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                { new OpenApiSecurityScheme { Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" } }, [] }
             });
-            return services;
-        }
+        });
+        return services;
     }
 }

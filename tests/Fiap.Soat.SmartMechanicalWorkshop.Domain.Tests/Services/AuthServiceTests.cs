@@ -14,8 +14,8 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Tests.Services;
 
 public sealed class AuthServiceTests
 {
-    private readonly IFixture _fixture = new Fixture();
     private readonly Mock<IConfiguration> _configMock = new();
+    private readonly IFixture _fixture = new Fixture();
     private readonly Mock<IPersonService> _personServiceMock = new();
     private readonly AuthService _service;
 
@@ -53,7 +53,7 @@ public sealed class AuthServiceTests
     {
         // Arrange
         var loginRequest = _fixture.Create<LoginRequest>();
-        var response = ResponseFactory.Fail<PersonDto>(new FluentResults.Error("Person Not Found"), HttpStatusCode.NotFound);
+        var response = ResponseFactory.Fail<PersonDto>("Person Not Found", HttpStatusCode.NotFound);
 
         _personServiceMock.Setup(s => s.GetOneByLoginAsync(loginRequest, It.IsAny<CancellationToken>()))
             .ReturnsAsync(response);

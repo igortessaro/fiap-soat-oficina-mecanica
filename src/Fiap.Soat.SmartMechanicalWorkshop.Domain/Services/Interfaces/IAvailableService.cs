@@ -1,5 +1,6 @@
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.AvailableServices;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
+
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.Interfaces;
 
 public interface IAvailableService

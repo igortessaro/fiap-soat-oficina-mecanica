@@ -14,8 +14,8 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Tests.Services;
 public sealed class SupplyServiceTests
 {
     private readonly IFixture _fixture = new Fixture();
-    private readonly Mock<ISupplyRepository> _repositoryMock = new();
     private readonly Mock<IMapper> _mapperMock = new();
+    private readonly Mock<ISupplyRepository> _repositoryMock = new();
     private readonly SupplyService _service;
 
     public SupplyServiceTests()

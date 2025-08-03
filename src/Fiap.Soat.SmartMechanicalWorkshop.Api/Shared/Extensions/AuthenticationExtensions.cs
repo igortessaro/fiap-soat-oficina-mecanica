@@ -2,16 +2,16 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
-namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Shared.Extensions
-{
-    public static class AuthenticationExtensions
-    {
-        public static IServiceCollection AddAuthenticationExtension(this IServiceCollection services, IConfiguration configuration)
-        {
-            string jwtKey = configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT Key is not configured.");
-            string? jwtIssuer = configuration["Jwt:Issuer"];
+namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Shared.Extensions;
 
-            services.AddAuthentication(options =>
+public static class AuthenticationExtensions
+{
+    public static IServiceCollection AddAuthenticationExtension(this IServiceCollection services, IConfiguration configuration)
+    {
+        string jwtKey = configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT Key is not configured.");
+        string? jwtIssuer = configuration["Jwt:Issuer"];
+
+        services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -27,11 +27,10 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Shared.Extensions
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
                     ValidIssuer = jwtIssuer,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
                 };
             });
 
-            return services;
-        }
+        return services;
     }
 }

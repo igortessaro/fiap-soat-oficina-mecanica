@@ -19,10 +19,10 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Tests.Services;
 
 public sealed class PersonServiceTests
 {
+    private readonly Mock<IAddressRepository> _addressRepositoryMock = new();
     private readonly IFixture _fixture = new Fixture();
     private readonly Mock<IMapper> _mapperMock = new();
     private readonly Mock<IPersonRepository> _repositoryMock = new();
-    private readonly Mock<IAddressRepository> _addressRepositoryMock = new();
     private readonly PersonService _service;
 
     public PersonServiceTests()
@@ -179,7 +179,8 @@ public sealed class PersonServiceTests
         var paginate = _fixture.Create<Paginate<Person>>();
         var paginateDto = _fixture.Create<Paginate<PersonDto>>();
 
-        _repositoryMock.Setup(r => r.GetAllAsync(new List<string>() { nameof(Person.Vehicles), nameof(Person.Address) }, paginatedRequest, It.IsAny<CancellationToken>()))
+        _repositoryMock.Setup(r =>
+                r.GetAllAsync(new List<string> { nameof(Person.Vehicles), nameof(Person.Address) }, paginatedRequest, It.IsAny<CancellationToken>()))
             .ReturnsAsync(paginate);
         _mapperMock.Setup(m => m.Map<Paginate<PersonDto>>(paginate)).Returns(paginateDto);
 

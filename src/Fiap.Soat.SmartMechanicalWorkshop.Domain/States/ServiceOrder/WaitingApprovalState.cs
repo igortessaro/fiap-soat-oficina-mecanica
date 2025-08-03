@@ -6,6 +6,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.States.ServiceOrder;
 public sealed class WaitingApprovalState : ServiceOrderState
 {
     public override ServiceOrderStatus Status => ServiceOrderStatus.WaitingApproval;
+
     public override void ChangeStatus(Entities.ServiceOrder serviceOrder, ServiceOrderStatus status)
     {
         _ = status switch

@@ -1,4 +1,3 @@
-
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Supplies;
 
 public record UpdateOneSupplyInput
