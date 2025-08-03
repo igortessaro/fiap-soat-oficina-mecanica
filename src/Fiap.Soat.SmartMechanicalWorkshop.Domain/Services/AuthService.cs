@@ -24,9 +24,9 @@ public sealed class AuthService(IConfiguration config, IPersonService personServ
             claims:
             [
                 new Claim(ClaimTypes.Name, person.Fullname),
-                new Claim(ClaimTypes.Email, person.Email.Address),
+                new Claim(ClaimTypes.Email, person.Email),
                 new Claim("PersonType", person.PersonType.ToString()),
-                new Claim(ClaimTypes.Role, person.EmployeeRole.ToString())
+                new Claim(ClaimTypes.Role, person.EmployeeRole?.ToString() ?? string.Empty),
             ],
             expires: DateTime.UtcNow.AddHours(1),
             signingCredentials: credentials
