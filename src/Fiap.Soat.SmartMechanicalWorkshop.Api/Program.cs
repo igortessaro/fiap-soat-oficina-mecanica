@@ -41,6 +41,7 @@ _ = builder.Services.AddHealthChecks();
 _ = builder.Services.AddRouting(options => options.LowercaseUrls = true);
 _ = builder.Services.AddAuthenticationExtension(builder.Configuration);
 _ = builder.Services.AddSwaggerExtension(builder.Configuration);
+_ = builder.Services.AddMemoryCache();
 
 var app = builder.Build();
 if (app.Environment.IsDevelopment())
