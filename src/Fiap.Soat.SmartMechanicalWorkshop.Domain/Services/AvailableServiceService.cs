@@ -48,7 +48,7 @@ public sealed class AvailableServiceService(
 
     public async Task<Response<Paginate<AvailableServiceDto>>> GetAllAsync(PaginatedRequest paginatedRequest, CancellationToken cancellationToken)
     {
-        var result = await repository.GetAllAsync(paginatedRequest, cancellationToken);
+        var result = await repository.GetAllAsync([nameof(AvailableService.Supplies)], paginatedRequest, cancellationToken);
         var mapped = mapper.Map<Paginate<AvailableServiceDto>>(result);
         return ResponseFactory.Ok(mapped);
     }

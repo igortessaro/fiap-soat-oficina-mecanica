@@ -11,7 +11,7 @@ public interface IServiceOrderService
     Task<Response<ServiceOrderDto>> GetOneAsync(Guid id, CancellationToken cancellationToken);
     Task<Response<ServiceOrderDto>> UpdateAsync(UpdateOneServiceOrderInput input, CancellationToken cancellationToken);
     Task<Response<Paginate<ServiceOrderDto>>> GetAllAsync(Guid? personId, PaginatedRequest paginatedRequest, CancellationToken cancellationToken);
-    Task<Response<ServiceOrderDto>> PatchAsync(UpdateOneServiceOrderInput input, CancellationToken cancellationToken);
+    Task<Response<ServiceOrderDto>> PatchAsync(PatchOneServiceOrderInput input, CancellationToken cancellationToken);
     Task<Response<ServiceOrderDto>> GetOneByLoginAsync(GetOnePersonByLoginInput getOnePersonByLoginInput, CancellationToken cancellationToken);
     Task<Response<TimeSpan>> GetAverageExecutionTime(CancellationToken cancellationToken);
 }

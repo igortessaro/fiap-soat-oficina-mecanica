@@ -35,18 +35,18 @@ public class ServiceOrder : Entity
         return this;
     }
 
+    public ServiceOrder AddAvailableServices(IReadOnlyList<AvailableService> services)
+    {
+        AvailableServices.Clear();
+        if (!services.Any()) return this;
+        foreach (var service in services) _ = AddAvailableService(service);
+        return this;
+    }
+
     public ServiceOrder Update(string title, string description)
     {
         if (!string.IsNullOrEmpty(title)) Title = title;
         if (!string.IsNullOrEmpty(description)) Description = description;
-        return this;
-    }
-
-    public ServiceOrder Update(string? title, string? description, ServiceOrderStatus? serviceOrderStatus)
-    {
-        if (!string.IsNullOrEmpty(title)) Title = title;
-        if (!string.IsNullOrEmpty(description)) Description = description;
-        if (serviceOrderStatus != null) Status = serviceOrderStatus.Value;
         return this;
     }
 

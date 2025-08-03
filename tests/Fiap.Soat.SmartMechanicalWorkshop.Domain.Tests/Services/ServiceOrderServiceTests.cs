@@ -206,7 +206,7 @@ public sealed partial class ServiceOrderServiceTests
 
         _repositoryMock.Setup(r => r.GetAsync(input.Id, It.IsAny<CancellationToken>())).ReturnsAsync(entity);
         _availableServiceRepositoryMock.Setup(r => r.GetByIdAsync(serviceId, It.IsAny<CancellationToken>())).ReturnsAsync(availableService);
-        _repositoryMock.Setup(r => r.UpdateAsync(It.IsAny<ServiceOrder>(), It.IsAny<CancellationToken>())).ReturnsAsync(updatedEntity);
+        _repositoryMock.Setup(r => r.UpdateAsync(input.Id, input.Title, input.Description, It.IsAny<IReadOnlyList<AvailableService>>(), It.IsAny<CancellationToken>())).ReturnsAsync(updatedEntity);
         _mapperMock.Setup(m => m.Map<ServiceOrderDto>(updatedEntity)).Returns(dto);
 
         var result = await _service.UpdateAsync(input, CancellationToken.None);
@@ -222,7 +222,7 @@ public sealed partial class ServiceOrderServiceTests
         var paginate = _fixture.Create<Paginate<ServiceOrder>>();
         var paginateDto = _fixture.Create<Paginate<ServiceOrderDto>>();
 
-        _repositoryMock.Setup(r => r.GetAllAsync(paginatedRequest, It.IsAny<CancellationToken>())).ReturnsAsync(paginate);
+        _repositoryMock.Setup(r => r.GetAllAsync(It.IsAny<IReadOnlyList<string>>(), paginatedRequest, It.IsAny<CancellationToken>())).ReturnsAsync(paginate);
         _mapperMock.Setup(m => m.Map<Paginate<ServiceOrderDto>>(paginate)).Returns(paginateDto);
 
         var result = await _service.GetAllAsync(null, paginatedRequest, CancellationToken.None);
@@ -278,7 +278,7 @@ public sealed partial class ServiceOrderServiceTests
     [Fact]
     public async Task PatchAsync_ShouldReturnNotFound_WhenNotFound()
     {
-        var input = _fixture.Create<UpdateOneServiceOrderInput>();
+        var input = _fixture.Create<PatchOneServiceOrderInput>();
         _repositoryMock.Setup(r => r.GetByIdAsync(input.Id, It.IsAny<CancellationToken>())).ReturnsAsync((ServiceOrder?) null);
 
         var result = await _service.PatchAsync(input, CancellationToken.None);
@@ -290,7 +290,6 @@ public sealed partial class ServiceOrderServiceTests
     [Fact]
     public async Task GetExecutionTimeAsync_ShouldReturnZero_WhenNotFound()
     {
-        var input = _fixture.Create<UpdateOneServiceOrderInput>();
         _repositoryEventsMock.Setup(r => r.GetAverageExecutionTime(It.IsAny<CancellationToken>())).ReturnsAsync(TimeSpan.Zero);
 
         var result = await _service.GetAverageExecutionTime(CancellationToken.None);

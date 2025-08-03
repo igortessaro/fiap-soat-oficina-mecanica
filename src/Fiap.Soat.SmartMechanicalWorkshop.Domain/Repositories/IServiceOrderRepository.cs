@@ -8,4 +8,5 @@ public interface IServiceOrderRepository : IRepository<ServiceOrder>
     Task<ServiceOrder?> GetAsync(Guid id, CancellationToken cancellationToken);
     Task<ServiceOrder?> GetDetailedAsync(Guid id, CancellationToken cancellationToken);
     Task<ServiceOrder?> GetOneByLoginAsync(GetOnePersonByLoginInput loginInput, CancellationToken cancellationToken);
+    Task<ServiceOrder> UpdateAsync(Guid id, string title, string description, IReadOnlyList<AvailableService> services, CancellationToken cancellationToken);
 }

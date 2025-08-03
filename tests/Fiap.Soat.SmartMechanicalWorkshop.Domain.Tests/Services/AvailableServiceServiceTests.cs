@@ -129,8 +129,9 @@ public sealed class AvailableServiceServiceTests
         var paginatedRequest = _fixture.Create<PaginatedRequest>();
         var paginate = _fixture.Create<Paginate<AvailableService>>();
         var paginateDto = _fixture.Create<Paginate<AvailableServiceDto>>();
+        string[] includes = [nameof(AvailableService.Supplies)];
 
-        _repositoryMock.Setup(r => r.GetAllAsync(paginatedRequest, It.IsAny<CancellationToken>())).ReturnsAsync(paginate);
+        _repositoryMock.Setup(r => r.GetAllAsync(includes, paginatedRequest, It.IsAny<CancellationToken>())).ReturnsAsync(paginate);
         _mapperMock.Setup(m => m.Map<Paginate<AvailableServiceDto>>(paginate)).Returns(paginateDto);
 
         // Act

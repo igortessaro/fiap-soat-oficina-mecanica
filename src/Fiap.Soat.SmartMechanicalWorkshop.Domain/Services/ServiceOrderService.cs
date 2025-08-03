@@ -87,34 +87,30 @@ public sealed class ServiceOrderService(
             return ResponseFactory.Fail<ServiceOrderDto>(new FluentResults.Error("Service Order not found"), System.Net.HttpStatusCode.NotFound);
         }
 
-        foundEntity.AvailableServices.Clear();
-
-        if (input.ServiceIds != null)
+        var services = new List<AvailableService>();
+        foreach (var service in input.ServiceIds)
         {
-            foreach (var service in input.ServiceIds)
+            var foundService = await availableServiceRepository.GetByIdAsync(service, cancellationToken);
+            if (foundService is null)
             {
-                var foundService = await availableServiceRepository.GetByIdAsync(service, cancellationToken);
-                if (foundService is null)
-                {
-                    return ResponseFactory.Fail<ServiceOrderDto>(new FluentResults.Error($"Available Service with ID {service} not found"),
-                        System.Net.HttpStatusCode.NotFound);
-                }
-
-                _ = foundEntity.AddAvailableService(foundService);
+                return ResponseFactory.Fail<ServiceOrderDto>(new FluentResults.Error($"Available Service with ID {service} not found"),
+                    System.Net.HttpStatusCode.NotFound);
             }
+
+            services.Add(foundService);
         }
 
-        var updatedObj = foundEntity.Update(input.Title, input.Description, input.ServiceOrderStatus);
-        var updatedEntity = await repository.UpdateAsync(updatedObj, cancellationToken);
+        var updatedEntity = await repository.UpdateAsync(input.Id, input.Title, input.Description, services, cancellationToken);
         return ResponseFactory.Ok(mapper.Map<ServiceOrderDto>(updatedEntity));
     }
 
     public async Task<Response<Paginate<ServiceOrderDto>>> GetAllAsync(Guid? personId, PaginatedRequest paginatedRequest,
         CancellationToken cancellationToken)
     {
+        string[] includes = [nameof(ServiceOrder.Client), nameof(ServiceOrder.Vehicle), nameof(ServiceOrder.AvailableServices)];
         var response = personId.HasValue
-            ? await repository.GetAllAsync(x => x.ClientId == personId, paginatedRequest, cancellationToken)
-            : await repository.GetAllAsync(paginatedRequest, cancellationToken);
+            ? await repository.GetAllAsync(includes, x => x.ClientId == personId, paginatedRequest, cancellationToken)
+            : await repository.GetAllAsync(includes, paginatedRequest, cancellationToken);
         var mappedResponse = mapper.Map<Paginate<ServiceOrderDto>>(response);
         return ResponseFactory.Ok(mappedResponse);
     }
@@ -134,7 +130,7 @@ public sealed class ServiceOrderService(
             : ResponseFactory.Fail(new FluentResults.Error("Not possible to send email"), System.Net.HttpStatusCode.InternalServerError);
     }
 
-    public async Task<Response<ServiceOrderDto>> PatchAsync(UpdateOneServiceOrderInput input, CancellationToken cancellationToken)
+    public async Task<Response<ServiceOrderDto>> PatchAsync(PatchOneServiceOrderInput input, CancellationToken cancellationToken)
     {
         var foundServiceOrder = await repository.GetByIdAsync(input.Id, cancellationToken);
         if (foundServiceOrder is null)
@@ -142,7 +138,7 @@ public sealed class ServiceOrderService(
             return ResponseFactory.Fail<ServiceOrderDto>(new FluentResults.Error("Service Order not found"), System.Net.HttpStatusCode.NotFound);
         }
 
-        _ = foundServiceOrder.ChangeStatus(input.ServiceOrderStatus!.Value);
+        _ = foundServiceOrder.ChangeStatus(input.Status);
         _ = await repository.UpdateAsync(foundServiceOrder, cancellationToken);
         return ResponseFactory.Ok(mapper.Map<ServiceOrderDto>(await repository.GetDetailedAsync(input.Id, cancellationToken)));
     }

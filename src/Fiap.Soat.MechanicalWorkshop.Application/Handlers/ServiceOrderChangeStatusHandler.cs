@@ -10,7 +10,7 @@ public sealed class ServiceOrderChangeStatusHandler(IServiceOrderService service
 {
     public async Task<Response<ServiceOrderDto>> Handle(ServiceOrderChangeStatusCommand request, CancellationToken cancellationToken)
     {
-        var changingStatusResponse = await service.PatchAsync(new UpdateOneServiceOrderInput(request.Id, request.Status), cancellationToken);
+        var changingStatusResponse = await service.PatchAsync(new PatchOneServiceOrderInput(request.Id, request.Status), cancellationToken);
         if (!changingStatusResponse.IsSuccess) return changingStatusResponse;
 
         return changingStatusResponse;

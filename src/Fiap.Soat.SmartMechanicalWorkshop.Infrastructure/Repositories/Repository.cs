@@ -30,7 +30,7 @@ public abstract class Repository<T>(DbContext context) : IRepository<T> where T 
     public virtual Task<Paginate<T>> GetAllAsync(PaginatedRequest paginatedRequest, CancellationToken cancellationToken) =>
         GetAllAsync(_dbSet, paginatedRequest, cancellationToken);
 
-    public virtual Task<Paginate<T>> GetAllAsync(IReadOnlyList<string> includes, PaginatedRequest paginatedRequest,
+    public Task<Paginate<T>> GetAllAsync(IReadOnlyList<string> includes, PaginatedRequest paginatedRequest,
         CancellationToken cancellationToken)
     {
         var query = _dbSet.AsQueryable();
@@ -40,6 +40,13 @@ public abstract class Repository<T>(DbContext context) : IRepository<T> where T 
 
     public Task<Paginate<T>> GetAllAsync(Expression<Func<T, bool>> predicate, PaginatedRequest paginatedRequest, CancellationToken cancellationToken) =>
         GetAllAsync(_dbSet.Where(predicate), paginatedRequest, cancellationToken);
+
+    public Task<Paginate<T>> GetAllAsync(IReadOnlyList<string> includes, Expression<Func<T, bool>> predicate, PaginatedRequest paginatedRequest, CancellationToken cancellationToken)
+    {
+        var query = _dbSet.AsQueryable();
+        query = includes.Aggregate(query, (current, include) => current.Include(include));
+        return GetAllAsync(query.Where(predicate), paginatedRequest, cancellationToken);
+    }
 
     public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken)
     {

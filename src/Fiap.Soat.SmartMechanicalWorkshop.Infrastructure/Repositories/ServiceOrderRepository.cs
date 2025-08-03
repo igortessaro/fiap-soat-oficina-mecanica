@@ -38,4 +38,16 @@ public sealed class ServiceOrderRepository(AppDbContext appDbContext) : Reposito
             .Include(x => x.Vehicle)
             .FirstOrDefaultAsync(x => x.Id.Equals(loginInput.Id) && x.Client.Email.Address.Equals(loginInput.Email), cancellationToken);
     }
+
+    public async Task<ServiceOrder> UpdateAsync(Guid id, string title, string description, IReadOnlyList<AvailableService> services, CancellationToken cancellationToken)
+    {
+        var entity = await Query(false)
+            .Include(x => x.AvailableServices)
+            .SingleAsync(x => x.Id == id, cancellationToken);
+
+        _ = entity.Update(title, description);
+        _ = entity.AddAvailableServices(services);
+        _ = await UpdateAsync(entity, cancellationToken);
+        return entity;
+    }
 }
