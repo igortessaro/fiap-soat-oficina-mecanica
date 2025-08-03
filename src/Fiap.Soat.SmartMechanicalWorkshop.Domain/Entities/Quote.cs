@@ -32,4 +32,16 @@ public sealed class Quote : Entity
         Total += price * quantity;
         return this;
     }
+
+    public Quote Approve()
+    {
+        Status = QuoteStatus.Approved;
+        return this;
+    }
+
+    public Quote Reject()
+    {
+        Status = QuoteStatus.Rejected;
+        return this;
+    }
 }

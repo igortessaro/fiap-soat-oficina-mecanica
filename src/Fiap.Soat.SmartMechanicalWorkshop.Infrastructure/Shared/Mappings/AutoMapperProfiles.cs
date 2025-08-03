@@ -52,13 +52,14 @@ public class AutoMapperProfiles : Profile
 
         CreateMap<Email, EmailDto>().ReverseMap();
 
-        CreateMap<ServiceOrder, ServiceOrderDto>()
-
-            .ReverseMap();
+        CreateMap<ServiceOrder, ServiceOrderDto>().ReverseMap();
         CreateMap<Paginate<ServiceOrder>, Paginate<ServiceOrderDto>>().ReverseMap();
         CreateMap<ServiceOrder, CreateServiceOrderRequest>()
             .ReverseMap()
             .ConstructUsing(dest => new ServiceOrder(dest.Title, dest.Description, dest.VehicleId, dest.ClientId));
         CreateMap<ServiceOrder, UpdateOneServiceOrderRequest>().ReverseMap();
+
+        CreateMap<Quote, QuoteDto>().ReverseMap();
+        CreateMap<ServiceOrderEvent, ServiceOrderEventDto>().ReverseMap();
     }
 }

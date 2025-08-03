@@ -4,6 +4,7 @@ using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.ServiceOrders;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.Interfaces;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -165,7 +166,24 @@ public sealed class ServiceOrdersController(IServiceOrderService service, IMedia
     public async Task<IActionResult> PatchAsync([FromRoute, Required] Guid id, [FromBody, Required] PatchServiceOrderRequest request, CancellationToken cancellationToken)
     {
         var result = await mediator.Send(new ServiceOrderChangeStatusCommand(id, request.Status), cancellationToken);
-        if (result.IsSuccess) await mediator.Publish(new ServiceOrderChangeStatusNotification(id, result.Data), cancellationToken);
+        return result.ToActionResult();
+    }
+
+    [HttpPatch("{id:guid}/quote/{quoteId:guid}/{status}")]
+    [SwaggerOperation(
+        Summary = "Approve a quote for a service order",
+        Description = "Approves a quote for a service order."
+    )]
+    [ProducesResponseType(typeof(ServiceOrderDto), (int) HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.BadRequest)]
+    public async Task<IActionResult> PatchQuoteAsync(
+        [FromRoute, Required] Guid id,
+        [FromRoute, Required] Guid quoteId,
+        [FromRoute, Required] QuoteStatus status,
+        CancellationToken cancellationToken)
+    {
+        var result = await mediator.Send(new QuoteChangeStatusCommand(quoteId, status, id), cancellationToken);
         return result.ToActionResult();
     }
 }

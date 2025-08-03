@@ -1,3 +1,4 @@
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.States.ServiceOrder;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 
@@ -31,11 +32,16 @@ public class ServiceOrder : Entity
 
     public ServiceOrder AddAvailableService(AvailableService availableService)
     {
+        if (!CanBeUpdated())
+        {
+            throw new DomainException($"Service Order with status {Status} cannot be updated.");
+        }
+
         AvailableServices.Add(availableService);
         return this;
     }
 
-    public ServiceOrder AddAvailableServices(IReadOnlyList<AvailableService> services)
+    private ServiceOrder AddAvailableServices(IReadOnlyList<AvailableService> services)
     {
         AvailableServices.Clear();
         if (!services.Any()) return this;
@@ -43,10 +49,16 @@ public class ServiceOrder : Entity
         return this;
     }
 
-    public ServiceOrder Update(string title, string description)
+    public ServiceOrder Update(string title, string description, IReadOnlyList<AvailableService> services)
     {
+        if (!CanBeUpdated())
+        {
+            throw new DomainException($"Service Order with status {Status} cannot be updated.");
+        }
+
         if (!string.IsNullOrEmpty(title)) Title = title;
         if (!string.IsNullOrEmpty(description)) Description = description;
+        _ = AddAvailableServices(services);
         return this;
     }
 
@@ -80,4 +92,17 @@ public class ServiceOrder : Entity
 
         return this;
     }
+
+    public static ServiceOrderStatus GetNextStatus(QuoteStatus quoteStatus)
+    {
+        return quoteStatus switch
+        {
+            QuoteStatus.Pending => ServiceOrderStatus.UnderDiagnosis,
+            QuoteStatus.Approved => ServiceOrderStatus.InProgress,
+            QuoteStatus.Rejected => ServiceOrderStatus.Rejected,
+            _ => throw new DomainException($"Cannot determine next status for quote with status {quoteStatus}.")
+        };
+    }
+
+    private bool CanBeUpdated() => Status is ServiceOrderStatus.Received or ServiceOrderStatus.UnderDiagnosis;
 }

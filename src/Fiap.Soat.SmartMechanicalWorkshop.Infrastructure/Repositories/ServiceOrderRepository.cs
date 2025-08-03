@@ -27,6 +27,8 @@ public sealed class ServiceOrderRepository(AppDbContext appDbContext) : Reposito
             .Include(x => x.AvailableServices).ThenInclude(item => item.Supplies)
             .Include(x => x.Client)
             .Include(x => x.Vehicle)
+            .Include(x => x.Quotes)
+            .Include(x => x.Events)
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
     }
 
@@ -45,8 +47,7 @@ public sealed class ServiceOrderRepository(AppDbContext appDbContext) : Reposito
             .Include(x => x.AvailableServices)
             .SingleAsync(x => x.Id == id, cancellationToken);
 
-        _ = entity.Update(title, description);
-        _ = entity.AddAvailableServices(services);
+        _ = entity.Update(title, description, services);
         _ = await UpdateAsync(entity, cancellationToken);
         return entity;
     }

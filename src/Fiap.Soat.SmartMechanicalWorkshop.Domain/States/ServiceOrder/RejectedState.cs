@@ -10,7 +10,7 @@ public sealed class RejectedState : ServiceOrderState
     {
         if (status != ServiceOrderStatus.WaitingApproval)
         {
-            throw new DomainException("Uma ordem de serviço rejeitada só pode ser alterada para agurdando aprovação.");
+            throw new DomainException("Uma ordem de serviço rejeitada só pode ser alterada para aguardando aprovação.");
         }
 
         _ = serviceOrder.SetState(new WaitingApprovalState());

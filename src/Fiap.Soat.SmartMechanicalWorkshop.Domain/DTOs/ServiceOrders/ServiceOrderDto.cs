@@ -16,5 +16,7 @@ public record ServiceOrderDto
     public PersonDto Client { get; init; } = null!;
     public VehicleDto Vehicle { get; init; } = null!;
     public ICollection<AvailableServiceDto> AvailableServices { get; init; } = [];
+    public ICollection<ServiceOrderEventDto> Events { get; init; } = [];
+    public ICollection<QuoteDto> Quotes { get; init; } = [];
 
 }
