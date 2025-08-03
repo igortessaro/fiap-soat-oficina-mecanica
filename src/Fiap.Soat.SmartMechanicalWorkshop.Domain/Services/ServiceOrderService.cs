@@ -11,7 +11,6 @@ using System.Net;
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Services;
 
 public sealed class ServiceOrderService(
-    ILogger<ServiceOrderService> logger,
     IMapper mapper,
     IServiceOrderRepository repository,
     IServiceOrderEventRepository serviceOrderEventRepository,

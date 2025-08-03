@@ -14,7 +14,10 @@ public sealed class PersonRepository(AppDbContext appDbContext) : Repository<Per
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
     public override Task<Person?> GetDetailedByIdAsync(Guid id, CancellationToken cancellationToken) =>
-        Query().Include(x => x.Vehicles).FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+        Query()
+            .Include(x => x.Address)
+            .Include(x => x.Vehicles)
+            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
     public Task<Person?> GetOneByLoginAsync(LoginRequest loginRequest, CancellationToken cancellationToken) =>
         Query().FirstOrDefaultAsync(item => item.Email.Address.Equals(loginRequest.Email) && item.Password.Equals(loginRequest.Password), cancellationToken);

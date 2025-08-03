@@ -14,6 +14,7 @@ public static class RepositoryExtensions
         _ = serviceCollection.AddScoped<IPersonRepository, PersonRepository>();
         _ = serviceCollection.AddScoped<IQuoteRepository, QuoteRepository>();
         _ = serviceCollection.AddScoped<IServiceOrderEventRepository, ServiceOrderEventRepository>();
+        _ = serviceCollection.AddScoped<IAddressRepository, AddressRepository>();
 
         return serviceCollection;
     }

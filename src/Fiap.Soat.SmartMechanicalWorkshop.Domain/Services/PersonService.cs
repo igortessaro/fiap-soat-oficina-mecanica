@@ -10,7 +10,7 @@ using System.Threading;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Services;
 
-public sealed class PersonService(IMapper mapper, IPersonRepository repository) : IPersonService
+public sealed class PersonService(IMapper mapper, IPersonRepository repository, IAddressRepository addressRepository) : IPersonService
 {
     public async Task<Response<PersonDto>> CreateAsync(CreatePersonRequest request, CancellationToken cancellationToken)
     {
@@ -28,7 +28,9 @@ public sealed class PersonService(IMapper mapper, IPersonRepository repository) 
             return ResponseFactory.Fail(new FluentResults.Error("Person not found"), System.Net.HttpStatusCode.NotFound);
         }
 
+        var address = await addressRepository.GetByIdAsync(foundEntity.AddressId, cancellationToken);
         await repository.DeleteAsync(foundEntity, cancellationToken);
+        await addressRepository.DeleteAsync(address!, cancellationToken);
         return ResponseFactory.Ok(System.Net.HttpStatusCode.NoContent);
     }
 
@@ -59,7 +61,7 @@ public sealed class PersonService(IMapper mapper, IPersonRepository repository) 
 
     public async Task<Response<Paginate<PersonDto>>> GetAllAsync(PaginatedRequest paginatedRequest, CancellationToken cancellationToken)
     {
-        var response = await repository.GetAllAsync([nameof(Person.Vehicles)], paginatedRequest, cancellationToken);
+        var response = await repository.GetAllAsync([nameof(Person.Vehicles), nameof(Person.Address)], paginatedRequest, cancellationToken);
         var mappedResponse = mapper.Map<Paginate<PersonDto>>(response);
         return ResponseFactory.Ok(mappedResponse);
     }

@@ -18,7 +18,6 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Tests.Services;
 public sealed partial class ServiceOrderServiceTests
 {
     private readonly IFixture _fixture = new Fixture();
-    private readonly Mock<ILogger<ServiceOrderService>> _loggerMock = new();
     private readonly Mock<IMapper> _mapperMock = new();
     private readonly Mock<IServiceOrderEventRepository> _repositoryEventsMock = new();
     private readonly Mock<IServiceOrderRepository> _repositoryMock = new();
@@ -32,7 +31,6 @@ public sealed partial class ServiceOrderServiceTests
     public ServiceOrderServiceTests()
     {
         _service = new ServiceOrderService(
-            _loggerMock.Object,
             _mapperMock.Object,
             _repositoryMock.Object,
             _repositoryEventsMock.Object,

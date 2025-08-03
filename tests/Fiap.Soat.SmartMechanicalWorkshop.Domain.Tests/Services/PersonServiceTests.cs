@@ -22,11 +22,12 @@ public sealed class PersonServiceTests
     private readonly IFixture _fixture = new Fixture();
     private readonly Mock<IMapper> _mapperMock = new();
     private readonly Mock<IPersonRepository> _repositoryMock = new();
+    private readonly Mock<IAddressRepository> _addressRepositoryMock = new();
     private readonly PersonService _service;
 
     public PersonServiceTests()
     {
-        _service = new PersonService(_mapperMock.Object, _repositoryMock.Object);
+        _service = new PersonService(_mapperMock.Object, _repositoryMock.Object, _addressRepositoryMock.Object);
     }
 
     [Fact]
@@ -58,12 +59,19 @@ public sealed class PersonServiceTests
         // Arrange
         var id = Guid.NewGuid();
         var person = _fixture.Create<Person>();
+        var address = _fixture.Create<Address>();
         _repositoryMock.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync(person);
+        _addressRepositoryMock.Setup(r => r.GetByIdAsync(person.AddressId, It.IsAny<CancellationToken>())).ReturnsAsync(address);
 
         // Act
         var result = await _service.DeleteAsync(id, CancellationToken.None);
 
         // Assert
+        _repositoryMock.Verify(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()), Times.Once);
+        _addressRepositoryMock.Verify(r => r.GetByIdAsync(person.AddressId, It.IsAny<CancellationToken>()), Times.Once);
+        _repositoryMock.Verify(r => r.DeleteAsync(person, It.IsAny<CancellationToken>()), Times.Once);
+        _addressRepositoryMock.Verify(r => r.DeleteAsync(It.IsAny<Address>(), It.IsAny<CancellationToken>()), Times.Once);
+        result.IsSuccess.Should().BeTrue();
         result.StatusCode.Should().Be(HttpStatusCode.NoContent);
     }
 
@@ -171,7 +179,7 @@ public sealed class PersonServiceTests
         var paginate = _fixture.Create<Paginate<Person>>();
         var paginateDto = _fixture.Create<Paginate<PersonDto>>();
 
-        _repositoryMock.Setup(r => r.GetAllAsync(new List<string>() { nameof(Person.Vehicles) }, paginatedRequest, It.IsAny<CancellationToken>()))
+        _repositoryMock.Setup(r => r.GetAllAsync(new List<string>() { nameof(Person.Vehicles), nameof(Person.Address) }, paginatedRequest, It.IsAny<CancellationToken>()))
             .ReturnsAsync(paginate);
         _mapperMock.Setup(m => m.Map<Paginate<PersonDto>>(paginate)).Returns(paginateDto);
 

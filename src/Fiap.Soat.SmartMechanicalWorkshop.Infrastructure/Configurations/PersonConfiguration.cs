@@ -71,7 +71,8 @@ public sealed class PersonConfiguration : IEntityTypeConfiguration<Person>
         builder.HasOne(c => c.Address)
             .WithOne(a => a.Person)
             .HasForeignKey<Person>(c => c.AddressId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Cascade)
+            .IsRequired();
 
         builder.HasMany(c => c.Vehicles)
             .WithOne(x => x.Person)
