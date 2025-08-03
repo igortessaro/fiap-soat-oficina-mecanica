@@ -19,13 +19,10 @@ public sealed partial class ServiceOrderServiceTests
 {
     private readonly IFixture _fixture = new Fixture();
     private readonly Mock<IMapper> _mapperMock = new();
-    private readonly Mock<IServiceOrderEventRepository> _repositoryEventsMock = new();
     private readonly Mock<IServiceOrderRepository> _repositoryMock = new();
     private readonly Mock<IPersonRepository> _personRepositoryMock = new();
     private readonly Mock<IVehicleRepository> _vehicleRepositoryMock = new();
     private readonly Mock<IAvailableServiceRepository> _availableServiceRepositoryMock = new();
-    private readonly Mock<IEmailService> _emailServiceMock = new();
-    private readonly Mock<IEmailTemplateProvider> _emailTemplateProviderMock = new();
     private readonly ServiceOrderService _service;
 
     public ServiceOrderServiceTests()
@@ -33,12 +30,9 @@ public sealed partial class ServiceOrderServiceTests
         _service = new ServiceOrderService(
             _mapperMock.Object,
             _repositoryMock.Object,
-            _repositoryEventsMock.Object,
             _personRepositoryMock.Object,
             _vehicleRepositoryMock.Object,
-            _availableServiceRepositoryMock.Object,
-            _emailServiceMock.Object,
-            _emailTemplateProviderMock.Object
+            _availableServiceRepositoryMock.Object
         );
     }
 
@@ -232,50 +226,6 @@ public sealed partial class ServiceOrderServiceTests
     }
 
     [Fact]
-    public async Task SendForApprovalAsync_ShouldReturnNotFound_WhenNotFound()
-    {
-        var request = _fixture.Create<SendServiceOrderApprovalRequest>();
-        _repositoryMock.Setup(r => r.GetDetailedAsync(request.Id, It.IsAny<CancellationToken>())).ReturnsAsync((ServiceOrder?) null);
-
-        var result = await _service.SendForApprovalAsync(request, CancellationToken.None);
-
-        result.StatusCode.Should().Be(HttpStatusCode.NotFound);
-        result.IsSuccess.Should().BeFalse();
-    }
-
-    [Fact]
-    public async Task SendForApprovalAsync_ShouldReturnAccepted_WhenEmailSent()
-    {
-        var request = _fixture.Create<SendServiceOrderApprovalRequest>();
-        var entity = _fixture.Create<ServiceOrder>();
-        entity.GetType().GetProperty("Client")!.SetValue(entity, _fixture.Create<Person>());
-        _repositoryMock.Setup(r => r.GetDetailedAsync(request.Id, It.IsAny<CancellationToken>())).ReturnsAsync(entity);
-        _emailTemplateProviderMock.Setup(e => e.GetTemplate(entity)).Returns("html");
-        _emailServiceMock.Setup(e => e.SendEmailAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(true);
-
-        var result = await _service.SendForApprovalAsync(request, CancellationToken.None);
-
-        result.StatusCode.Should().Be(HttpStatusCode.Accepted);
-        result.IsSuccess.Should().BeTrue();
-    }
-
-    [Fact]
-    public async Task SendForApprovalAsync_ShouldReturnInternalServerError_WhenEmailFails()
-    {
-        var request = _fixture.Create<SendServiceOrderApprovalRequest>();
-        var entity = _fixture.Create<ServiceOrder>();
-        entity.GetType().GetProperty("Client")!.SetValue(entity, _fixture.Create<Person>());
-        _repositoryMock.Setup(r => r.GetDetailedAsync(request.Id, It.IsAny<CancellationToken>())).ReturnsAsync(entity);
-        _emailTemplateProviderMock.Setup(e => e.GetTemplate(entity)).Returns("html");
-        _emailServiceMock.Setup(e => e.SendEmailAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(false);
-
-        var result = await _service.SendForApprovalAsync(request, CancellationToken.None);
-
-        result.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
-        result.IsSuccess.Should().BeFalse();
-    }
-
-    [Fact]
     public async Task PatchAsync_ShouldReturnNotFound_WhenNotFound()
     {
         var input = _fixture.Create<PatchOneServiceOrderInput>();
@@ -285,16 +235,5 @@ public sealed partial class ServiceOrderServiceTests
 
         result.StatusCode.Should().Be(HttpStatusCode.NotFound);
         result.IsSuccess.Should().BeFalse();
-    }
-
-    [Fact]
-    public async Task GetExecutionTimeAsync_ShouldReturnZero_WhenNotFound()
-    {
-        _repositoryEventsMock.Setup(r => r.GetAverageExecutionTime(It.IsAny<CancellationToken>())).ReturnsAsync(TimeSpan.Zero);
-
-        var result = await _service.GetAverageExecutionTime(CancellationToken.None);
-
-        result.StatusCode.Should().Be(HttpStatusCode.OK);
-        result.Data.Should().Be(TimeSpan.Zero);
     }
 }

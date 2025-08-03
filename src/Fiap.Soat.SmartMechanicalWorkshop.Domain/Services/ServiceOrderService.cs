@@ -13,12 +13,9 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Services;
 public sealed class ServiceOrderService(
     IMapper mapper,
     IServiceOrderRepository repository,
-    IServiceOrderEventRepository serviceOrderEventRepository,
     IPersonRepository personRepository,
     IVehicleRepository vehicleRepository,
-    IAvailableServiceRepository availableServiceRepository,
-    IEmailService emailService,
-    IEmailTemplateProvider emailTemplateProvider) : IServiceOrderService
+    IAvailableServiceRepository availableServiceRepository) : IServiceOrderService
 {
     public async Task<Response<ServiceOrderDto>> CreateAsync(CreateServiceOrderRequest request, CancellationToken cancellationToken)
     {
@@ -32,8 +29,6 @@ public sealed class ServiceOrderService(
         {
             return ResponseFactory.Fail<ServiceOrderDto>(new FluentResults.Error("Vehicle not found"), System.Net.HttpStatusCode.NotFound);
         }
-
-        // TODO: Adicionar validação para verificar se o cliente já possui uma ordem de serviço em andamento para o mesmo veículo.
 
         foreach (var serviceId in request.ServiceIds)
         {
@@ -66,14 +61,6 @@ public sealed class ServiceOrderService(
     public async Task<Response<ServiceOrderDto>> GetOneAsync(Guid id, CancellationToken cancellationToken)
     {
         var foundEntity = await repository.GetDetailedAsync(id, cancellationToken);
-        return foundEntity != null
-            ? ResponseFactory.Ok(mapper.Map<ServiceOrderDto>(foundEntity))
-            : ResponseFactory.Fail<ServiceOrderDto>(new FluentResults.Error("Service Order Not Found"), System.Net.HttpStatusCode.NotFound);
-    }
-
-    public async Task<Response<ServiceOrderDto>> GetOneByLoginAsync(GetOnePersonByLoginInput getOnePersonByLoginInput, CancellationToken cancellationToken)
-    {
-        var foundEntity = await repository.GetOneByLoginAsync(getOnePersonByLoginInput, cancellationToken);
         return foundEntity != null
             ? ResponseFactory.Ok(mapper.Map<ServiceOrderDto>(foundEntity))
             : ResponseFactory.Fail<ServiceOrderDto>(new FluentResults.Error("Service Order Not Found"), System.Net.HttpStatusCode.NotFound);
@@ -115,21 +102,6 @@ public sealed class ServiceOrderService(
         return ResponseFactory.Ok(mappedResponse);
     }
 
-    public async Task<Response> SendForApprovalAsync(SendServiceOrderApprovalRequest request, CancellationToken cancellationToken)
-    {
-        var foundEntity = await repository.GetDetailedAsync(request.Id, cancellationToken);
-        if (foundEntity is null)
-        {
-            return ResponseFactory.Fail(new FluentResults.Error("Service Order Not Found"), System.Net.HttpStatusCode.NotFound);
-        }
-
-        string html = emailTemplateProvider.GetTemplate(foundEntity);
-        bool response = await emailService.SendEmailAsync(foundEntity.Client.Email, "Envio de orçamento de serviço(s)", html);
-        return response
-            ? ResponseFactory.Ok(HttpStatusCode.Accepted)
-            : ResponseFactory.Fail(new FluentResults.Error("Not possible to send email"), System.Net.HttpStatusCode.InternalServerError);
-    }
-
     public async Task<Response<ServiceOrderDto>> PatchAsync(PatchOneServiceOrderInput input, CancellationToken cancellationToken)
     {
         var foundServiceOrder = await repository.GetByIdAsync(input.Id, cancellationToken);
@@ -141,12 +113,5 @@ public sealed class ServiceOrderService(
         _ = foundServiceOrder.ChangeStatus(input.Status);
         _ = await repository.UpdateAsync(foundServiceOrder, cancellationToken);
         return ResponseFactory.Ok(mapper.Map<ServiceOrderDto>(await repository.GetDetailedAsync(input.Id, cancellationToken)));
-    }
-
-    public async Task<Response<TimeSpan>> GetAverageExecutionTime(CancellationToken cancellationToken)
-    {
-        var averageTime = await serviceOrderEventRepository.GetAverageExecutionTime(cancellationToken);
-
-        return ResponseFactory.Ok(averageTime);
     }
 }

@@ -1,38 +1,53 @@
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.ServiceOrders;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Repositories;
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 using Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Repositories;
 
-public class ServiceOrderEventRepository(AppDbContext appDbContext) : Repository<ServiceOrderEvent>(appDbContext), IServiceOrderEventRepository
+public sealed class ServiceOrderEventRepository(AppDbContext appDbContext) : Repository<ServiceOrderEvent>(appDbContext), IServiceOrderEventRepository
 {
-    public async Task<TimeSpan> GetAverageExecutionTime(CancellationToken cancellationToken)
+    public async Task<ServiceOrderExecutionTimeReport> GetAverageExecutionTimesAsync(DateTime startDate, DateTime endDate, CancellationToken cancellationToken)
     {
-        await using var connection = base.GetDbConnection();
-        await connection.OpenAsync(cancellationToken);
+        var query = Query()
+            .Where(e => e.CreatedAt >= startDate && e.CreatedAt <= endDate);
 
-        await using var command = connection.CreateCommand();
-        command.CommandText = @"SELECT
-            AVG(TIMESTAMPDIFF(SECOND, MinCreatedAt, MaxCreatedAt)) * 10000000 AS AverageTicks
-        FROM (
-            SELECT
-                service_order_id,
-                MIN(created_at) AS MinCreatedAt,
-                MAX(created_at) AS MaxCreatedAt
-            FROM service_order_events
-            WHERE Status IN ('InProgress', 'Delivered')
-            GROUP BY service_order_id
-            HAVING
-                COUNT(CASE WHEN Status = 'InProgress' THEN 1 END) > 0 AND
-                COUNT(CASE WHEN Status = 'Delivered' THEN 1 END) > 0
-        ) AS TimeDiffs;
-        ";
-        object? result = await command.ExecuteScalarAsync(cancellationToken);
-        decimal decimalResult = Math.Round((decimal) (result ?? decimal.Zero));
+        var grouped = await query
+            .GroupBy(e => e.ServiceOrderId)
+            .Select(g => new
+            {
+                ServiceOrderId = g.Key,
+                HasCancelled = g.Any(e => e.Status == ServiceOrderStatus.Cancelled),
+                ReceivedAt = g.Where(e => e.Status == ServiceOrderStatus.Received).OrderBy(e => e.CreatedAt).Select(e => (DateTime?) e.CreatedAt).FirstOrDefault(),
+                InProgressAt = g.Where(e => e.Status == ServiceOrderStatus.InProgress).OrderBy(e => e.CreatedAt).Select(e => (DateTime?) e.CreatedAt).FirstOrDefault(),
+                CompletedAt = g.Where(e => e.Status == ServiceOrderStatus.Completed).OrderBy(e => e.CreatedAt).Select(e => (DateTime?) e.CreatedAt).FirstOrDefault(),
+                DeliveredAt = g.Where(e => e.Status == ServiceOrderStatus.Delivered).OrderBy(e => e.CreatedAt).Select(e => (DateTime?) e.CreatedAt).FirstOrDefault()
+            })
+            .Where(x =>
+                !x.HasCancelled &&
+                x.ReceivedAt != null &&
+                x.InProgressAt != null &&
+                x.CompletedAt != null &&
+                x.DeliveredAt != null
+            )
+            .ToListAsync(cancellationToken);
 
-        return TimeSpan.FromTicks((long) decimalResult);
+        int totalCount = grouped.Count;
+        if (totalCount == 0) return new ServiceOrderExecutionTimeReport(0, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero);
+
+        double avgTotal = grouped.Average(x => (x.DeliveredAt - x.ReceivedAt)?.TotalSeconds ?? 0);
+        double avgAttendance = grouped.Average(x => (x.InProgressAt - x.ReceivedAt)?.TotalSeconds ?? 0);
+        double avgExecution = grouped.Average(x => (x.CompletedAt - x.InProgressAt)?.TotalSeconds ?? 0);
+        double avgDelivery = grouped.Average(x => (x.DeliveredAt - x.CompletedAt)?.TotalSeconds ?? 0);
+
+        return new ServiceOrderExecutionTimeReport(
+            totalCount,
+            TimeSpan.FromSeconds(avgTotal),
+            TimeSpan.FromSeconds(avgAttendance),
+            TimeSpan.FromSeconds(avgExecution),
+            TimeSpan.FromSeconds(avgDelivery));
     }
 }
+

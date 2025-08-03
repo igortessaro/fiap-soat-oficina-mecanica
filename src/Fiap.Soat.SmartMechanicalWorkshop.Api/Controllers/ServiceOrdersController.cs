@@ -60,19 +60,21 @@ public sealed class ServiceOrdersController(IServiceOrderService service, IMedia
     /// <summary>
     /// Gets the average execution time of service orders.
     /// </summary>
+    /// <param name="startDate">Start date</param>
+    /// <param name="endDate">End date</param>
     /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>The average execution time as a TimeSpan.</returns>
+    /// <returns>The average execution time</returns>
     [HttpGet("average-execution-time")]
     [SwaggerOperation(
         Summary = "Get average execution time of service orders",
         Description = "Returns the average execution time for all service orders."
     )]
-    [ProducesResponseType(typeof(Response<TimeSpan>), (int) HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(Response<ServiceOrderExecutionTimeReport>), (int) HttpStatusCode.OK)]
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.BadRequest)]
-    public async Task<IActionResult> GetAverageExecutionTime(CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAverageExecutionTime([FromQuery] DateOnly startDate, [FromQuery] DateOnly endDate, CancellationToken cancellationToken)
     {
-        Response<TimeSpan> result = await service.GetAverageExecutionTime(cancellationToken);
+        var result = await mediator.Send(new GetAverageExecutionTimeCommand(startDate, endDate), cancellationToken);
         return result.ToActionResult();
     }
 
@@ -90,26 +92,6 @@ public sealed class ServiceOrdersController(IServiceOrderService service, IMedia
     {
         var result = await service.CreateAsync(request, cancellationToken);
         if (result.IsSuccess) await mediator.Publish(new ServiceOrderChangeStatusNotification(result.Data.Id, result.Data), cancellationToken);
-        return result.ToActionResult();
-    }
-
-    /// <summary>
-    /// Sends a service order to the person for approval via email.
-    /// </summary>
-    /// <param name="request">Data required to send the service order for approval.</param>
-    /// <param name="cancellationToken">Cancellation token.</param>
-    [HttpPost("send-email")]
-    [SwaggerOperation(
-        Summary = "Send service order for person approval",
-        Description = "Sends the service order details via e-mail to the person for approval or rejection."
-    )]
-    [ProducesResponseType((int) HttpStatusCode.OK)]
-    [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.BadRequest)]
-    public async Task<IActionResult> SendForApprovalAsync(
-        [FromBody, Required] SendServiceOrderApprovalRequest request,
-        CancellationToken cancellationToken)
-    {
-        var result = await service.SendForApprovalAsync(request, cancellationToken);
         return result.ToActionResult();
     }
 
