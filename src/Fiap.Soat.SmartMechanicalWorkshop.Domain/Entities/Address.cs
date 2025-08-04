@@ -1,6 +1,6 @@
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 
-public class Address : Entity
+public sealed class Address : Entity
 {
     private Address() { }
 
