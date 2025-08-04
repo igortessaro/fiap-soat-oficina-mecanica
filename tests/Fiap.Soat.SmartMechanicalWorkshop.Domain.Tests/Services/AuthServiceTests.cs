@@ -35,7 +35,7 @@ public sealed class AuthServiceTests
         // Arrange
         var person = PeopleFactory.CreateDetailerEmployee();
         var loginRequest = _fixture.Build<LoginRequest>()
-            .With(x => x.Email, (string)person.Email)
+            .With(x => x.Email, (string) person.Email)
             .With(x => x.Password, PeopleFactory.ValidPassword)
             .Create();
 
@@ -57,7 +57,7 @@ public sealed class AuthServiceTests
         // Arrange
         var person = PeopleFactory.CreateDetailerEmployee();
         var loginRequest = _fixture.Build<LoginRequest>()
-            .With(x => x.Email, (string)person.Email)
+            .With(x => x.Email, (string) person.Email)
             .With(x => x.Password, "123456789")
             .Create();
 
