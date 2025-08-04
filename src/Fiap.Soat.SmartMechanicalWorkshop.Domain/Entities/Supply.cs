@@ -24,4 +24,16 @@ public class Supply : Entity
         if (quantity.HasValue) Quantity = quantity.Value;
         return this;
     }
+
+    public Supply RemoveFromStock(int quantity)
+    {
+        Quantity -= quantity;
+        return this;
+    }
+
+    public Supply AddToStock(int quantity)
+    {
+        Quantity += quantity;
+        return this;
+    }
 }

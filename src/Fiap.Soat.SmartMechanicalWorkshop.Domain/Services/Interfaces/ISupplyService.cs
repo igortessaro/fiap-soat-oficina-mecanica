@@ -11,4 +11,5 @@ public interface ISupplyService
     Task<Response<SupplyDto>> GetOneAsync(Guid id, CancellationToken cancellationToken);
     Task<Response<SupplyDto>> UpdateAsync(UpdateOneSupplyInput input, CancellationToken cancellationToken);
     Task<Response<Paginate<SupplyDto>>> GetAllAsync(PaginatedRequest paginatedRequest, CancellationToken cancellationToken);
+    Task<Response<SupplyDto>> ChangeStock(Guid id, int quantity, bool adding, CancellationToken cancellationToken);
 }

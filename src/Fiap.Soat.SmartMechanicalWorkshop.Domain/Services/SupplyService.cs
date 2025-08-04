@@ -60,4 +60,12 @@ public sealed class SupplyService(ISupplyRepository repository, IMapper mapper) 
         var updatedEntity = await repository.UpdateAsync(foundEntity.Update(input.Name, input.Price, input.Quantity), cancellationToken);
         return ResponseFactory.Ok(mapper.Map<SupplyDto>(updatedEntity));
     }
+
+    public async Task<Response<SupplyDto>> ChangeStock(Guid id, int quantity, bool adding, CancellationToken cancellationToken)
+    {
+        var entity = await repository.GetByIdAsync(id, cancellationToken);
+        if (entity is null) return ResponseFactory.Fail<SupplyDto>("Supply not found", HttpStatusCode.NotFound);
+        await repository.UpdateAsync(adding ? entity.AddToStock(quantity) : entity.RemoveFromStock(quantity), cancellationToken);
+        return ResponseFactory.Ok(mapper.Map<SupplyDto>(entity));
+    }
 }
