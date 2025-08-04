@@ -1,14 +1,24 @@
 using Fiap.Soat.MechanicalWorkshop.Application.Notifications;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.Repositories;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
+using Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Services.Interfaces;
 using MediatR;
-using Microsoft.Extensions.Logging;
 
 namespace Fiap.Soat.MechanicalWorkshop.Application.Handlers;
 
-public sealed class SendEmailHandler(ILogger<SendEmailHandler> logger) : INotificationHandler<ServiceOrderChangeStatusNotification>
+public sealed class SendEmailHandler(
+    IServiceOrderRepository repository,
+    IEmailTemplateProvider emailTemplateProvider,
+    IEmailService emailService) : INotificationHandler<ServiceOrderChangeStatusNotification>
 {
-    public Task Handle(ServiceOrderChangeStatusNotification notification, CancellationToken cancellationToken)
+    public async Task Handle(ServiceOrderChangeStatusNotification notification, CancellationToken cancellationToken)
     {
-        logger.LogInformation("Handling {@ServiceOrderChangeStatusNotification}", notification);
-        return Task.CompletedTask;
+        if (notification.ServiceOrder.Status != ServiceOrderStatus.WaitingApproval) return;
+
+        var foundEntity = await repository.GetDetailedAsync(notification.ServiceOrder.Id, cancellationToken);
+        if (foundEntity is null) return;
+
+        string html = emailTemplateProvider.GetTemplate(foundEntity);
+        await emailService.SendEmailAsync(foundEntity.Client.Email, "Envio de orçamento de serviço(s)", html);
     }
 }

@@ -1,18 +1,13 @@
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.ExternalServices;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
+using Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Services.Interfaces;
 using Microsoft.Extensions.Options;
 using System.Net.Mail;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Services;
 
-public class EmailService : IEmailService
+public class EmailService(IOptions<EmailSettings> options) : IEmailService
 {
-    private readonly EmailSettings _emailSettings;
-
-    public EmailService(IOptions<EmailSettings> options)
-    {
-        _emailSettings = options.Value;
-    }
+    private readonly EmailSettings _emailSettings = options.Value;
 
     public async Task<bool> SendEmailAsync(string to, string subject, string htmlBody)
     {

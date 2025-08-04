@@ -1,6 +1,6 @@
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 
-namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.Interfaces;
+namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Services.Interfaces;
 
 public interface IEmailTemplateProvider
 {
