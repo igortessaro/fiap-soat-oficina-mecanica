@@ -97,7 +97,7 @@ public class SuppliesController(ISupplyService supplyService) : ControllerBase
     public async Task<IActionResult> UpdateAsync([FromRoute][Required] Guid id, [FromBody][Required] UpdateOneSupplyRequest request,
         CancellationToken cancellationToken)
     {
-        UpdateOneSupplyInput updateRequest = new() { Id = id, Quantity = request.Quantity, Price = request.Price, Name = request.Name };
+        UpdateOneSupplyInput updateRequest = new(id, request.Name, request.Quantity, request.Price);
 
         var result = await supplyService.UpdateAsync(updateRequest, cancellationToken);
         return result.ToActionResult();

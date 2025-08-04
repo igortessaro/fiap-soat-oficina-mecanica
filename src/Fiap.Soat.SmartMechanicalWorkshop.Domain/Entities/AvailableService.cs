@@ -1,3 +1,5 @@
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.AvailableServices;
+
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 
 public class AvailableService : Entity
@@ -14,7 +16,7 @@ public class AvailableService : Entity
     public string Name { get; private set; } = string.Empty;
     public decimal Price { get; private set; }
     public ICollection<ServiceOrder> ServiceOrders { get; private set; } = [];
-    public ICollection<Supply> Supplies { get; private set; } = [];
+    public ICollection<AvailableServiceSupply> AvailableServiceSupplies { get; private set; } = [];
 
     public AvailableService Update(string name, decimal? price)
     {
@@ -23,17 +25,17 @@ public class AvailableService : Entity
         return this;
     }
 
-    public AvailableService AddSupply(Supply supply)
+    public AvailableService AddSupply(Guid supplyId, int quantity)
     {
-        Supplies.Add(supply);
+        AvailableServiceSupplies.Add(new AvailableServiceSupply(Id, supplyId, quantity));
         return this;
     }
 
-    public AvailableService AddSupplies(IReadOnlyList<Supply> supplies)
+    public AvailableService AddSupplies(IReadOnlyList<ServiceSupplyDto> supplies)
     {
-        Supplies.Clear();
+        AvailableServiceSupplies.Clear();
         if (!supplies.Any()) return this;
-        foreach (var supply in supplies) _ = AddSupply(supply);
+        foreach (var supply in supplies) _ = AddSupply(supply.SupplyId, supply.Quantity);
         return this;
     }
 }

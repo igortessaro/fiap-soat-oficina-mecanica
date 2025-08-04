@@ -24,6 +24,7 @@ public class AutoMapperProfiles : Profile
         CreateMap<Vehicle, UpdateOneVehicleRequest>().ReverseMap();
 
         CreateMap<AvailableService, AvailableServiceDto>()
+            .ConstructUsing(dest => new AvailableServiceDto(dest.Id, dest.Name, dest.Price, dest.AvailableServiceSupplies.Select(x => new SupplyDto(x.SupplyId, x.Supply.Name, x.Quantity, x.Supply.Price)).ToList()))
             .ReverseMap();
         CreateMap<Paginate<AvailableService>, Paginate<AvailableServiceDto>>().ReverseMap();
         CreateMap<AvailableService, CreateAvailableServiceRequest>()
@@ -61,5 +62,10 @@ public class AutoMapperProfiles : Profile
 
         CreateMap<Quote, QuoteDto>().ReverseMap();
         CreateMap<ServiceOrderEvent, ServiceOrderEventDto>().ReverseMap();
+
+        CreateMap<AvailableServiceSupply, SupplyDto>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.SupplyId))
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Supply.Name))
+            .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Supply.Price));
     }
 }

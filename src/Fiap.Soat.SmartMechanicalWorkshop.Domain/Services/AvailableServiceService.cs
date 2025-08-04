@@ -22,20 +22,20 @@ public sealed class AvailableServiceService(
             return ResponseFactory.Fail<AvailableServiceDto>($"AvailableService with name {request.Name} already exists", HttpStatusCode.Conflict);
         }
 
-        if (!request.SuppliesIds.Any())
+        if (!request.Supplies.Any())
         {
             return ResponseFactory.Ok(mapper.Map<AvailableServiceDto>(await repository.AddAsync(entity, cancellationToken)), HttpStatusCode.Created);
         }
 
-        foreach (var supply in request.SuppliesIds)
+        foreach (var supply in request.Supplies)
         {
-            var foundSupply = await supplyRepository.GetByIdAsync(supply, cancellationToken);
+            var foundSupply = await supplyRepository.GetByIdAsync(supply.SupplyId, cancellationToken);
             if (foundSupply is null)
             {
                 return ResponseFactory.Fail<AvailableServiceDto>($"Supply with ID {supply} not found", HttpStatusCode.NotFound);
             }
 
-            _ = entity.AddSupply(foundSupply);
+            _ = entity.AddSupply(supply.SupplyId, supply.Quantity);
         }
 
         var created = await repository.AddAsync(entity, cancellationToken);
@@ -56,7 +56,7 @@ public sealed class AvailableServiceService(
 
     public async Task<Response<Paginate<AvailableServiceDto>>> GetAllAsync(PaginatedRequest paginatedRequest, CancellationToken cancellationToken)
     {
-        var result = await repository.GetAllAsync([nameof(AvailableService.Supplies)], paginatedRequest, cancellationToken);
+        var result = await repository.GetAllAsync(["AvailableServiceSupplies.Supply"], paginatedRequest, cancellationToken);
         var mapped = mapper.Map<Paginate<AvailableServiceDto>>(result);
         return ResponseFactory.Ok(mapped);
     }
@@ -83,18 +83,16 @@ public sealed class AvailableServiceService(
             return ResponseFactory.Fail<AvailableServiceDto>($"AvailableService with name {input.Name} already exists", HttpStatusCode.Conflict);
         }
 
-        var supplies = new List<Supply>();
-        foreach (var supply in input.SuppliesIds ?? [])
+        foreach (var supply in input.Supplies)
         {
-            var foundSupply = await supplyRepository.GetByIdAsync(supply, cancellationToken);
+            var foundSupply = await supplyRepository.GetByIdAsync(supply.SupplyId, cancellationToken);
             if (foundSupply is null)
             {
                 return ResponseFactory.Fail<AvailableServiceDto>($"Supply with ID {supply} not found", HttpStatusCode.NotFound);
             }
-
-            supplies.Add(foundSupply);
         }
 
+        var supplies = input.Supplies.Select(x => new ServiceSupplyDto(input.Id, x.SupplyId, x.Quantity)).ToList();
         var updated = await repository.UpdateAsync(input.Id, input.Name, input.Price, supplies, cancellationToken);
         return ResponseFactory.Ok(mapper.Map<AvailableServiceDto>(updated));
     }

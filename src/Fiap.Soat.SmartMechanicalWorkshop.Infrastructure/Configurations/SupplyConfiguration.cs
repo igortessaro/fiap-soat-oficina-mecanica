@@ -29,9 +29,10 @@ public sealed class SupplyConfiguration : IEntityTypeConfiguration<Supply>
             .HasColumnType("decimal(18,2)")
             .IsRequired();
 
-        builder.HasMany(x => x.AvailableServices)
-            .WithMany(x => x.Supplies)
-            .UsingEntity(j => j.ToTable("available_services_supply"));
+        builder.HasMany(x => x.AvailableServiceSupplies)
+            .WithOne(x => x.Supply)
+            .HasForeignKey(x => x.SupplyId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasIndex(x => x.Name).IsUnique();
     }

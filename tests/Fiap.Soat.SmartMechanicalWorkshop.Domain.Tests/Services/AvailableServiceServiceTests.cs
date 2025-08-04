@@ -29,7 +29,7 @@ public sealed class AvailableServiceServiceTests
     {
         // Arrange
         var request = _fixture.Build<CreateAvailableServiceRequest>()
-            .With(x => x.SuppliesIds, [])
+            .With(x => x.Supplies, [])
             .Create();
         var entity = _fixture.Create<AvailableService>();
         var dto = _fixture.Create<AvailableServiceDto>();
@@ -52,7 +52,7 @@ public sealed class AvailableServiceServiceTests
         // Arrange
         var supplyId = Guid.NewGuid();
         var request = _fixture.Build<CreateAvailableServiceRequest>()
-            .With(x => x.SuppliesIds, [supplyId])
+            .With(x => x.Supplies, [new ServiceSupplyRequest(supplyId, 10)])
             .Create();
         var entity = _fixture.Create<AvailableService>();
 
@@ -73,7 +73,7 @@ public sealed class AvailableServiceServiceTests
         // Arrange
         var supplyId = Guid.NewGuid();
         var request = _fixture.Build<CreateAvailableServiceRequest>()
-            .With(x => x.SuppliesIds, [supplyId])
+            .With(x => x.Supplies, [new ServiceSupplyRequest(supplyId, 10)])
             .Create();
         var entity = _fixture.Create<AvailableService>();
         var supply = _fixture.Create<Supply>();
@@ -129,7 +129,7 @@ public sealed class AvailableServiceServiceTests
         var paginatedRequest = _fixture.Create<PaginatedRequest>();
         var paginate = _fixture.Create<Paginate<AvailableService>>();
         var paginateDto = _fixture.Create<Paginate<AvailableServiceDto>>();
-        string[] includes = [nameof(AvailableService.Supplies)];
+        string[] includes = [$"{nameof(AvailableService.AvailableServiceSupplies)}.{nameof(AvailableServiceSupply.Supply)}"];
 
         _repositoryMock.Setup(r => r.GetAllAsync(includes, paginatedRequest, It.IsAny<CancellationToken>())).ReturnsAsync(paginate);
         _mapperMock.Setup(m => m.Map<Paginate<AvailableServiceDto>>(paginate)).Returns(paginateDto);
@@ -196,7 +196,7 @@ public sealed class AvailableServiceServiceTests
     {
         // Arrange
         var input = _fixture.Build<UpdateOneAvailableServiceInput>()
-            .With(x => x.SuppliesIds, [Guid.NewGuid()])
+            .With(x => x.Supplies, [new ServiceSupplyInput(Guid.NewGuid(), 10)])
             .Create();
         var entity = _fixture.Create<AvailableService>();
         _repositoryMock.Setup(r => r.GetAsync(input.Id, It.IsAny<CancellationToken>())).ReturnsAsync(entity);
@@ -216,7 +216,7 @@ public sealed class AvailableServiceServiceTests
         // Arrange
         var supplyId = Guid.NewGuid();
         var input = _fixture.Build<UpdateOneAvailableServiceInput>()
-            .With(x => x.SuppliesIds, [supplyId])
+            .With(x => x.Supplies, [new ServiceSupplyInput(supplyId, 10)])
             .Create();
         var entity = _fixture.Create<AvailableService>();
         var supply = _fixture.Create<Supply>();
@@ -225,7 +225,7 @@ public sealed class AvailableServiceServiceTests
 
         _repositoryMock.Setup(r => r.GetAsync(input.Id, It.IsAny<CancellationToken>())).ReturnsAsync(entity);
         _supplyRepositoryMock.Setup(s => s.GetByIdAsync(supplyId, It.IsAny<CancellationToken>())).ReturnsAsync(supply);
-        _repositoryMock.Setup(r => r.UpdateAsync(input.Id, input.Name, input.Price, It.IsAny<IReadOnlyList<Supply>>(), It.IsAny<CancellationToken>()))
+        _repositoryMock.Setup(r => r.UpdateAsync(input.Id, input.Name, input.Price, It.IsAny<IReadOnlyList<ServiceSupplyDto>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(updatedEntity);
         _mapperMock.Setup(m => m.Map<AvailableServiceDto>(updatedEntity)).Returns(dto);
 

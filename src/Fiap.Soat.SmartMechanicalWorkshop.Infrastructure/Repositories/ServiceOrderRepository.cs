@@ -24,7 +24,7 @@ public sealed class ServiceOrderRepository(AppDbContext appDbContext) : Reposito
     public async Task<ServiceOrder?> GetDetailedAsync(Guid id, CancellationToken cancellationToken)
     {
         return await Query()
-            .Include(x => x.AvailableServices).ThenInclude(item => item.Supplies)
+            .Include(x => x.AvailableServices).ThenInclude(item => item.AvailableServiceSupplies).ThenInclude(x => x.Supply)
             .Include(x => x.Client)
             .Include(x => x.Vehicle)
             .Include(x => x.Quotes)
@@ -35,7 +35,7 @@ public sealed class ServiceOrderRepository(AppDbContext appDbContext) : Reposito
     public async Task<ServiceOrder?> GetOneByLoginAsync(GetOnePersonByLoginInput loginInput, CancellationToken cancellationToken)
     {
         return await Query()
-            .Include(x => x.AvailableServices).ThenInclude(item => item.Supplies)
+            .Include(x => x.AvailableServices).ThenInclude(item => item.AvailableServiceSupplies).ThenInclude(x => x.Supply)
             .Include(x => x.Client)
             .Include(x => x.Vehicle)
             .FirstOrDefaultAsync(x => x.Id.Equals(loginInput.Id) && x.Client.Email.Address.Equals(loginInput.Email), cancellationToken);

@@ -18,6 +18,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> dbContextOptions) : DbC
     public DbSet<QuoteAvailableService> QuoteServices { get; set; }
     public DbSet<QuoteSupply> QuoteSupplies { get; set; }
     public DbSet<ServiceOrderEvent> EventLogs { get; set; }
+    public DbSet<AvailableServiceSupply> AvailableServiceSupplies { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -32,10 +33,11 @@ public class AppDbContext(DbContextOptions<AppDbContext> dbContextOptions) : DbC
         modelBuilder.ApplyConfiguration(new QuoteServiceConfiguration());
         modelBuilder.ApplyConfiguration(new QuoteSupplyConfiguration());
         modelBuilder.ApplyConfiguration(new ServiceOrderEventConfiguration());
+        modelBuilder.ApplyConfiguration(new AvailableServiceSupplyConfiguration());
     }
 
-    // protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    //     => optionsBuilder.LogTo(Console.WriteLine).EnableSensitiveDataLogging();
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        => optionsBuilder.LogTo(Console.WriteLine).EnableSensitiveDataLogging();
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
