@@ -10,6 +10,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Tests.Shared.Factories;
 [ExcludeFromCodeCoverage]
 public static class PeopleFactory
 {
+    public static string ValidPassword => "Pa$$w0rd!";
     public static Person CreateClient() => Create(PersonType.Client, null);
 
     public static Person CreateDetailerEmployee() => Create(PersonType.Employee, EmployeeRole.Detailer);
@@ -23,7 +24,7 @@ public static class PeopleFactory
             personType,
             employeeRole,
             faker.Internet.Email(),
-            faker.Internet.Password(),
+            ValidPassword,
             new Phone(faker.Phone.PhoneNumber()),
             new Address(faker.Address.StreetName(), faker.Address.City(), faker.Address.State(), faker.Address.ZipCode()));
     }

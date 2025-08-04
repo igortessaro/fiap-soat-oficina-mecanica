@@ -29,8 +29,7 @@ public class AuthController(IAuthService authService) : ControllerBase
     [SwaggerResponse(404, "Returns when user/password is not found", typeof(NotFoundResult))]
     public async Task<IActionResult> Login([FromBody] LoginRequest login, CancellationToken cancellationToken)
     {
-        var response = await authService.Login(login, cancellationToken);
-
+        var response = await authService.LoginAsync(login, cancellationToken);
         return response.ToActionResult();
     }
 }

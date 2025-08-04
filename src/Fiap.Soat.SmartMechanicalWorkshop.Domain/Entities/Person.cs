@@ -19,7 +19,7 @@ public class Person : Entity
     public EmployeeRole? EmployeeRole { get; private set; }
     public Phone Phone { get; private set; } = null!;
     public Email Email { get; private set; } = null!;
-    public string Password { get; private set; } = null!;
+    public Password Password { get; private set; } = null!;
     public Guid AddressId { get; private set; }
     public Address Address { get; private set; } = null!;
     public ICollection<Vehicle> Vehicles { get; private set; } = [];

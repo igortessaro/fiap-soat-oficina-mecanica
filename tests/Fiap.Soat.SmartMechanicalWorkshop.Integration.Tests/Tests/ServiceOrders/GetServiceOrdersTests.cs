@@ -34,8 +34,8 @@ public sealed class GetServiceOrdersTests : CustomWebApplicationFactory<Program>
             "999.999.999-99",
             PersonType.Client,
             null,
-            string.Empty,
             "client@email.com",
+            PeopleFactory.ValidPassword,
             new Phone("55", "99999999"),
             new Address("Street", "City", "State", "99999-999"));
         await dbContext.People.AddAsync(client);

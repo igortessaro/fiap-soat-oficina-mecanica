@@ -11,5 +11,4 @@ public interface IPersonService
     Task<Response<PersonDto>> GetOneAsync(Guid id, CancellationToken cancellationToken);
     Task<Response<PersonDto>> UpdateAsync(UpdateOnePersonInput input, CancellationToken cancellationToken);
     Task<Response<Paginate<PersonDto>>> GetAllAsync(PaginatedRequest paginatedRequest, CancellationToken cancellationToken);
-    Task<Response<PersonDto>> GetOneByLoginAsync(LoginRequest loginRequest, CancellationToken cancellationToken);
 }

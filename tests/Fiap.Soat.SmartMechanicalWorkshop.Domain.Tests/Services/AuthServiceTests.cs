@@ -1,10 +1,13 @@
 using AutoFixture;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Auth;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Person;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.Repositories;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.Interfaces;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
+using Fiap.Soat.SmartMechanicalWorkshop.Tests.Shared.Factories;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using Moq;
@@ -16,31 +19,31 @@ public sealed class AuthServiceTests
 {
     private readonly Mock<IConfiguration> _configMock = new();
     private readonly IFixture _fixture = new Fixture();
-    private readonly Mock<IPersonService> _personServiceMock = new();
+    private readonly Mock<IPersonRepository> _personRepositoryMock = new();
     private readonly AuthService _service;
 
     public AuthServiceTests()
     {
         _configMock.Setup(c => c["Jwt:Key"]).Returns("super_secret_test_key_1234567890");
         _configMock.Setup(c => c["Jwt:Issuer"]).Returns("TestIssuer");
-        _service = new AuthService(_configMock.Object, _personServiceMock.Object);
+        _service = new AuthService(_configMock.Object, _personRepositoryMock.Object);
     }
 
     [Fact]
     public async Task Login_ShouldReturnToken_WhenCredentialsAreValid()
     {
         // Arrange
-        var loginRequest = _fixture.Create<LoginRequest>();
-        var personDto = _fixture.Build<PersonDto>()
-            .With(x => x.EmployeeRole, EmployeeRole.Detailer)
+        var person = PeopleFactory.CreateDetailerEmployee();
+        var loginRequest = _fixture.Build<LoginRequest>()
+            .With(x => x.Email, (string)person.Email)
+            .With(x => x.Password, PeopleFactory.ValidPassword)
             .Create();
-        var response = ResponseFactory.Ok(personDto);
 
-        _personServiceMock.Setup(s => s.GetOneByLoginAsync(loginRequest, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(response);
+        _personRepositoryMock.Setup(s => s.GetByEmailAsync(loginRequest.Email, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(person);
 
         // Act
-        var result = await _service.Login(loginRequest, CancellationToken.None);
+        var result = await _service.LoginAsync(loginRequest, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
@@ -52,14 +55,17 @@ public sealed class AuthServiceTests
     public async Task Login_ShouldReturnUnauthorized_WhenCredentialsAreInvalid()
     {
         // Arrange
-        var loginRequest = _fixture.Create<LoginRequest>();
-        var response = ResponseFactory.Fail<PersonDto>("Person Not Found", HttpStatusCode.NotFound);
+        var person = PeopleFactory.CreateDetailerEmployee();
+        var loginRequest = _fixture.Build<LoginRequest>()
+            .With(x => x.Email, (string)person.Email)
+            .With(x => x.Password, "123456789")
+            .Create();
 
-        _personServiceMock.Setup(s => s.GetOneByLoginAsync(loginRequest, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(response);
+        _personRepositoryMock.Setup(s => s.GetByEmailAsync(loginRequest.Email, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(person);
 
         // Act
-        var result = await _service.Login(loginRequest, CancellationToken.None);
+        var result = await _service.LoginAsync(loginRequest, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeFalse();

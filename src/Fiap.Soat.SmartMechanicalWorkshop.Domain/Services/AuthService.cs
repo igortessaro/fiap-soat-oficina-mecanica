@@ -1,5 +1,6 @@
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Auth;
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Person;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.Repositories;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.Interfaces;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 using Microsoft.Extensions.Configuration;
@@ -11,9 +12,26 @@ using System.Text;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Services;
 
-public sealed class AuthService(IConfiguration config, IPersonService personService) : IAuthService
+public sealed class AuthService(IConfiguration config, IPersonRepository personRepository) : IAuthService
 {
-    private string GenerateJwtToken(PersonDto person)
+    public async Task<Response<string>> LoginAsync(LoginRequest loginRequest, CancellationToken cancellationToken)
+    {
+        var person = await personRepository.GetByEmailAsync(loginRequest.Email, cancellationToken);
+        if (person is null)
+        {
+            return ResponseFactory.Fail<string>(new FluentResults.Error($"Person with {loginRequest.Email} not found"), HttpStatusCode.NotFound);
+        }
+
+        if (!person.Password.VerifyPassword(loginRequest.Password))
+        {
+            return ResponseFactory.Fail<string>(new FluentResults.Error("Invalid login credentials"), HttpStatusCode.Unauthorized);
+        }
+
+        string token = GenerateJwtToken(person);
+        return ResponseFactory.Ok(token);
+    }
+
+    private string GenerateJwtToken(Person person)
     {
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:Key"]));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -33,18 +51,5 @@ public sealed class AuthService(IConfiguration config, IPersonService personServ
         );
 
         return new JwtSecurityTokenHandler().WriteToken(token);
-    }
-
-    public async Task<Response<string>> Login(LoginRequest loginRequest, CancellationToken cancellationToken)
-    {
-        var response = await personService.GetOneByLoginAsync(loginRequest, cancellationToken);
-
-        if (response is not { IsSuccess: true })
-        {
-            return ResponseFactory.Fail<string>(new FluentResults.Error("Invalid login credentials"), HttpStatusCode.Unauthorized);
-        }
-
-        string token = GenerateJwtToken(response.Data);
-        return ResponseFactory.Ok(token);
     }
 }

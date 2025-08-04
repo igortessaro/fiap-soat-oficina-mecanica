@@ -26,12 +26,6 @@ public sealed class PersonConfiguration : IEntityTypeConfiguration<Person>
             .HasMaxLength(100)
             .IsRequired();
 
-        builder.Property(x => x.Password)
-            .HasColumnName("password")
-            .HasConversion<string>()
-            .HasMaxLength(100)
-            .IsRequired();
-
         builder.Property(x => x.EmployeeRole)
             .HasColumnName("employee_role")
             .HasConversion<string>()
@@ -66,6 +60,15 @@ public sealed class PersonConfiguration : IEntityTypeConfiguration<Person>
                 .IsRequired();
 
             document.HasIndex(x => x.Value).IsUnique();
+        });
+
+        builder.OwnsOne(d => d.Password, password =>
+        {
+            password.Property(x => x.Value)
+                .HasColumnName("password")
+                .HasColumnType("VARCHAR(100)")
+                .HasMaxLength(100)
+                .IsRequired();
         });
 
         builder.HasOne(c => c.Address)

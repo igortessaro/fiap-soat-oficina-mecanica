@@ -138,7 +138,7 @@ public sealed class PersonServiceTests
         var personDto = _fixture.Create<PersonDto>();
         var phone = _fixture.Create<Phone>();
         var address = _fixture.Create<Address>();
-        string? password = faker.Internet.Password();
+        string password = PeopleFactory.CreateClient().Password;
         var person = _fixture.Create<Person>()
             .Update(input.Fullname, input.Document, input.PersonType, input.EmployeeRole, input.Email, password, phone, address);
 
@@ -190,39 +190,5 @@ public sealed class PersonServiceTests
         // Assert
         result.IsSuccess.Should().BeTrue();
         result.Data.Should().Be(paginateDto);
-    }
-
-    [Fact]
-    public async Task GetOneByLoginAsync_ShouldReturnPerson_WhenExists()
-    {
-        // Arrange
-        var loginRequest = _fixture.Create<LoginRequest>();
-        var person = _fixture.Create<Person>();
-        var personDto = _fixture.Create<PersonDto>();
-
-        _repositoryMock.Setup(r => r.GetOneByLoginAsync(loginRequest, It.IsAny<CancellationToken>())).ReturnsAsync(person);
-        _mapperMock.Setup(m => m.Map<PersonDto>(person)).Returns(personDto);
-
-        // Act
-        var result = await _service.GetOneByLoginAsync(loginRequest, CancellationToken.None);
-
-        // Assert
-        result.IsSuccess.Should().BeTrue();
-        result.Data.Should().Be(personDto);
-    }
-
-    [Fact]
-    public async Task GetOneByLoginAsync_ShouldReturnNotFound_WhenPersonDoesNotExist()
-    {
-        // Arrange
-        var loginRequest = _fixture.Create<LoginRequest>();
-        _repositoryMock.Setup(r => r.GetOneByLoginAsync(loginRequest, It.IsAny<CancellationToken>())).ReturnsAsync((Person) null!);
-
-        // Act
-        var result = await _service.GetOneByLoginAsync(loginRequest, CancellationToken.None);
-
-        // Assert
-        result.StatusCode.Should().Be(HttpStatusCode.NotFound);
-        result.IsSuccess.Should().BeFalse();
     }
 }

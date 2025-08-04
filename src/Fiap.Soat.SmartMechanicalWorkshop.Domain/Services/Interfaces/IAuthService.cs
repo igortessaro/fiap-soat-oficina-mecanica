@@ -5,5 +5,5 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.Interfaces;
 
 public interface IAuthService
 {
-    Task<Response<string>> Login(LoginRequest loginRequest, CancellationToken cancellationToken);
+    Task<Response<string>> LoginAsync(LoginRequest loginRequest, CancellationToken cancellationToken);
 }

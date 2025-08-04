@@ -66,13 +66,4 @@ public sealed class PersonService(IMapper mapper, IPersonRepository repository, 
         var mappedResponse = mapper.Map<Paginate<PersonDto>>(response);
         return ResponseFactory.Ok(mappedResponse);
     }
-
-    public async Task<Response<PersonDto>> GetOneByLoginAsync(LoginRequest loginRequest, CancellationToken cancellationToken)
-    {
-        var foundEntity = await repository.GetOneByLoginAsync(loginRequest, cancellationToken);
-
-        return foundEntity != null
-            ? ResponseFactory.Ok(mapper.Map<PersonDto>(foundEntity))
-            : ResponseFactory.Fail<PersonDto>("Person Not Found", HttpStatusCode.NotFound);
-    }
 }
