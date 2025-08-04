@@ -18,7 +18,7 @@ public static class ResultExtensions
 
     public static ActionResult ToActionResult<T>(this Result<T> result)
     {
-        if (result.IsSuccess && result.Value == null)
+        if (result.IsSuccess && object.Equals(result.Value, default(T)))
         {
             return new NotFoundResult();
         }
@@ -31,11 +31,6 @@ public static class ResultExtensions
         if (result.Errors.Any(e => e.Message.Contains("not found", StringComparison.OrdinalIgnoreCase)))
         {
             return new NotFoundObjectResult(result.Errors);
-        }
-
-        if (result.Errors.Count != 0)
-        {
-            return new BadRequestObjectResult(result.Errors);
         }
 
         return new BadRequestObjectResult(result.Errors);

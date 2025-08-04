@@ -1,6 +1,6 @@
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 
-public interface IPaginate<T>
+public interface IPaginate<out T>
 {
     IEnumerable<T> Items { get; }
     int TotalCount { get; }

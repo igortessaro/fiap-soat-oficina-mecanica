@@ -9,7 +9,7 @@ public class EmailService(IOptions<EmailSettings> options) : IEmailService
 {
     private readonly EmailSettings _emailSettings = options.Value;
 
-    public async Task<bool> SendEmailAsync(string to, string subject, string htmlBody)
+    public async Task<bool> SendEmailAsync(string to, string subject, string bodyHtml)
     {
         var fromAddress = new MailAddress(_emailSettings.SenderAddress, _emailSettings.SenderName);
         var toAddress = new MailAddress(to);
@@ -23,7 +23,7 @@ public class EmailService(IOptions<EmailSettings> options) : IEmailService
             UseDefaultCredentials = true
         };
 
-        using var message = new MailMessage(fromAddress, toAddress) { Subject = subject, Body = htmlBody, IsBodyHtml = true };
+        using var message = new MailMessage(fromAddress, toAddress) { Subject = subject, Body = bodyHtml, IsBodyHtml = true };
 
         try
         {

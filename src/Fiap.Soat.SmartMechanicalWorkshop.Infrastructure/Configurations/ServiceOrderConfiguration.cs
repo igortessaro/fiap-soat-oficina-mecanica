@@ -6,6 +6,9 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Configurations;
 
 public sealed class ServiceOrderConfiguration : IEntityTypeConfiguration<ServiceOrder>
 {
+    private const string AvailableServiceId = "available_service_id";
+    private const string ServiceOrderId = "service_order_id";
+
     public void Configure(EntityTypeBuilder<ServiceOrder> builder)
     {
         builder.ToTable("service_orders");
@@ -58,20 +61,20 @@ public sealed class ServiceOrderConfiguration : IEntityTypeConfiguration<Service
                 j => j
                     .HasOne<AvailableService>()
                     .WithMany()
-                    .HasForeignKey("available_service_id")
+                    .HasForeignKey(AvailableServiceId)
                     .HasConstraintName("fk_available_service_service_order")
                     .OnDelete(DeleteBehavior.Cascade),
                 j => j
                     .HasOne<ServiceOrder>()
                     .WithMany()
-                    .HasForeignKey("service_order_id")
+                    .HasForeignKey(ServiceOrderId)
                     .HasConstraintName("fk_service_order_available_service")
                     .OnDelete(DeleteBehavior.Cascade),
                 j =>
                 {
-                    j.HasKey("available_service_id", "service_order_id");
-                    j.Property<Guid>("available_service_id").HasColumnName("available_service_id");
-                    j.Property<Guid>("service_order_id").HasColumnName("service_order_id");
+                    j.HasKey(AvailableServiceId, ServiceOrderId);
+                    j.Property<Guid>(AvailableServiceId).HasColumnName(AvailableServiceId);
+                    j.Property<Guid>(ServiceOrderId).HasColumnName(ServiceOrderId);
                     j.ToTable("available_services_services_orders");
                 }
             );
