@@ -42,7 +42,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"igortessaro_fiap-soat-oficina-mecanica" /o:"igortessaro" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml" /d:sonar.coverage.exclusions="**Tests/**,**Integration.Tests/**,**/Configurations/**,**/Migrations/**"
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"igortessaro_fiap-soat-oficina-mecanica" /o:"igortessaro" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml" /d:sonar.coverage.exclusions="**Tests/**,**Integration.Tests/**,**/Configurations/**,**/Migrations/**" /d:sonar.exclusions="**/*.sql,**/*Designer.cs"
           dotnet build --no-incremental
           dotnet test tests/Fiap.Soat.SmartMechanicalWorkshop.Domain.Tests/Fiap.Soat.SmartMechanicalWorkshop.Domain.Tests.csproj --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage --settings coverlet.runsettings
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
