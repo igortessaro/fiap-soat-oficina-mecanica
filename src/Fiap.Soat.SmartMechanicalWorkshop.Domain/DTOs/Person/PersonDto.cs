@@ -1,8 +1,10 @@
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Vehicles;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Person;
 
+[ExcludeFromCodeCoverage]
 public record PersonDto(
     Guid Id,
     string Fullname,

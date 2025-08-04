@@ -1,5 +1,8 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Vehicles;
 
+[ExcludeFromCodeCoverage]
 public record UpdateOneVehicleRequest
 {
     public string LicensePlate { get; init; } = string.Empty;

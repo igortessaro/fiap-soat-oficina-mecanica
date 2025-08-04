@@ -1,7 +1,9 @@
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Person;
 
+[ExcludeFromCodeCoverage]
 public record UpdateOnePersonRequest(
     string Fullname,
     string Document,
@@ -12,6 +14,8 @@ public record UpdateOnePersonRequest(
     UpdateOnePhoneRequest? Phone,
     UpdateOneAddressRequest? Address);
 
+[ExcludeFromCodeCoverage]
 public record UpdateOnePhoneRequest(string AreaCode, string Number);
 
+[ExcludeFromCodeCoverage]
 public record UpdateOneAddressRequest(string Street, string City, string State, string ZipCode);

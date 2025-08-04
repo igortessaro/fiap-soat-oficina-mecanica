@@ -1,7 +1,9 @@
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Person;
 
+[ExcludeFromCodeCoverage]
 public record UpdateOnePersonInput(
     Guid Id,
     string Fullname,
@@ -13,6 +15,7 @@ public record UpdateOnePersonInput(
     UpdateOnePhoneInput? Phone,
     UpdateOneAddressInput? Address);
 
+[ExcludeFromCodeCoverage]
 public record UpdateOnePhoneInput(string AreaCode, string Number)
 {
     public static implicit operator UpdateOnePhoneInput?(UpdateOnePhoneRequest? input)
@@ -21,6 +24,7 @@ public record UpdateOnePhoneInput(string AreaCode, string Number)
     }
 }
 
+[ExcludeFromCodeCoverage]
 public record UpdateOneAddressInput(string Street, string City, string State, string ZipCode)
 {
     public static implicit operator UpdateOneAddressInput?(UpdateOneAddressRequest? input)

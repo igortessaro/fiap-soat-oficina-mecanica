@@ -1,7 +1,9 @@
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Supplies;
 
+[ExcludeFromCodeCoverage]
 public record CreateNewSupplyRequest
 {
     [Required]

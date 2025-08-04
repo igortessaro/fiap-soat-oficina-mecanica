@@ -1,8 +1,10 @@
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Person;
 
+[ExcludeFromCodeCoverage]
 public record CreatePersonRequest(
     [Required][MaxLength(255)] string Fullname,
     [Required][MaxLength(100)] string Document,
@@ -13,11 +15,13 @@ public record CreatePersonRequest(
     CreatePhoneRequest Phone,
     CreateAddressRequest Address);
 
+[ExcludeFromCodeCoverage]
 public record CreatePhoneRequest(
     [Required][MaxLength(5)] string AreaCode,
     [Required][MaxLength(15)] string Number
 );
 
+[ExcludeFromCodeCoverage]
 public record CreateAddressRequest(
     [Required][MaxLength(100)] string Street,
     [Required][MaxLength(60)] string City,
