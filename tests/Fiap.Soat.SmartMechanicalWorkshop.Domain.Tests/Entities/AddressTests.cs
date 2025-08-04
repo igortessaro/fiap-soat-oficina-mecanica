@@ -10,9 +10,9 @@ public sealed class AddressTests
     {
         // Arrange
         const string street = "Main St";
-        const string  city = "Metropolis";
-        const string  state = "NY";
-        const string  zipCode = "12345";
+        const string city = "Metropolis";
+        const string state = "NY";
+        const string zipCode = "12345";
 
         // Act
         var address = new Address(street, city, state, zipCode);
