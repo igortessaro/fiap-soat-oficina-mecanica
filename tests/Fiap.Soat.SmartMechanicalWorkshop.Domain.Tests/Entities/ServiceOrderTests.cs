@@ -270,7 +270,7 @@ public sealed class ServiceOrderTests
     [Fact]
     public void GetNextStatus_ShouldThrow_OnUnknownStatus()
     {
-        Action act = () => ServiceOrder.GetNextStatus((QuoteStatus)999);
+        Action act = () => ServiceOrder.GetNextStatus((QuoteStatus) 999);
 
         act.Should().Throw<DomainException>();
     }

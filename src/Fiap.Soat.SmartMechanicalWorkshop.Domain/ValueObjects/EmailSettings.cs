@@ -1,5 +1,8 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 
+[ExcludeFromCodeCoverage]
 public class EmailSettings
 {
     public string SenderAddress { get; set; } = string.Empty;
