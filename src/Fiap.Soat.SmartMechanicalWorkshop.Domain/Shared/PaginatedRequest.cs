@@ -1,8 +1,10 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 
+[ExcludeFromCodeCoverage]
 public class PaginatedRequest
 {
     [Required]

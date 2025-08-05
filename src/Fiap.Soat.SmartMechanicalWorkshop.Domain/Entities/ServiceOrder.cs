@@ -4,7 +4,7 @@ using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 
-public class ServiceOrder : Entity
+public sealed class ServiceOrder : Entity
 {
     private ServiceOrder() { }
 

@@ -1,10 +1,11 @@
 using FluentResults;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Text.Json.Serialization;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 
-
+[ExcludeFromCodeCoverage]
 public sealed class Response<T>(Result<T> result, HttpStatusCode statusCode)
 {
     [JsonIgnore]

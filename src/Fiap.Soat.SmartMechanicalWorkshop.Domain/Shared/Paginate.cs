@@ -1,5 +1,8 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 
+[ExcludeFromCodeCoverage]
 public class Paginate<T> : IPaginate<T>
 {
     public Paginate(IEnumerable<T> items, int totalCount, int pageSize, int currentPage, int totalPages)
