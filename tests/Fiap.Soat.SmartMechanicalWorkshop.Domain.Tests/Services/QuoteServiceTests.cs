@@ -99,4 +99,100 @@ public sealed class QuoteServiceTests
         result.IsSuccess.Should().BeTrue();
         result.Data.Should().NotBeNull();
     }
+
+    [Fact]
+    public async Task PatchAsync_ShouldReturnNotFound_WhenQuoteDoesNotExist()
+    {
+        _quoteRepositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync((Quote?) null);
+
+        var result = await _service.PatchAsync(Guid.NewGuid(), QuoteStatus.Approved, default);
+
+        result.IsSuccess.Should().BeFalse();
+        result.StatusCode.Should().Be(HttpStatusCode.NotFound);
+        result.Reasons.Select(x => x.Message).Should().Contain("Quote not found");
+    }
+
+    [Fact]
+    public async Task PatchAsync_ShouldReturnFail_WhenStatusIsAlreadySet()
+    {
+        var quote = new Quote(Guid.NewGuid());
+        typeof(Quote).GetProperty(nameof(Quote.Status))!.SetValue(quote, QuoteStatus.Approved);
+
+        _quoteRepositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(quote);
+
+        var result = await _service.PatchAsync(Guid.NewGuid(), QuoteStatus.Approved, default);
+
+        result.IsSuccess.Should().BeFalse();
+        result.Reasons.Select(x => x.Message).Should().Contain("Quote is already Approved");
+    }
+
+    [Fact]
+    public async Task PatchAsync_ShouldReturnFail_WhenQuoteIsNotPending()
+    {
+        var quote = new Quote(Guid.NewGuid());
+        typeof(Quote).GetProperty(nameof(Quote.Status))!.SetValue(quote, QuoteStatus.Rejected);
+
+        _quoteRepositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(quote);
+
+        var result = await _service.PatchAsync(Guid.NewGuid(), QuoteStatus.Approved, default);
+
+        result.IsSuccess.Should().BeFalse();
+        result.Reasons.Select(x => x.Message).Should().Contain("Quote is not in Pending status");
+    }
+
+    [Fact]
+    public async Task PatchAsync_ShouldReturnFail_WhenStatusIsInvalid()
+    {
+        var quote = new Quote(Guid.NewGuid());
+        typeof(Quote).GetProperty(nameof(Quote.Status))!.SetValue(quote, QuoteStatus.Pending);
+
+        _quoteRepositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(quote);
+
+        var result = await _service.PatchAsync(Guid.NewGuid(), (QuoteStatus) 999, default);
+
+        result.IsSuccess.Should().BeFalse();
+        result.Reasons.Select(x => x.Message).Should().Contain("Invalid status 999");
+    }
+
+    [Fact]
+    public async Task PatchAsync_ShouldApprove_WhenStatusIsApproved()
+    {
+        var quote = new Quote(Guid.NewGuid());
+        typeof(Quote).GetProperty(nameof(Quote.Status))!.SetValue(quote, QuoteStatus.Pending);
+
+        _quoteRepositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(quote);
+        _quoteRepositoryMock.Setup(r => r.UpdateAsync(It.IsAny<Quote>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(quote);
+        _mapperMock.Setup(m => m.Map<QuoteDto>(It.IsAny<Quote>()))
+            .Returns(_fixture.Create<QuoteDto>());
+
+        var result = await _service.PatchAsync(Guid.NewGuid(), QuoteStatus.Approved, default);
+
+        result.IsSuccess.Should().BeTrue();
+        result.Data.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task PatchAsync_ShouldReject_WhenStatusIsRejected()
+    {
+        var quote = new Quote(Guid.NewGuid());
+        typeof(Quote).GetProperty(nameof(Quote.Status))!.SetValue(quote, QuoteStatus.Pending);
+
+        _quoteRepositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(quote);
+        _quoteRepositoryMock.Setup(r => r.UpdateAsync(It.IsAny<Quote>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(quote);
+        _mapperMock.Setup(m => m.Map<QuoteDto>(It.IsAny<Quote>()))
+            .Returns(_fixture.Create<QuoteDto>());
+
+        var result = await _service.PatchAsync(Guid.NewGuid(), QuoteStatus.Rejected, default);
+
+        result.IsSuccess.Should().BeTrue();
+        result.Data.Should().NotBeNull();
+    }
 }
