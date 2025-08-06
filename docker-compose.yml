@@ -1,34 +1,61 @@
 services:
-    db:
-        image: mysql:8.4
-        container_name: smart-mechanical-workshop-db
-        environment:
-            MYSQL_ROOT_PASSWORD: rootpassword
-            MYSQL_DATABASE: workshopdb
-            MYSQL_USER: workshopuser
-            MYSQL_PASSWORD: workshop123
-        ports:
-            - "3306:3306"
-        volumes:
-            - mysql_data:/var/lib/mysql
-    mailhog:
-        image: mailhog/mailhog
-        container_name: mailhog-smart-mechanical-workshop
-        ports:
-            - "1025:1025"  # SMTP (porta usada para envio)
-            - "8025:8025"  # Web UI (acesso no navegador)
-    # api:
-    #   build:
-    #     context: ./src/Fiap.Soat.SmartMechanicalWorkshop.Api
-    #     dockerfile: .dockerfile
-    #   container_name: smart-mechanical-workshop-api
-    #   environment:
-    #     ASPNETCORE_ENVIRONMENT: Development
-    #     ConnectionStrings__DefaultConnection: "server=mysql-db;port=3306;database=workshopdb;user=workshopuser;password=workshop123"
-    #   ports:
-    #     - "8080:8080"
-    #   depends_on:
-    #     - db
+  db:
+    image: mysql:8.4
+    container_name: smart-mechanical-workshop-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "${DB_PORT}:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
+      timeout: 20s
+      retries: 10
+    networks:
+      - mechanical-workshop-network
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: smart-mechanical-workshop-api
+    restart: unless-stopped
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__DefaultConnection: "server=${DB_HOST};port=${DB_PORT};database=${MYSQL_DATABASE};user=${MYSQL_USER};password=${MYSQL_PASSWORD};SslMode=none;AllowPublicKeyRetrieval=True;"
+      Jwt__Key: ${JWT_KEY}
+    ports:
+      - "5180:8080"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - mechanical-workshop-network
+
+  mailhog:
+    image: mailhog/mailhog
+    container_name: mailhog-smart-mechanical-workshop
+    restart: unless-stopped
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+      - mechanical-workshop-network
 
 volumes:
-    mysql_data:
+  mysql_data:
+
+networks:
+  mechanical-workshop-network:
+    driver: bridge
