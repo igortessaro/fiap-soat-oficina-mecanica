@@ -69,3 +69,26 @@ token, clique em "Authorize" no Swagger e insira o token conforme as instruçõe
 requisições protegidas.
 Além disso, o endpoint de visualização de ordens de serviço por clientes exige dois parâmetros obrigatórios: o ID da ordem e o e-mail da pessoa cadastrada
 ou vinculada àquela ordem.
+
+
+## Rodar API local
+
+```
+# Start only database and mailhog for development
+docker compose -f docker-compose.dev.yml -p "fiap-smart-mechanical-workshop-dev" up --build -d
+
+# Stop the development environment
+docker compose -f docker-compose.dev.yml -p "fiap-smart-mechanical-workshop-dev" down
+```
+```
+"ConnectionStrings": {
+  "DefaultConnection": "server=localhost;port=3306;database=workshopdb;user=workshopuser;password=workshop123;SslMode=none;AllowPublicKeyRetrieval=True;"
+}
+```
+
+
+Com API
+
+```
+docker compose -f docker-compose.yml -p "fiap-smart-mechanical-workshop" up --build -d
+```

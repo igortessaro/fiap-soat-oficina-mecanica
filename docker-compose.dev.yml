@@ -1,0 +1,37 @@
+services:
+  db:
+    image: mysql:8.4
+    container_name: smart-mechanical-workshop-mysql-dev
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "${DB_PORT}:3306"
+    volumes:
+      - mysql_data_dev:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
+      timeout: 20s
+      retries: 10
+    networks:
+      - mechanical-workshop-dev-network
+
+  mailhog:
+    image: mailhog/mailhog
+    container_name: mailhog-smart-mechanical-workshop-dev
+    restart: unless-stopped
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+      - mechanical-workshop-dev-network
+
+volumes:
+  mysql_data_dev:
+
+networks:
+  mechanical-workshop-dev-network:
+    driver: bridge
