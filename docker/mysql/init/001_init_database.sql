@@ -34,8 +34,10 @@ create table if not exists people (
     address_id char(36) charset ascii not null,
     created_at datetime(6) not null,
     updated_at datetime(6) not null,
+    password varchar(100) default '' not null,
     constraint IX_people_address_id unique (address_id),
     constraint IX_people_document unique (document),
+    constraint IX_people_email unique (email),
     constraint FK_people_addresses_address_id foreign key (address_id) references addresses (id) on delete cascade
 );
 
@@ -52,6 +54,7 @@ create table if not exists supplies (
 create table if not exists available_services_supply (
     available_service_id char(36) charset ascii not null,
     supply_id char(36) charset ascii not null,
+    quantity int default 0 not null,
     primary key (
         available_service_id,
         supply_id

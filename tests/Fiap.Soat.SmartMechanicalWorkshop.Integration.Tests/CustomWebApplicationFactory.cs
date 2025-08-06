@@ -15,12 +15,12 @@ public class CustomWebApplicationFactory<TProgram> : WebApplicationFactory<TProg
 {
     protected readonly HttpClient Client;
     protected readonly Faker Faker = new Faker("pt_BR");
+    private readonly string JwtSigningKey = "integration-tests-jwt-signing-key";
 
     protected CustomWebApplicationFactory()
     {
         Client = CreateClient();
-        string jwtSigningKey = "your-very-secure-and-long-key-1234567890";
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSigningKey));
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtSigningKey));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(
@@ -43,6 +43,7 @@ public class CustomWebApplicationFactory<TProgram> : WebApplicationFactory<TProg
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
+        Environment.SetEnvironmentVariable("Jwt__Key", JwtSigningKey);
         builder.ConfigureServices(services =>
         {
             var descriptor = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<AppDbContext>));

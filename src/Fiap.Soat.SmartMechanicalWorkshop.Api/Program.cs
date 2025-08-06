@@ -25,8 +25,8 @@ _ = builder.Services.AddControllers().AddJsonOptions(options =>
 
 _ = builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(
-        builder.Configuration.GetConnectionString("DbConnectionString"),
-        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DbConnectionString")),
+        builder.Configuration.GetValue<string>("ConnectionStrings:DefaultConnection"),
+        ServerVersion.AutoDetect(builder.Configuration.GetValue<string>("ConnectionStrings:DefaultConnection")),
         mySqlOptions =>
             mySqlOptions.MigrationsAssembly("Fiap.Soat.SmartMechanicalWorkshop.Infrastructure")
     ));
@@ -69,6 +69,7 @@ _ = app.UseMiddleware<ExceptionMiddleware>();
 _ = app.UseHttpsRedirection();
 _ = app.UseAuthorization();
 _ = app.MapControllers();
+_ = app.MapHealthChecks("/health");
 
 await app.RunAsync();
 

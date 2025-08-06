@@ -7,16 +7,16 @@
 	},
 	"item": [
 		{
-			"name": "clients",
+			"name": "people",
 			"item": [
 				{
-					"name": "create a new client",
+					"name": "create a new one",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"fullname\": \"Fulano da Silva\",\n  \"document\": \"999.999.999-00\",\n  \"email\": \"fulano.silva@email.com\",\n  \"phone\": {\n    \"areaCode\": \"51\",\n    \"number\": \"999999-90\"\n  },\n  \"address\": {\n    \"street\": \"Street ||\",\n    \"city\": \"Viamão\",\n    \"state\": \"RS\",\n    \"zipCode\": \"9999-999\"\n  }\n}",
+							"raw": "{\n    \"fullname\": \"Test Password\",\n    \"document\": \"649.519.350-58\",\n    \"personType\": \"Client\",\n    \"email\": \"test.password@email.com\",\n    \"password\": \"Pa$$w0rd!\",\n    \"phone\": {\n        \"areaCode\": \"51\",\n        \"number\": \"999999-00\"\n    },\n    \"address\": {\n        \"street\": \"Admin\",\n        \"city\": \"Admin\",\n        \"state\": \"RS\",\n        \"zipCode\": \"9999-111\"\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -24,37 +24,37 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}api/v1/clients",
+							"raw": "{{BASE_URL}}api/v1/people",
 							"host": [
 								"{{BASE_URL}}api"
 							],
 							"path": [
 								"v1",
-								"clients"
+								"people"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "get client by id",
+					"name": "get by id",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}api/v1/clients/:id",
+							"raw": "{{BASE_URL}}api/v1/people/:id",
 							"host": [
 								"{{BASE_URL}}api"
 							],
 							"path": [
 								"v1",
-								"clients",
+								"people",
 								":id"
 							],
 							"variable": [
 								{
 									"key": "id",
-									"value": "08ddb67e-9dc7-4497-82cf-ec31b4495c2a"
+									"value": "08ddd27d-04fc-4c23-8839-f115484fdcc6"
 								}
 							]
 						}
@@ -62,24 +62,24 @@
 					"response": []
 				},
 				{
-					"name": "delete a client",
+					"name": "delete one",
 					"request": {
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}api/v1/clients/:id",
+							"raw": "{{BASE_URL}}api/v1/people/:id",
 							"host": [
 								"{{BASE_URL}}api"
 							],
 							"path": [
 								"v1",
-								"clients",
+								"people",
 								":id"
 							],
 							"variable": [
 								{
 									"key": "id",
-									"value": "08ddb67e-9dc7-4497-82cf-ec31b4495c2a"
+									"value": "08ddd27c-7c31-4db5-8a51-22d7be82ff17"
 								}
 							]
 						}
@@ -87,13 +87,13 @@
 					"response": []
 				},
 				{
-					"name": "update a client",
+					"name": "update one",
 					"request": {
 						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"fullname\": \"Fulano da Silva\",\n  \"document\": \"999.999.999-00\",\n  \"email\": \"fulano.silva@email.com\",\n  \"phone\": {\n    \"areaCode\": \"51\",\n    \"number\": \"999999-90\"\n  },\n  \"address\": {\n    \"street\": \"Street ||\",\n    \"city\": \"Viamão\",\n    \"state\": \"RS\",\n    \"zipCode\": \"9999-999\"\n  }\n}",
+							"raw": "{\n  \"fullname\": \"Fulano da Silva\",\n  \"document\": \"734.465.290-04\",\n  \"email\": \"fulano.silva@email.com\",\n  \"password\": \"senha2\",\n  \"phone\": {\n    \"areaCode\": \"51\",\n    \"number\": \"999999-90\"\n  },\n  \"address\": {\n    \"street\": \"Street ||\",\n    \"city\": \"Viamão\",\n    \"state\": \"RS\",\n    \"zipCode\": \"9999-999\"\n  }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -101,19 +101,19 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}api/v1/clients/:id",
+							"raw": "{{BASE_URL}}api/v1/people/:id",
 							"host": [
 								"{{BASE_URL}}api"
 							],
 							"path": [
 								"v1",
-								"clients",
+								"people",
 								":id"
 							],
 							"variable": [
 								{
 									"key": "id",
-									"value": "08ddb67e-b908-4853-8e34-db4993ff67a0"
+									"value": "08ddd27d-04fc-4c23-8839-f115484fdcc6 "
 								}
 							]
 						}
@@ -121,18 +121,18 @@
 					"response": []
 				},
 				{
-					"name": "get all clients",
+					"name": "get all people",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}api/v1/clients",
+							"raw": "{{BASE_URL}}api/v1/people",
 							"host": [
 								"{{BASE_URL}}api"
 							],
 							"path": [
 								"v1",
-								"clients"
+								"people"
 							]
 						}
 					},
@@ -168,7 +168,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"name\": \"Supply 10\",\n  \"quantity\": 3,\n  \"price\": 22\n}",
+							"raw": "{\n    \"name\": \"supply to be deleted\",\n    \"quantity\": 34,\n    \"price\": 21.98\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -206,7 +206,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "08ddb67e-064b-4008-8e17-b22536473829"
+									"value": "c2d82a9b-6176-11f0-aee0-ae720649cdfb"
 								}
 							]
 						}
@@ -231,7 +231,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "08ddb67e-064b-4008-8e17-b22536473829"
+									"value": "08ddd20e-c020-45cd-882a-580c4fbfdb1d"
 								}
 							]
 						}
@@ -245,7 +245,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"name\": \"Updated\",\n    \"quantity\": 999,\n    \"price\": 999\n}",
+							"raw": "{\n    \"name\": \"Desinfetante Automotivo II\",\n    \"quantity\": 34,\n    \"price\": 21.98\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -265,7 +265,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "08ddb67e-027e-476c-8a80-9c5a6f10abcc"
+									"value": "c2d834e5-6176-11f0-aee0-ae720649cdfb"
 								}
 							]
 						}
@@ -302,7 +302,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"name\": \"Service III\",\n  \"price\": 1000.23,\n  \"supplies\": [\n    \"08ddb67e-0efa-41d3-8c29-cc3c023f6722\"\n  ]\n}",
+							"raw": "{\n    \"name\": \"Teste Supply Com Quantidade\",\n    \"price\": 1000.23,\n    \"supplies\": [\n        {\n            \"supplyId\": \"c2d82a9b-6176-11f0-aee0-ae720649cdfb\",\n            \"quantity\": 11\n        }\n    ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -340,7 +340,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "08ddb5d9-de5a-409f-8c98-ece966904f4a"
+									"value": "08ddd213-9091-45ab-8cf9-f5686decf7a3"
 								}
 							]
 						}
@@ -365,7 +365,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "08ddb5d9-de5a-409f-8c98-ece966904f4a"
+									"value": "08ddd210-5926-4872-8667-f6ca2c82875a"
 								}
 							]
 						}
@@ -379,7 +379,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"name\": \"Service III\",\n  \"price\": 1000.23,\n  \"supplies\": [\n    \"08ddb67e-027e-476c-8a80-9c5a6f10abcc\",\n    \"08ddb67e-0bcc-4c16-8414-6c620d5298b1\"\n  ]\n}",
+							"raw": "{\n    \"name\": \"Teste Supply Com Quantidade Atualizado\",\n    \"price\": 1290.98,\n    \"supplies\": [\n        {\n            \"supplyId\": \"c2d833ee-6176-11f0-aee0-ae720649cdfb\",\n            \"quantity\": 10\n        },\n        {\n            \"supplyId\": \"c2d83438-6176-11f0-aee0-ae720649cdfb\",\n            \"quantity\": 2\n        }\n    ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -399,7 +399,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "08ddb681-a52a-41d0-84af-7eba12d8c443"
+									"value": "08ddd34f-f8ef-46f1-8244-e284ae48681e"
 								}
 							]
 						}
@@ -436,7 +436,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"licensePlate\": \"NFA-0373\",\n  \"manufactureYear\": 2025,\n  \"brand\": \"Brand\",\n  \"model\": \"Model\",\n  \"clientId\": \"08ddb67e-b908-4853-8e34-db4993ff67a0\"\n}",
+							"raw": "{\n  \"licensePlate\": \"NFA-0373\",\n  \"manufactureYear\": 2025,\n  \"brand\": \"Brand\",\n  \"model\": \"Model\",\n  \"personId\": \"c5af706b-6176-11f0-aee0-ae720649cdfb\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -474,7 +474,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "08ddb67f-8a64-470d-8e26-ff226674595d"
+									"value": "08ddd220-02ed-4780-8a68-6076d1b6afe8"
 								}
 							]
 						}
@@ -499,7 +499,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "08ddb67f-8a64-470d-8e26-ff226674595d"
+									"value": "08ddd220-02ed-4780-8a68-6076d1b6afe8"
 								}
 							]
 						}
@@ -513,7 +513,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"id\": \"08ddb67f-9833-425d-8eb7-28905575f445\",\n    \"licensePlate\": \"NFA-0372\",\n    \"manufactureYear\": 2020,\n    \"brand\": \"Brand\",\n    \"model\": \"Model\",\n    \"clientId\": \"08ddb67e-b908-4853-8e34-db4993ff67a0\"\n}",
+							"raw": "{\n    \"id\": \"08ddb67f-9833-425d-8eb7-28905575f445\",\n    \"licensePlate\": \"NFA-0372\",\n    \"manufactureYear\": 2025,\n    \"brand\": \"Brand I\",\n    \"model\": \"Model I\",\n    \"clientId\": \"c5af706b-6176-11f0-aee0-ae720649cdfb\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -533,7 +533,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "08ddb67f-9833-425d-8eb7-28905575f445"
+									"value": "08ddd220-02ed-4780-8a68-6076d1b6afe8"
 								}
 							]
 						}
@@ -558,19 +558,60 @@
 							"path": [
 								"v1",
 								"serviceorders"
+							],
+							"query": [
+								{
+									"key": "clientId",
+									"value": "08ddb67e-b908-4853-8e34-db4993ff67a0",
+									"disabled": true
+								}
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "create a new service order",
+					"name": "get average execution time",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}api/v1/serviceorders/average-execution-time?startDate=2024-08-01&endDate=2025-08-03",
+							"host": [
+								"{{BASE_URL}}api"
+							],
+							"path": [
+								"v1",
+								"serviceorders",
+								"average-execution-time"
+							],
+							"query": [
+								{
+									"key": "startDate",
+									"value": "2024-08-01"
+								},
+								{
+									"key": "endDate",
+									"value": "2025-08-03"
+								},
+								{
+									"key": "clientId",
+									"value": "08ddb67e-b908-4853-8e34-db4993ff67a0",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create a new one",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"clientId\": \"08ddb67e-b908-4853-8e34-db4993ff67a0\",\n  \"vehicleId\": \"08ddb67f-9833-425d-8eb7-28905575f445\",\n  \"serviceIds\": [\n    \"08ddb680-c01d-441f-8a16-23f8a2fc9151\"\n  ],\n  \"title\": \"Revisão 3\",\n  \"description\": \"Revisão de 30.000km\"\n}",
+							"raw": "{\n  \"clientId\": \"c5af706b-6176-11f0-aee0-ae720649cdfb\",\n  \"vehicleId\": \"ccd022f5-6176-11f0-aee0-ae720649cdfb\",\n  \"serviceIds\": [\n    \"08ddd34f-f8ef-46f1-8244-e284ae48681e\"\n  ],\n  \"title\": \"Teste Service Order ||\",\n  \"description\": \"Teste Service Order Descrição ||\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -608,7 +649,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "08ddb689-8d42-4726-805a-57ece8ca9203"
+									"value": "08ddc39a-eff0-4517-809a-a3c18a2ed69a"
 								}
 							]
 						}
@@ -633,7 +674,7 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "08ddb67f-8a64-470d-8e26-ff226674595d"
+									"value": "08ddd285-91e4-461f-88b4-ef1003121893"
 								}
 							]
 						}
@@ -647,7 +688,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"id\": \"08ddb67f-9833-425d-8eb7-28905575f445\",\n    \"licensePlate\": \"NFA-0372\",\n    \"manufactureYear\": 2020,\n    \"brand\": \"Brand\",\n    \"model\": \"Model\",\n    \"clientId\": \"08ddb67e-b908-4853-8e34-db4993ff67a0\"\n}",
+							"raw": "{\n    \"serviceIds\": [\n        \"c072b6e4-6176-11f0-aee0-ae720649cdfb\",\n        \"c072c01a-6176-11f0-aee0-ae720649cdfb\"\n    ],\n    \"title\": \"Primeira Revisão I\",\n    \"description\": \"Revisão de 10.000km I\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -667,8 +708,118 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "08ddb67f-9833-425d-8eb7-28905575f445"
+									"value": "08ddd285-91e4-461f-88b4-ef1003121893"
 								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update service order status",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"status\": \"WaitingApproval\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}api/v1/serviceorders/:id",
+							"host": [
+								"{{BASE_URL}}api"
+							],
+							"path": [
+								"v1",
+								"serviceorders",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "08ddd46e-0cbf-49fe-8823-ea00ce295912"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update quote status",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"status\": \"WaitingApproval\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}api/v1/serviceorders/:id/quote/:quoteid/:status",
+							"host": [
+								"{{BASE_URL}}api"
+							],
+							"path": [
+								"v1",
+								"serviceorders",
+								":id",
+								"quote",
+								":quoteid",
+								":status"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "08ddd46e-0cbf-49fe-8823-ea00ce295912"
+								},
+								{
+									"key": "quoteid",
+									"value": "08ddd46e-29fc-4fbd-82b7-b35055250e7a"
+								},
+								{
+									"key": "status",
+									"value": "Approved"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "authentication",
+			"item": [
+				{
+					"name": "get token",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"fulano.silva@email.com\",\n  \"password\": \"Pa$$w0rd!\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{BASE_URL}}auth/login",
+							"host": [
+								"{{BASE_URL}}auth"
+							],
+							"path": [
+								"login"
 							]
 						}
 					},
@@ -677,6 +828,16 @@
 			]
 		}
 	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{TOKEN}}",
+				"type": "string"
+			}
+		]
+	},
 	"event": [
 		{
 			"listen": "prerequest",
@@ -684,7 +845,28 @@
 				"type": "text/javascript",
 				"packages": {},
 				"exec": [
-					""
+					"    const getTokenRequest = {",
+					"        method: 'POST',",
+					"        url: 'http://localhost:5180/auth/login',",
+					"        header: {",
+					"            'Content-Type': 'application/json'",
+					"        },",
+					"        body: {",
+					"            mode: 'raw',",
+					"            raw: JSON.stringify({ \"email\": \"fulano.silva@email.com\", \"password\": \"Pa$$w0rd!\" })",
+					"        }",
+					"    };",
+					"",
+					"    pm.sendRequest(getTokenRequest, (err, response) => {",
+					"        if (err) {",
+					"            console.error(err);",
+					"            return;",
+					"        }",
+					"        const jsonResponse = response.json();",
+					"        const newAccessToken = jsonResponse.data;",
+					"",
+					"        pm.collectionVariables.set('TOKEN', newAccessToken);",
+					"    });"
 				]
 			}
 		},
@@ -703,6 +885,21 @@
 		{
 			"key": "BASE_URL",
 			"value": "http://localhost:5180/",
+			"type": "string"
+		},
+		{
+			"key": "TOKEN",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiVGVzdCBVc2VyIiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvZW1haWxhZGRyZXNzIjoidGVzdHVzZXJAZW1haWwuY29tIiwiUGVyc29uVHlwZSI6IkNsaWVudCIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6IlZlaGljbGVJbnNwZWN0b3IiLCJleHAiOjE3NTQxNzQ4MzMsImlzcyI6InNtYXJ0d29ya3Nob3AuY29tIn0.nP3e7c8aqIk-Wz8S0M8AWb1hHFUIiDGK-0ujlDdA4Ms",
+			"type": "string"
+		},
+		{
+			"key": "ADMIN_EMAIL",
+			"value": "fulano.silva@email.com",
+			"type": "string"
+		},
+		{
+			"key": "ADMIN_PASSWORD",
+			"value": "senha2",
 			"type": "string"
 		}
 	]
