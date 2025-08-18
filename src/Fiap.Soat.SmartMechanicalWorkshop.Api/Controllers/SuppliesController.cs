@@ -42,15 +42,15 @@ public sealed class SuppliesController(IMediator mediator) : ControllerBase
     /// <summary>
     ///     Gets a paginated list of all supplies.
     /// </summary>
-    /// <param name="paginatedRequest">Pagination parameters.</param>
+    /// <param name="paginatedQuery">Pagination parameters.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>Returns a paginated list of supplies.</returns>
     /// <response code="200">Returns the paginated list of supplies.</response>
     [HttpGet]
     [ProducesResponseType(typeof(Paginate<SupplyDto>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetAllAsync([FromQuery][Required] ListSuppliesQuery paginatedRequest, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAllAsync([FromQuery][Required] ListSuppliesQuery paginatedQuery, CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(paginatedRequest, cancellationToken);
+        var result = await mediator.Send(paginatedQuery, cancellationToken);
         return result.ToActionResult();
     }
 

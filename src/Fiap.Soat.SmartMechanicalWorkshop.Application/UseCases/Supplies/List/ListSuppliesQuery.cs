@@ -4,4 +4,4 @@ using MediatR;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Supplies.List;
 
-public class ListSuppliesQuery : PaginatedRequest, IRequest<Response<Paginate<SupplyDto>>>;
+public sealed class ListSuppliesQuery : PaginatedRequest, IRequest<Response<Paginate<SupplyDto>>>;

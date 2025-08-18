@@ -1,6 +1,8 @@
 using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.AvailableServices.Create;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.AvailableServices.Delete;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.AvailableServices.Get;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.AvailableServices.List;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.AvailableServices.Update;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.AvailableServices;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.Interfaces;
@@ -20,7 +22,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Controllers;
 [Route("api/v1/[controller]")]
 [Authorize]
 [ApiController]
-public sealed class AvailableServicesController(IAvailableService service, IMediator mediator) : ControllerBase
+public sealed class AvailableServicesController(IMediator mediator) : ControllerBase
 {
     /// <summary>
     ///     Gets an available service by its unique identifier.
@@ -34,22 +36,22 @@ public sealed class AvailableServicesController(IAvailableService service, IMedi
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.NotFound)]
     public async Task<IActionResult> GetOneAsync([FromRoute][Required] Guid id, CancellationToken cancellationToken)
     {
-        var result = await service.GetOneAsync(id, cancellationToken);
+        var result = await mediator.Send(new GetAvailableServiceByIdQuery(id), cancellationToken);
         return result.ToActionResult();
     }
 
     /// <summary>
     ///     Gets a paginated list of available services.
     /// </summary>
-    /// <param name="paginatedRequest">Pagination parameters.</param>
+    /// <param name="paginatedQuery">Pagination parameters.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>Paginated list of available services.</returns>
     [HttpGet]
     [SwaggerOperation(Summary = "Get all available services (paginated)", Description = "Returns a paginated list of available services.")]
     [ProducesResponseType(typeof(Paginate<AvailableServiceDto>), (int) HttpStatusCode.OK)]
-    public async Task<IActionResult> GetAllAsync([FromQuery][Required] PaginatedRequest paginatedRequest, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAllAsync([FromQuery][Required] ListAvailableServicesQuery paginatedQuery, CancellationToken cancellationToken)
     {
-        var result = await service.GetAllAsync(paginatedRequest, cancellationToken);
+        var result = await mediator.Send(paginatedQuery, cancellationToken);
         return result.ToActionResult();
     }
 
