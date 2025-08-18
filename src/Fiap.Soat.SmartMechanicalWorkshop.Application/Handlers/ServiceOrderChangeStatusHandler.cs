@@ -1,12 +1,12 @@
-using Fiap.Soat.MechanicalWorkshop.Application.Commands;
-using Fiap.Soat.MechanicalWorkshop.Application.Notifications;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.Commands;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.Notifications;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.ServiceOrders;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.Interfaces;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 using MediatR;
 
-namespace Fiap.Soat.MechanicalWorkshop.Application.Handlers;
+namespace Fiap.Soat.SmartMechanicalWorkshop.Application.Handlers;
 
 public sealed class ServiceOrderChangeStatusHandler(IServiceOrderService service, IMediator mediator)
     : IRequestHandler<ServiceOrderChangeStatusCommand, Response<ServiceOrderDto>>, INotificationHandler<QuoteChangeStatusNotification>

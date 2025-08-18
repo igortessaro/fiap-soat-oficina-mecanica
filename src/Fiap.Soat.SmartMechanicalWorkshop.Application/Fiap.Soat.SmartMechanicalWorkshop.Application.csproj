@@ -15,4 +15,12 @@
         <PackageReference Include="MediatR" Version="12.5.0"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="UseCases\AvailableServices\Create\" />
+      <Folder Include="UseCases\AvailableServices\Delete\" />
+      <Folder Include="UseCases\AvailableServices\Get\" />
+      <Folder Include="UseCases\AvailableServices\List\" />
+      <Folder Include="UseCases\AvailableServices\Update\" />
+    </ItemGroup>
+
 </Project>

@@ -1,11 +1,11 @@
-using Fiap.Soat.MechanicalWorkshop.Application.Commands;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.Commands;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.ServiceOrders;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Repositories;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 using MediatR;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace Fiap.Soat.MechanicalWorkshop.Application.Handlers;
+namespace Fiap.Soat.SmartMechanicalWorkshop.Application.Handlers;
 
 public sealed class GetAverageExecutionTimeHandler(IServiceOrderEventRepository repository, IMemoryCache memoryCache)
     : IRequestHandler<GetAverageExecutionTimeCommand, Response<ServiceOrderExecutionTimeReport>>

@@ -1,7 +1,13 @@
+using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Supplies.Create;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Supplies.Delete;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Supplies.Get;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Supplies.List;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Supplies.Update;
 using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Supplies;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.Interfaces;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
@@ -14,7 +20,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Controllers;
 [Route("api/v1/[controller]")]
 [ApiController]
 [Authorize]
-public class SuppliesController(ISupplyService supplyService) : ControllerBase
+public class SuppliesController(ISupplyService supplyService, IMediator mediator) : ControllerBase
 {
     /// <summary>
     ///     Gets a supply by its unique identifier.
@@ -29,7 +35,7 @@ public class SuppliesController(ISupplyService supplyService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetOneAsync([FromRoute][Required] Guid id, CancellationToken cancellationToken)
     {
-        var result = await supplyService.GetOneAsync(id, cancellationToken);
+        var result = await mediator.Send(new GetSupplyByIdQuery(id), cancellationToken);
         return result.ToActionResult();
     }
 
@@ -42,16 +48,16 @@ public class SuppliesController(ISupplyService supplyService) : ControllerBase
     /// <response code="200">Returns the paginated list of supplies.</response>
     [HttpGet]
     [ProducesResponseType(typeof(Paginate<SupplyDto>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetAllAsync([FromQuery][Required] PaginatedRequest paginatedRequest, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAllAsync([FromQuery][Required] ListSuppliesQuery paginatedRequest, CancellationToken cancellationToken)
     {
-        var result = await supplyService.GetAllAsync(paginatedRequest, cancellationToken);
+        var result = await mediator.Send(paginatedRequest, cancellationToken);
         return result.ToActionResult();
     }
 
     /// <summary>
     ///     Creates a new supply.
     /// </summary>
-    /// <param name="request">The supply to create.</param>
+    /// <param name="command">The supply to create.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>Returns the created supply.</returns>
     /// <response code="201">Returns the newly created supply.</response>
@@ -59,9 +65,9 @@ public class SuppliesController(ISupplyService supplyService) : ControllerBase
     [HttpPost]
     [ProducesResponseType(typeof(SupplyDto), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> CreateAsync([FromBody][Required] CreateNewSupplyRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> CreateAsync([FromBody][Required] CreateSupplyCommand command, CancellationToken cancellationToken)
     {
-        var result = await supplyService.CreateAsync(request, cancellationToken);
+        var result = await mediator.Send(command, cancellationToken);
         return result.ToActionResult();
     }
 
@@ -78,7 +84,7 @@ public class SuppliesController(ISupplyService supplyService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteAsync([FromRoute][Required] Guid id, CancellationToken cancellationToken)
     {
-        var result = await supplyService.DeleteAsync(id, cancellationToken);
+        var result = await mediator.Send(new DeleteSupplyCommand(id), cancellationToken);
         return result.ToActionResult();
     }
 
@@ -97,9 +103,7 @@ public class SuppliesController(ISupplyService supplyService) : ControllerBase
     public async Task<IActionResult> UpdateAsync([FromRoute][Required] Guid id, [FromBody][Required] UpdateOneSupplyRequest request,
         CancellationToken cancellationToken)
     {
-        UpdateOneSupplyInput updateRequest = new(id, request.Name, request.Quantity, request.Price);
-
-        var result = await supplyService.UpdateAsync(updateRequest, cancellationToken);
+        var result = await mediator.Send(new UpdateSupplyCommand(id, request.Name, request.Quantity, request.Price), cancellationToken);
         return result.ToActionResult();
     }
 }

@@ -1,9 +1,9 @@
-using Fiap.Soat.MechanicalWorkshop.Application.Notifications;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.Notifications;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.Interfaces;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace Fiap.Soat.MechanicalWorkshop.Application.Handlers;
+namespace Fiap.Soat.SmartMechanicalWorkshop.Application.Handlers;
 
 public sealed class CreateQuoteHandler(IQuoteService service) : INotificationHandler<ServiceOrderChangeStatusNotification>
 {

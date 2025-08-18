@@ -1,4 +1,5 @@
 using AutoMapper;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Supplies.Create;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.AvailableServices;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Person;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.ServiceOrders;
@@ -9,7 +10,7 @@ using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Shared.Mappings;
+namespace Fiap.Soat.SmartMechanicalWorkshop.Application.Mappers;
 
 [ExcludeFromCodeCoverage]
 public class AutoMapperProfiles : Profile
@@ -33,7 +34,7 @@ public class AutoMapperProfiles : Profile
 
         CreateMap<Supply, SupplyDto>().ReverseMap();
         CreateMap<Paginate<Supply>, Paginate<SupplyDto>>().ReverseMap();
-        CreateMap<Supply, CreateNewSupplyRequest>().ReverseMap();
+        CreateMap<Supply, CreateSupplyCommand>().ReverseMap();
         CreateMap<Supply, UpdateOneSupplyRequest>().ReverseMap();
 
         CreateMap<Person, PersonDto>().ReverseMap();

@@ -1,5 +1,5 @@
-using Fiap.Soat.MechanicalWorkshop.Application.Commands;
-using Fiap.Soat.MechanicalWorkshop.Application.Notifications;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.Commands;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.Notifications;
 using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.ServiceOrders;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.Interfaces;

@@ -1,10 +1,10 @@
-using Fiap.Soat.MechanicalWorkshop.Application.Notifications;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.Notifications;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Repositories;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.Interfaces;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 using MediatR;
 
-namespace Fiap.Soat.MechanicalWorkshop.Application.Handlers;
+namespace Fiap.Soat.SmartMechanicalWorkshop.Application.Handlers;
 
 public sealed class ReplacementStockHandler(IQuoteRepository quoteRepository, ISupplyService supplyService) : INotificationHandler<QuoteChangeStatusNotification>
 {

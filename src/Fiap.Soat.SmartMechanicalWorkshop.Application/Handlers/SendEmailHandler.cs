@@ -1,10 +1,10 @@
-using Fiap.Soat.MechanicalWorkshop.Application.Notifications;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.Notifications;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Repositories;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 using Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Services.Interfaces;
 using MediatR;
 
-namespace Fiap.Soat.MechanicalWorkshop.Application.Handlers;
+namespace Fiap.Soat.SmartMechanicalWorkshop.Application.Handlers;
 
 public sealed class SendEmailHandler(
     IServiceOrderRepository repository,
