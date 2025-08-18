@@ -1,7 +1,11 @@
 using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.AvailableServices.Create;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.AvailableServices.Delete;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.AvailableServices.Update;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.AvailableServices;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.Interfaces;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -16,7 +20,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Controllers;
 [Route("api/v1/[controller]")]
 [Authorize]
 [ApiController]
-public class AvailableServicesController(IAvailableService service) : ControllerBase
+public sealed class AvailableServicesController(IAvailableService service, IMediator mediator) : ControllerBase
 {
     /// <summary>
     ///     Gets an available service by its unique identifier.
@@ -61,7 +65,9 @@ public class AvailableServicesController(IAvailableService service) : Controller
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.BadRequest)]
     public async Task<IActionResult> CreateAsync([FromBody][Required] CreateAvailableServiceRequest request, CancellationToken cancellationToken)
     {
-        var result = await service.CreateAsync(request, cancellationToken);
+        var supplies = request.Supplies?.Select(x => new ServiceSupplyCommand(x.SupplyId, x.Quantity)).ToList() ?? [];
+        var command = new CreateAvailableServiceCommand(request.Name, request.Price, supplies);
+        var result = await mediator.Send(command, cancellationToken);
         return result.ToActionResult();
     }
 
@@ -77,7 +83,7 @@ public class AvailableServicesController(IAvailableService service) : Controller
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.NotFound)]
     public async Task<IActionResult> DeleteAsync([FromRoute][Required] Guid id, CancellationToken cancellationToken)
     {
-        var result = await service.DeleteAsync(id, cancellationToken);
+        var result = await mediator.Send(new DeleteAvailableServiceCommand(id), cancellationToken);
         return result.ToActionResult();
     }
 
@@ -97,8 +103,8 @@ public class AvailableServicesController(IAvailableService service) : Controller
         CancellationToken cancellationToken)
     {
         var supplies = request.Supplies.Select(x => new ServiceSupplyInput(x.SupplyId, x.Quantity)).ToList();
-        UpdateOneAvailableServiceInput input = new(id, request.Name, request.Price, supplies);
-        var result = await service.UpdateAsync(input, cancellationToken);
+        UpdateAvailableServiceCommand command = new(id, request.Name, request.Price, supplies);
+        var result = await mediator.Send(command, cancellationToken);
         return result.ToActionResult();
     }
 }

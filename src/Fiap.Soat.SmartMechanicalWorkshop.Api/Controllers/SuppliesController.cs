@@ -20,7 +20,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Controllers;
 [Route("api/v1/[controller]")]
 [ApiController]
 [Authorize]
-public class SuppliesController(ISupplyService supplyService, IMediator mediator) : ControllerBase
+public sealed class SuppliesController(IMediator mediator) : ControllerBase
 {
     /// <summary>
     ///     Gets a supply by its unique identifier.
