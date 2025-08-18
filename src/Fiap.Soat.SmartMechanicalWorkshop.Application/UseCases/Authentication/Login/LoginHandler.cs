@@ -1,8 +1,7 @@
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Auth;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Repositories;
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.Interfaces;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
+using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -10,21 +9,21 @@ using System.Net;
 using System.Security.Claims;
 using System.Text;
 
-namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Services;
+namespace Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Authentication.Login;
 
-public sealed class AuthService(IConfiguration config, IPersonRepository personRepository) : IAuthService
+public sealed class LoginHandler(IConfiguration config, IPersonRepository personRepository) : IRequestHandler<LoginCommand, Response<string>>
 {
-    public async Task<Response<string>> LoginAsync(LoginRequest loginRequest, CancellationToken cancellationToken)
+    public async Task<Response<string>> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
-        var person = await personRepository.GetByEmailAsync(loginRequest.Email, cancellationToken);
+        var person = await personRepository.GetByEmailAsync(request.Email, cancellationToken);
         if (person is null)
         {
-            return ResponseFactory.Fail<string>(new FluentResults.Error($"Person with {loginRequest.Email} not found"), HttpStatusCode.NotFound);
+            return ResponseFactory.Fail<string>($"Person with {request.Email} not found", HttpStatusCode.NotFound);
         }
 
-        if (!person.Password.VerifyPassword(loginRequest.Password))
+        if (!person.Password.VerifyPassword(request.Password))
         {
-            return ResponseFactory.Fail<string>(new FluentResults.Error("Invalid login credentials"), HttpStatusCode.Unauthorized);
+            return ResponseFactory.Fail<string>("Invalid login credentials", HttpStatusCode.Unauthorized);
         }
 
         string token = GenerateJwtToken(person);

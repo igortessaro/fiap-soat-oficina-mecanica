@@ -1,7 +1,8 @@
 using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Authentication.Login;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Auth;
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.Interfaces;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -9,7 +10,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Controllers;
 
 [ApiController]
 [Route("auth")]
-public class AuthController(IAuthService authService) : ControllerBase
+public class AuthController(IMediator mediator) : ControllerBase
 {
     /// <summary>
     ///     Authenticates a user and returns a JWT token if successful.
@@ -29,7 +30,7 @@ public class AuthController(IAuthService authService) : ControllerBase
     [SwaggerResponse(404, "Returns when user/password is not found", typeof(NotFoundResult))]
     public async Task<IActionResult> Login([FromBody] LoginRequest login, CancellationToken cancellationToken)
     {
-        var response = await authService.LoginAsync(login, cancellationToken);
+        var response = await mediator.Send(new LoginCommand(login.Email, login.Password), cancellationToken);
         return response.ToActionResult();
     }
 }

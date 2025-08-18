@@ -15,4 +15,10 @@
         <PackageReference Include="MediatR" Version="12.5.0"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="UseCases\People\" />
+      <Folder Include="UseCases\ServiceOrders\" />
+      <Folder Include="UseCases\Vehicles\" />
+    </ItemGroup>
+
 </Project>

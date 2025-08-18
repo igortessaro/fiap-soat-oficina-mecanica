@@ -1,32 +1,26 @@
 using AutoFixture;
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Auth;
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Person;
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Authentication.Login;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Repositories;
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services;
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.Interfaces;
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 using Fiap.Soat.SmartMechanicalWorkshop.Tests.Shared.Factories;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using Moq;
 using System.Net;
 
-namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Tests.Services;
+namespace Fiap.Soat.SmartMechanicalWorkshop.Application.Tests.UseCases.Authentication;
 
-public sealed class AuthServiceTests
+public sealed class LoginHandlerTests
 {
     private readonly Mock<IConfiguration> _configMock = new();
     private readonly IFixture _fixture = new Fixture();
     private readonly Mock<IPersonRepository> _personRepositoryMock = new();
-    private readonly AuthService _service;
+    private readonly LoginHandler _useCase;
 
-    public AuthServiceTests()
+    public LoginHandlerTests()
     {
         _configMock.Setup(c => c["Jwt:Key"]).Returns("super_secret_test_key_1234567890");
         _configMock.Setup(c => c["Jwt:Issuer"]).Returns("TestIssuer");
-        _service = new AuthService(_configMock.Object, _personRepositoryMock.Object);
+        _useCase = new LoginHandler(_configMock.Object, _personRepositoryMock.Object);
     }
 
     [Fact]
@@ -34,16 +28,16 @@ public sealed class AuthServiceTests
     {
         // Arrange
         var person = PeopleFactory.CreateDetailerEmployee();
-        var loginRequest = _fixture.Build<LoginRequest>()
+        var command = _fixture.Build<LoginCommand>()
             .With(x => x.Email, (string) person.Email)
             .With(x => x.Password, PeopleFactory.ValidPassword)
             .Create();
 
-        _personRepositoryMock.Setup(s => s.GetByEmailAsync(loginRequest.Email, It.IsAny<CancellationToken>()))
+        _personRepositoryMock.Setup(s => s.GetByEmailAsync(command.Email, It.IsAny<CancellationToken>()))
             .ReturnsAsync(person);
 
         // Act
-        var result = await _service.LoginAsync(loginRequest, CancellationToken.None);
+        var result = await _useCase.Handle(command, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
@@ -56,16 +50,16 @@ public sealed class AuthServiceTests
     {
         // Arrange
         var person = PeopleFactory.CreateDetailerEmployee();
-        var loginRequest = _fixture.Build<LoginRequest>()
+        var command = _fixture.Build<LoginCommand>()
             .With(x => x.Email, (string) person.Email)
             .With(x => x.Password, "123456789")
             .Create();
 
-        _personRepositoryMock.Setup(s => s.GetByEmailAsync(loginRequest.Email, It.IsAny<CancellationToken>()))
+        _personRepositoryMock.Setup(s => s.GetByEmailAsync(command.Email, It.IsAny<CancellationToken>()))
             .ReturnsAsync(person);
 
         // Act
-        var result = await _service.LoginAsync(loginRequest, CancellationToken.None);
+        var result = await _useCase.Handle(command, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeFalse();

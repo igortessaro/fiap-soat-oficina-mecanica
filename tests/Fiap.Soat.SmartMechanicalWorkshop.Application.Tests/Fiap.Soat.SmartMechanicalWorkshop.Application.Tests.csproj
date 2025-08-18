@@ -23,6 +23,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\src\Fiap.Soat.SmartMechanicalWorkshop.Application\Fiap.Soat.SmartMechanicalWorkshop.Application.csproj" />
+      <ProjectReference Include="..\Fiap.Soat.SmartMechanicalWorkshop.Tests.Shared\Fiap.Soat.SmartMechanicalWorkshop.Tests.Shared.csproj" />
     </ItemGroup>
 
 </Project>
