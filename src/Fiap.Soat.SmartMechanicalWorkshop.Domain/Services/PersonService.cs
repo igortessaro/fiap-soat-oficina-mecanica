@@ -12,28 +12,6 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Services;
 
 public sealed class PersonService(IMapper mapper, IPersonRepository repository, IAddressRepository addressRepository) : IPersonService
 {
-    public async Task<Response<PersonDto>> CreateAsync(CreatePersonRequest request, CancellationToken cancellationToken)
-    {
-        var mapperEntity = mapper.Map<Person>(request);
-        mapperEntity.Validate();
-        var createdEntity = await repository.AddAsync(mapperEntity, cancellationToken);
-        return ResponseFactory.Ok(mapper.Map<PersonDto>(createdEntity), HttpStatusCode.Created);
-    }
-
-    public async Task<Response> DeleteAsync(Guid id, CancellationToken cancellationToken)
-    {
-        var foundEntity = await repository.GetByIdAsync(id, cancellationToken);
-        if (foundEntity is null)
-        {
-            return ResponseFactory.Fail("Person not found", HttpStatusCode.NotFound);
-        }
-
-        var address = await addressRepository.GetByIdAsync(foundEntity.AddressId, cancellationToken);
-        await repository.DeleteAsync(foundEntity, cancellationToken);
-        await addressRepository.DeleteAsync(address!, cancellationToken);
-        return ResponseFactory.Ok(HttpStatusCode.NoContent);
-    }
-
     public async Task<Response<PersonDto>> GetOneAsync(Guid id, CancellationToken cancellationToken)
     {
         var foundEntity = await repository.GetDetailedByIdAsync(id, cancellationToken);

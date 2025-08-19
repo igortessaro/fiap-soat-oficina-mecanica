@@ -1,7 +1,10 @@
 using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.People.Create;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.People.Delete;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Person;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.Interfaces;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -16,7 +19,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Controllers;
 [Route("api/v1/[controller]")]
 [ApiController]
 [Authorize]
-public sealed class PeopleController(IPersonService service) : ControllerBase
+public sealed class PeopleController(IPersonService service, IMediator mediator) : ControllerBase
 {
     /// <summary>
     ///     Gets a person by its unique identifier.
@@ -61,7 +64,8 @@ public sealed class PeopleController(IPersonService service) : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.BadRequest)]
     public async Task<IActionResult> CreateAsync([FromBody][Required] CreatePersonRequest request, CancellationToken cancellationToken)
     {
-        var result = await service.CreateAsync(request, cancellationToken);
+        CreatePersonCommand command = request;
+        var result = await mediator.Send(command, cancellationToken);
         return result.ToActionResult();
     }
 
@@ -77,7 +81,7 @@ public sealed class PeopleController(IPersonService service) : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.NotFound)]
     public async Task<IActionResult> DeleteAsync([FromRoute][Required] Guid id, CancellationToken cancellationToken)
     {
-        var result = await service.DeleteAsync(id, cancellationToken);
+        var result = await mediator.Send(new DeletePersonCommand(id), cancellationToken);
         return result.ToActionResult();
     }
 

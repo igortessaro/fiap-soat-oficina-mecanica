@@ -31,66 +31,6 @@ public sealed class PersonServiceTests
     }
 
     [Fact]
-    public async Task CreateAsync_ShouldReturnCreatedPerson()
-    {
-        // Arrange
-        var request = _fixture.Build<CreatePersonRequest>()
-            .With(x => x.PersonType, PersonType.Client)
-            .Without(x => x.EmployeeRole)
-            .Create();
-        var person = PeopleFactory.CreateClient();
-        var personDto = _fixture.Create<PersonDto>();
-
-        _mapperMock.Setup(m => m.Map<Person>(request)).Returns(person);
-        _repositoryMock.Setup(r => r.AddAsync(person, It.IsAny<CancellationToken>())).ReturnsAsync(person);
-        _mapperMock.Setup(m => m.Map<PersonDto>(person)).Returns(personDto);
-
-        // Act
-        var result = await _service.CreateAsync(request, CancellationToken.None);
-
-        // Assert
-        result.StatusCode.Should().Be(HttpStatusCode.Created);
-        result.Data.Should().Be(personDto);
-    }
-
-    [Fact]
-    public async Task DeleteAsync_ShouldReturnNoContent_WhenPersonExists()
-    {
-        // Arrange
-        var id = Guid.NewGuid();
-        var person = _fixture.Create<Person>();
-        var address = _fixture.Create<Address>();
-        _repositoryMock.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync(person);
-        _addressRepositoryMock.Setup(r => r.GetByIdAsync(person.AddressId, It.IsAny<CancellationToken>())).ReturnsAsync(address);
-
-        // Act
-        var result = await _service.DeleteAsync(id, CancellationToken.None);
-
-        // Assert
-        _repositoryMock.Verify(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>()), Times.Once);
-        _addressRepositoryMock.Verify(r => r.GetByIdAsync(person.AddressId, It.IsAny<CancellationToken>()), Times.Once);
-        _repositoryMock.Verify(r => r.DeleteAsync(person, It.IsAny<CancellationToken>()), Times.Once);
-        _addressRepositoryMock.Verify(r => r.DeleteAsync(It.IsAny<Address>(), It.IsAny<CancellationToken>()), Times.Once);
-        result.IsSuccess.Should().BeTrue();
-        result.StatusCode.Should().Be(HttpStatusCode.NoContent);
-    }
-
-    [Fact]
-    public async Task DeleteAsync_ShouldReturnNotFound_WhenPersonDoesNotExist()
-    {
-        // Arrange
-        var id = Guid.NewGuid();
-        _repositoryMock.Setup(r => r.GetByIdAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync((Person?) null);
-
-        // Act
-        var result = await _service.DeleteAsync(id, CancellationToken.None);
-
-        // Assert
-        result.StatusCode.Should().Be(HttpStatusCode.NotFound);
-        result.IsSuccess.Should().BeFalse();
-    }
-
-    [Fact]
     public async Task GetOneAsync_ShouldReturnPerson_WhenExists()
     {
         // Arrange

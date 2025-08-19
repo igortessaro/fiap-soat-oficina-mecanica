@@ -1,5 +1,6 @@
 using AutoMapper;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.AvailableServices.Create;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.People.Create;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Supplies.Create;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.AvailableServices;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Person;
@@ -40,16 +41,18 @@ public class AutoMapperProfiles : Profile
 
         CreateMap<Person, PersonDto>().ReverseMap();
         CreateMap<Paginate<Person>, Paginate<PersonDto>>().ReverseMap();
-        CreateMap<Person, CreatePersonRequest>().ReverseMap();
+        CreateMap<Person, CreatePersonCommand>().ReverseMap();
         CreateMap<Person, UpdateOnePersonRequest>().ReverseMap();
 
         CreateMap<Phone, PhoneDto>().ReverseMap();
         CreateMap<Phone, CreatePhoneRequest>().ReverseMap();
+        CreateMap<Phone, CreatePhoneCommand>().ReverseMap();
         CreateMap<Phone, UpdateOnePhoneInput>().ReverseMap();
         CreateMap<Phone, UpdateOnePhoneRequest>().ReverseMap();
 
         CreateMap<Address, AddressDto>().ReverseMap();
         CreateMap<Address, CreateAddressRequest>().ReverseMap();
+        CreateMap<Address, CreateAddressCommand>().ReverseMap();
         CreateMap<Address, UpdateOneAddressInput>().ReverseMap();
         CreateMap<Address, UpdateOneAddressRequest>().ReverseMap();
 
