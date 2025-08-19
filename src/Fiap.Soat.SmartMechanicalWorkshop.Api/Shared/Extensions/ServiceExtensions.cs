@@ -13,7 +13,6 @@ public static class ServiceExtensions
         _ = serviceCollection.AddSingleton<IEmailService, EmailService>();
         _ = serviceCollection.AddSingleton<IEmailTemplateProvider, EmailTemplateProvider>();
         _ = serviceCollection.AddTransient<IQuoteService, QuoteService>();
-        _ = serviceCollection.AddTransient<IServiceOrderEventService, ServiceOrderEventService>();
 
         return serviceCollection;
     }

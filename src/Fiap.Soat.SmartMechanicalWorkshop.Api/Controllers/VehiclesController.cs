@@ -1,3 +1,4 @@
+using Fiap.Soat.SmartMechanicalWorkshop.Api.Models.Vehicles;
 using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Vehicles.Create;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Vehicles.Delete;

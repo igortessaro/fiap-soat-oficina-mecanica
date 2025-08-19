@@ -1,6 +1,7 @@
+using Fiap.Soat.SmartMechanicalWorkshop.Api.Models.ServiceOrders;
 using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared;
-using Fiap.Soat.SmartMechanicalWorkshop.Application.Commands;
-using Fiap.Soat.SmartMechanicalWorkshop.Application.Notifications;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Quotes.Update;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.ServiceOrders;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.ServiceOrders.Create;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.ServiceOrders.Delete;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.ServiceOrders.Get;
@@ -75,7 +76,7 @@ public sealed class ServiceOrdersController(IMediator mediator) : ControllerBase
         Summary = "Get average execution time of service orders",
         Description = "Returns the average execution time for all service orders."
     )]
-    [ProducesResponseType(typeof(Response<ServiceOrderExecutionTimeReport>), (int) HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(Response<ServiceOrderExecutionTimeReportDto>), (int) HttpStatusCode.OK)]
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.BadRequest)]
     public async Task<IActionResult> GetAverageExecutionTime([FromQuery] DateOnly startDate, [FromQuery] DateOnly endDate,
@@ -99,7 +100,7 @@ public sealed class ServiceOrdersController(IMediator mediator) : ControllerBase
     {
         CreateServiceOrderCommand command = new(request.ClientId, request.VehicleId, request.ServiceIds, request.Title, request.Description);
         var result = await mediator.Send(command, cancellationToken);
-        if (result.IsSuccess) await mediator.Publish(new ServiceOrderChangeStatusNotification(result.Data.Id, result.Data), cancellationToken);
+        if (result.IsSuccess) await mediator.Publish(new UpdateServiceOrderStatusNotification(result.Data.Id, result.Data), cancellationToken);
         return result.ToActionResult();
     }
 
@@ -175,7 +176,7 @@ public sealed class ServiceOrdersController(IMediator mediator) : ControllerBase
         [FromRoute][Required] QuoteStatus status,
         CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new QuoteChangeStatusCommand(quoteId, status, id), cancellationToken);
+        var result = await mediator.Send(new UpdateQuoteStatusCommand(quoteId, status, id), cancellationToken);
         return result.ToActionResult();
     }
 }

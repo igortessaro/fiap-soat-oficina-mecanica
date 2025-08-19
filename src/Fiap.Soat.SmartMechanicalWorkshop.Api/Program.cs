@@ -1,6 +1,5 @@
 using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared.Extensions;
 using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared.Middlewares;
-using Fiap.Soat.SmartMechanicalWorkshop.Application.Commands;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.Mappers;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.ServiceOrders.Update;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;

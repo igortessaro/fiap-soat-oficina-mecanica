@@ -1,3 +1,4 @@
+using Fiap.Soat.SmartMechanicalWorkshop.Api.Models.Person;
 using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.People.Create;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.People.Delete;
@@ -66,7 +67,9 @@ public sealed class PeopleController(IMediator mediator) : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.BadRequest)]
     public async Task<IActionResult> CreateAsync([FromBody][Required] CreatePersonRequest request, CancellationToken cancellationToken)
     {
-        CreatePersonCommand command = request;
+        var phone = new CreatePhoneCommand(request.Phone.AreaCode, request.Phone.Number);
+        var address = new CreateAddressCommand(request.Address.Street, request.Address.City, request.Address.State, request.Address.ZipCode);
+        CreatePersonCommand command = new(request.Fullname, request.Document, request.PersonType, request.EmployeeRole, request.Email, request.Password, phone, address);
         var result = await mediator.Send(command, cancellationToken);
         return result.ToActionResult();
     }
@@ -102,7 +105,9 @@ public sealed class PeopleController(IMediator mediator) : ControllerBase
     public async Task<IActionResult> UpdateAsync([FromRoute][Required] Guid id, [FromBody][Required] UpdateOnePersonRequest request,
         CancellationToken cancellationToken)
     {
-        UpdatePersonCommand input = new(id, request.Fullname, request.Document, request.PersonType, request.EmployeeRole, request.Email, request.Password, request.Phone, request.Address);
+        var phone = request.Phone != null ? new UpdatePhoneCommand(request.Phone.AreaCode, request.Phone.Number) : null;
+        var address = request.Address != null ? new UpdateAddressCommand(request.Address.Street, request.Address.City, request.Address.State, request.Address.ZipCode) : null;
+        UpdatePersonCommand input = new(id, request.Fullname, request.Document, request.PersonType, request.EmployeeRole, request.Email, request.Password, phone, address);
         var result = await mediator.Send(input, cancellationToken);
         return result.ToActionResult();
     }

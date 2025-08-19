@@ -5,5 +5,5 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Repositories;
 
 public interface IServiceOrderEventRepository : IRepository<ServiceOrderEvent>
 {
-    Task<ServiceOrderExecutionTimeReport> GetAverageExecutionTimesAsync(DateTime startDate, DateTime endDate, CancellationToken cancellationToken);
+    Task<ServiceOrderExecutionTimeReportDto> GetAverageExecutionTimesAsync(DateTime startDate, DateTime endDate, CancellationToken cancellationToken);
 }

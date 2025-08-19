@@ -1,3 +1,4 @@
+using Fiap.Soat.SmartMechanicalWorkshop.Api.Models.AvailableServices;
 using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.AvailableServices.Create;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.AvailableServices.Delete;
@@ -67,7 +68,7 @@ public sealed class AvailableServicesController(IMediator mediator) : Controller
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.BadRequest)]
     public async Task<IActionResult> CreateAsync([FromBody][Required] CreateAvailableServiceRequest request, CancellationToken cancellationToken)
     {
-        var supplies = request.Supplies?.Select(x => new ServiceSupplyCommand(x.SupplyId, x.Quantity)).ToList() ?? [];
+        var supplies = request.Supplies?.Select(x => new CreateServiceSupplyCommand(x.SupplyId, x.Quantity)).ToList() ?? [];
         var command = new CreateAvailableServiceCommand(request.Name, request.Price, supplies);
         var result = await mediator.Send(command, cancellationToken);
         return result.ToActionResult();
@@ -104,7 +105,7 @@ public sealed class AvailableServicesController(IMediator mediator) : Controller
     public async Task<IActionResult> UpdateAsync([FromRoute][Required] Guid id, [FromBody][Required] UpdateOneAvailableServiceRequest request,
         CancellationToken cancellationToken)
     {
-        var supplies = request.Supplies.Select(x => new ServiceSupplyInput(x.SupplyId, x.Quantity)).ToList();
+        var supplies = request.Supplies.Select(x => new UpdateServiceSupplyCommand(x.SupplyId, x.Quantity)).ToList();
         UpdateAvailableServiceCommand command = new(id, request.Name, request.Price, supplies);
         var result = await mediator.Send(command, cancellationToken);
         return result.ToActionResult();

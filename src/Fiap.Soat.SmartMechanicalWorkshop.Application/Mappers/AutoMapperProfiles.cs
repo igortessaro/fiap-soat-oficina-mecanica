@@ -34,38 +34,37 @@ public class AutoMapperProfiles : Profile
         CreateMap<Paginate<AvailableService>, Paginate<AvailableServiceDto>>().ReverseMap();
         CreateMap<AvailableService, CreateAvailableServiceCommand>()
             .ReverseMap();
-        CreateMap<AvailableService, UpdateOneAvailableServiceRequest>().ReverseMap();
 
         CreateMap<Supply, SupplyDto>().ReverseMap();
         CreateMap<Paginate<Supply>, Paginate<SupplyDto>>().ReverseMap();
         CreateMap<Supply, CreateSupplyCommand>().ReverseMap();
-        CreateMap<Supply, UpdateOneSupplyRequest>().ReverseMap();
+        // CreateMap<Supply, UpdateOneSupplyRequest>().ReverseMap();
 
         CreateMap<Person, PersonDto>().ReverseMap();
         CreateMap<Paginate<Person>, Paginate<PersonDto>>().ReverseMap();
         CreateMap<Person, CreatePersonCommand>().ReverseMap();
-        CreateMap<Person, UpdateOnePersonRequest>().ReverseMap();
+        // CreateMap<Person, UpdateOnePersonRequest>().ReverseMap();
 
         CreateMap<Phone, PhoneDto>().ReverseMap();
-        CreateMap<Phone, CreatePhoneRequest>().ReverseMap();
+        // CreateMap<Phone, CreatePhoneRequest>().ReverseMap();
         CreateMap<Phone, CreatePhoneCommand>().ReverseMap();
-        CreateMap<Phone, UpdateOnePhoneInput>().ReverseMap();
-        CreateMap<Phone, UpdateOnePhoneRequest>().ReverseMap();
+        // CreateMap<Phone, UpdateOnePhoneInput>().ReverseMap();
+        // CreateMap<Phone, UpdateOnePhoneRequest>().ReverseMap();
 
         CreateMap<Address, AddressDto>().ReverseMap();
-        CreateMap<Address, CreateAddressRequest>().ReverseMap();
+        // CreateMap<Address, CreateAddressRequest>().ReverseMap();
         CreateMap<Address, CreateAddressCommand>().ReverseMap();
-        CreateMap<Address, UpdateOneAddressInput>().ReverseMap();
-        CreateMap<Address, UpdateOneAddressRequest>().ReverseMap();
+        // CreateMap<Address, UpdateOneAddressInput>().ReverseMap();
+        // CreateMap<Address, UpdateOneAddressRequest>().ReverseMap();
 
         CreateMap<Email, EmailDto>().ReverseMap();
 
         CreateMap<ServiceOrder, ServiceOrderDto>().ReverseMap();
         CreateMap<Paginate<ServiceOrder>, Paginate<ServiceOrderDto>>().ReverseMap();
-        CreateMap<ServiceOrder, CreateServiceOrderRequest>()
-            .ReverseMap()
-            .ConstructUsing(dest => new ServiceOrder(dest.Title, dest.Description, dest.VehicleId, dest.ClientId));
-        CreateMap<ServiceOrder, UpdateOneServiceOrderRequest>().ReverseMap();
+        // CreateMap<ServiceOrder, CreateServiceOrderRequest>()
+        //     .ReverseMap()
+        //     .ConstructUsing(dest => new ServiceOrder(dest.Title, dest.Description, dest.VehicleId, dest.ClientId));
+        // CreateMap<ServiceOrder, UpdateOneServiceOrderRequest>().ReverseMap();
 
         CreateMap<Quote, QuoteDto>().ReverseMap();
         CreateMap<ServiceOrderEvent, ServiceOrderEventDto>().ReverseMap();

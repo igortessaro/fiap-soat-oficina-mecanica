@@ -43,7 +43,7 @@ public sealed class UpdateAvailableServiceHandlerTests
     {
         // Arrange
         var command = _fixture.Build<UpdateAvailableServiceCommand>()
-            .With(x => x.Supplies, [new ServiceSupplyInput(Guid.NewGuid(), 10)])
+            .With(x => x.Supplies, [new UpdateServiceSupplyCommand(Guid.NewGuid(), 10)])
             .Create();
         var entity = _fixture.Create<AvailableService>();
         _repositoryMock.Setup(r => r.GetAsync(command.Id, It.IsAny<CancellationToken>())).ReturnsAsync(entity);
@@ -63,7 +63,7 @@ public sealed class UpdateAvailableServiceHandlerTests
         // Arrange
         var supplyId = Guid.NewGuid();
         var command = _fixture.Build<UpdateAvailableServiceCommand>()
-            .With(x => x.Supplies, [new ServiceSupplyInput(supplyId, 10)])
+            .With(x => x.Supplies, [new UpdateServiceSupplyCommand(supplyId, 10)])
             .Create();
         var entity = _fixture.Create<AvailableService>();
         var supply = _fixture.Create<Supply>();

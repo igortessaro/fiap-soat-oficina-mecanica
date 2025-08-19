@@ -51,7 +51,7 @@ public sealed class CreateAvailableServiceHandlerTests
         // Arrange
         var supplyId = Guid.NewGuid();
         var request = _fixture.Build<CreateAvailableServiceCommand>()
-            .With(x => x.Supplies, [new ServiceSupplyCommand(supplyId, 10)])
+            .With(x => x.Supplies, [new CreateServiceSupplyCommand(supplyId, 10)])
             .Create();
         var entity = _fixture.Create<AvailableService>();
 
@@ -72,7 +72,7 @@ public sealed class CreateAvailableServiceHandlerTests
         // Arrange
         var supplyId = Guid.NewGuid();
         var request = _fixture.Build<CreateAvailableServiceCommand>()
-            .With(x => x.Supplies, [new ServiceSupplyCommand(supplyId, 10)])
+            .With(x => x.Supplies, [new CreateServiceSupplyCommand(supplyId, 10)])
             .Create();
         var entity = _fixture.Create<AvailableService>();
         var supply = _fixture.Create<Supply>();

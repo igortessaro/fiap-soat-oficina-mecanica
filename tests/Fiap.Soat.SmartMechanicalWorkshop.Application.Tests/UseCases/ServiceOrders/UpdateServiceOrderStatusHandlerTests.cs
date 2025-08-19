@@ -1,6 +1,6 @@
 using AutoFixture;
 using AutoMapper;
-using Fiap.Soat.SmartMechanicalWorkshop.Application.Notifications;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.ServiceOrders;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.ServiceOrders.Update;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.ServiceOrders;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
@@ -36,7 +36,7 @@ public sealed class UpdateServiceOrderStatusHandlerTests
         var result = await _service.Handle(input, CancellationToken.None);
 
         // Assert
-        _mediatorMock.Verify(x => x.Publish(It.IsAny<ServiceOrderChangeStatusNotification>(), It.IsAny<CancellationToken>()), Times.Never);
+        _mediatorMock.Verify(x => x.Publish(It.IsAny<UpdateServiceOrderStatusNotification>(), It.IsAny<CancellationToken>()), Times.Never);
         result.StatusCode.Should().Be(HttpStatusCode.NotFound);
         result.IsSuccess.Should().BeFalse();
     }

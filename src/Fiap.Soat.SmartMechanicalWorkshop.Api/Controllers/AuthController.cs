@@ -1,6 +1,7 @@
+using Fiap.Soat.SmartMechanicalWorkshop.Api.Models;
+using Fiap.Soat.SmartMechanicalWorkshop.Api.Models.Authentication;
 using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Authentication.Login;
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Auth;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

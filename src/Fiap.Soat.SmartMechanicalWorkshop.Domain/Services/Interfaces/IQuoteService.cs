@@ -6,6 +6,5 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.Interfaces;
 
 public interface IQuoteService
 {
-    Task<Response<QuoteDto>> CreateAsync(ServiceOrderDto serviceOrder, CancellationToken cancellationToken);
     Task<Response<QuoteDto>> PatchAsync(Guid id, QuoteStatus status, CancellationToken cancellationToken);
 }
