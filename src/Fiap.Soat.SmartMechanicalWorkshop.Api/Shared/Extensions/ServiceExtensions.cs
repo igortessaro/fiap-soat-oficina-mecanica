@@ -10,7 +10,6 @@ public static class ServiceExtensions
     public static IServiceCollection AddServiceExtensions(this IServiceCollection serviceCollection)
     {
         _ = serviceCollection.AddTransient<ISupplyService, SupplyService>();
-        _ = serviceCollection.AddTransient<IServiceOrderService, ServiceOrderService>();
         _ = serviceCollection.AddSingleton<IEmailService, EmailService>();
         _ = serviceCollection.AddSingleton<IEmailTemplateProvider, EmailTemplateProvider>();
         _ = serviceCollection.AddTransient<IQuoteService, QuoteService>();

@@ -1,6 +1,11 @@
 using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.Commands;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.Notifications;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.ServiceOrders.Create;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.ServiceOrders.Delete;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.ServiceOrders.Get;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.ServiceOrders.List;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.ServiceOrders.Update;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.ServiceOrders;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.Interfaces;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
@@ -20,7 +25,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Controllers;
 [Route("api/v1/[controller]")]
 [ApiController]
 [Authorize]
-public sealed class ServiceOrdersController(IServiceOrderService service, IMediator mediator) : ControllerBase
+public sealed class ServiceOrdersController(IMediator mediator) : ControllerBase
 {
     /// <summary>
     ///     Gets a service order by its unique identifier.
@@ -34,7 +39,7 @@ public sealed class ServiceOrdersController(IServiceOrderService service, IMedia
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.NotFound)]
     public async Task<IActionResult> GetOneAsync([FromRoute][Required] Guid id, CancellationToken cancellationToken)
     {
-        var result = await service.GetOneAsync(id, cancellationToken);
+        var result = await mediator.Send(new GetServiceOrderByIdQuery(id), cancellationToken);
         return result.ToActionResult();
     }
 
@@ -53,7 +58,8 @@ public sealed class ServiceOrdersController(IServiceOrderService service, IMedia
         [FromQuery] Guid? personId,
         CancellationToken cancellationToken)
     {
-        var result = await service.GetAllAsync(personId, paginatedRequest, cancellationToken);
+        var query = new ListServiceOrdersQuery(paginatedRequest.PageNumber, paginatedRequest.PageSize, personId);
+        var result = await mediator.Send(query, cancellationToken);
         return result.ToActionResult();
     }
 
@@ -91,7 +97,8 @@ public sealed class ServiceOrdersController(IServiceOrderService service, IMedia
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.BadRequest)]
     public async Task<IActionResult> CreateAsync([FromBody][Required] CreateServiceOrderRequest request, CancellationToken cancellationToken)
     {
-        var result = await service.CreateAsync(request, cancellationToken);
+        CreateServiceOrderCommand command = new(request.ClientId, request.VehicleId, request.ServiceIds, request.Title, request.Description);
+        var result = await mediator.Send(command, cancellationToken);
         if (result.IsSuccess) await mediator.Publish(new ServiceOrderChangeStatusNotification(result.Data.Id, result.Data), cancellationToken);
         return result.ToActionResult();
     }
@@ -108,7 +115,7 @@ public sealed class ServiceOrdersController(IServiceOrderService service, IMedia
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.NotFound)]
     public async Task<IActionResult> DeleteAsync([FromRoute][Required] Guid id, CancellationToken cancellationToken)
     {
-        var result = await service.DeleteAsync(id, cancellationToken);
+        var result = await mediator.Send(new DeleteServiceOrderCommand(id), cancellationToken);
         return result.ToActionResult();
     }
 
@@ -127,8 +134,8 @@ public sealed class ServiceOrdersController(IServiceOrderService service, IMedia
     public async Task<IActionResult> UpdateAsync([FromRoute][Required] Guid id, [FromBody][Required] UpdateOneServiceOrderRequest request,
         CancellationToken cancellationToken)
     {
-        UpdateOneServiceOrderInput input = new(id, request.Title, request.Description, request.ServiceIds);
-        var result = await service.UpdateAsync(input, cancellationToken);
+        UpdateServiceOrderCommand command = new(id, request.Title, request.Description, request.ServiceIds);
+        var result = await mediator.Send(command, cancellationToken);
         return result.ToActionResult();
     }
 
@@ -150,7 +157,7 @@ public sealed class ServiceOrdersController(IServiceOrderService service, IMedia
     public async Task<IActionResult> PatchAsync([FromRoute][Required] Guid id, [FromBody][Required] PatchServiceOrderRequest request,
         CancellationToken cancellationToken)
     {
-        var result = await mediator.Send(new ServiceOrderChangeStatusCommand(id, request.Status), cancellationToken);
+        var result = await mediator.Send(new UpdateServiceOrderStatusCommand(id, request.Status), cancellationToken);
         return result.ToActionResult();
     }
 

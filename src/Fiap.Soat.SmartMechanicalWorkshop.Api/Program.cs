@@ -2,6 +2,7 @@ using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared.Extensions;
 using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared.Middlewares;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.Commands;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.Mappers;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.ServiceOrders.Update;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 using Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -35,7 +36,7 @@ _ = builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("
 _ = builder.Services.AddServiceExtensions();
 _ = builder.Services.AddRepositoryExtensions();
 _ = builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
-_ = builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ServiceOrderChangeStatusCommand).Assembly));
+_ = builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(UpdateServiceOrderStatusCommand).Assembly));
 _ = builder.Services.AddHttpContextAccessor();
 _ = builder.Services.AddHealthChecks();
 _ = builder.Services.AddRouting(options => options.LowercaseUrls = true);

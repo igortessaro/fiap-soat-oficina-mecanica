@@ -16,7 +16,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="UseCases\ServiceOrders\" />
+      <Folder Include="UseCases\Quotes\" />
     </ItemGroup>
 
 </Project>
