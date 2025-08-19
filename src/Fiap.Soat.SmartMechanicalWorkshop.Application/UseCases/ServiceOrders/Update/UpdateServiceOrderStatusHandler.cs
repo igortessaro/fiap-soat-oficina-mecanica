@@ -16,14 +16,6 @@ public sealed class UpdateServiceOrderStatusHandler(IMapper mapper, IMediator me
 {
     public async Task<Response<ServiceOrderDto>> Handle(UpdateServiceOrderStatusCommand request, CancellationToken cancellationToken)
     {
-        // var response = await service.PatchAsync(new PatchOneServiceOrderInput(request.Id, request.Status), cancellationToken);
-        // if (response.IsSuccess)
-        // {
-        //     await mediator.Publish(new ServiceOrderChangeStatusNotification(request.Id, response.Data), cancellationToken);
-        // }
-        //
-        // return response;
-
         var entity = await serviceOrderRepository.GetByIdAsync(request.Id, cancellationToken);
         if (entity is null)
         {
