@@ -1,6 +1,9 @@
 using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.People.Create;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.People.Delete;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.People.Get;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.People.List;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.People.Update;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Person;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.Interfaces;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
@@ -19,7 +22,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Controllers;
 [Route("api/v1/[controller]")]
 [ApiController]
 [Authorize]
-public sealed class PeopleController(IPersonService service, IMediator mediator) : ControllerBase
+public sealed class PeopleController(IMediator mediator) : ControllerBase
 {
     /// <summary>
     ///     Gets a person by its unique identifier.
@@ -33,7 +36,7 @@ public sealed class PeopleController(IPersonService service, IMediator mediator)
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.NotFound)]
     public async Task<IActionResult> GetOneAsync([FromRoute][Required] Guid id, CancellationToken cancellationToken)
     {
-        var result = await service.GetOneAsync(id, cancellationToken);
+        var result = await mediator.Send(new GetPersonByIdQuery(id), cancellationToken);
         return result.ToActionResult();
     }
 
@@ -46,9 +49,9 @@ public sealed class PeopleController(IPersonService service, IMediator mediator)
     [HttpGet]
     [SwaggerOperation(Summary = "Get all people (paginated)", Description = "Returns a paginated list of people.")]
     [ProducesResponseType(typeof(Paginate<PersonDto>), (int) HttpStatusCode.OK)]
-    public async Task<IActionResult> GetAllAsync([FromQuery][Required] PaginatedRequest paginatedRequest, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAllAsync([FromQuery][Required] ListPeopleQuery paginatedRequest, CancellationToken cancellationToken)
     {
-        var result = await service.GetAllAsync(paginatedRequest, cancellationToken);
+        var result = await mediator.Send(paginatedRequest, cancellationToken);
         return result.ToActionResult();
     }
 
@@ -100,9 +103,8 @@ public sealed class PeopleController(IPersonService service, IMediator mediator)
     public async Task<IActionResult> UpdateAsync([FromRoute][Required] Guid id, [FromBody][Required] UpdateOnePersonRequest request,
         CancellationToken cancellationToken)
     {
-        UpdateOnePersonInput input = new(id, request.Fullname, request.Document, request.PersonType, request.EmployeeRole, request.Email, request.Password,
-            request.Phone, request.Address);
-        var result = await service.UpdateAsync(input, cancellationToken);
+        UpdatePersonCommand input = new(id, request.Fullname, request.Document, request.PersonType, request.EmployeeRole, request.Email, request.Password, request.Phone, request.Address);
+        var result = await mediator.Send(input, cancellationToken);
         return result.ToActionResult();
     }
 }

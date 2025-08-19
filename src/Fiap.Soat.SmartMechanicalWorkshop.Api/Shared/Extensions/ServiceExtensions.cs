@@ -11,7 +11,6 @@ public static class ServiceExtensions
     {
         _ = serviceCollection.AddTransient<IVehicleService, VehicleService>();
         _ = serviceCollection.AddTransient<ISupplyService, SupplyService>();
-        _ = serviceCollection.AddTransient<IPersonService, PersonService>();
         _ = serviceCollection.AddTransient<IServiceOrderService, ServiceOrderService>();
         _ = serviceCollection.AddSingleton<IEmailService, EmailService>();
         _ = serviceCollection.AddSingleton<IEmailTemplateProvider, EmailTemplateProvider>();
