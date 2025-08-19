@@ -28,7 +28,6 @@ jobs:
         dotnet test tests/Fiap.Soat.SmartMechanicalWorkshop.Domain.Tests/Fiap.Soat.SmartMechanicalWorkshop.Domain.Tests.csproj
         dotnet test tests/Fiap.Soat.SmartMechanicalWorkshop.Application.Tests/Fiap.Soat.SmartMechanicalWorkshop.Application.Tests.csproj
 
-
   integration-tests:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
