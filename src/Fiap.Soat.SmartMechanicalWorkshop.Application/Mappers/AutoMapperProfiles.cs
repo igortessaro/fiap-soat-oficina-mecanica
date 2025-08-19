@@ -2,6 +2,8 @@ using AutoMapper;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.AvailableServices.Create;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.People.Create;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Supplies.Create;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Vehicles.Create;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Vehicles.Update;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.AvailableServices;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Person;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.ServiceOrders;
@@ -21,10 +23,10 @@ public class AutoMapperProfiles : Profile
     {
         CreateMap<Vehicle, VehicleDto>().ReverseMap();
         CreateMap<Paginate<Vehicle>, Paginate<VehicleDto>>().ReverseMap();
-        CreateMap<Vehicle, CreateNewVehicleRequest>()
+        CreateMap<Vehicle, CreateVehicleCommand>()
             .ReverseMap()
             .ConstructUsing(dest => new Vehicle(dest.Model, dest.Brand, dest.ManufactureYear, dest.LicensePlate, dest.PersonId));
-        CreateMap<Vehicle, UpdateOneVehicleRequest>().ReverseMap();
+        CreateMap<Vehicle, UpdateVehicleCommand>().ReverseMap();
 
         CreateMap<AvailableService, AvailableServiceDto>()
             .ConstructUsing(dest => new AvailableServiceDto(dest.Id, dest.Name, dest.Price, dest.AvailableServiceSupplies.Select(x => new SupplyDto(x.SupplyId, x.Supply.Name, x.Quantity, x.Supply.Price)).ToList()))

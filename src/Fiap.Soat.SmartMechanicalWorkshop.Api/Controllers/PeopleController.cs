@@ -5,7 +5,6 @@ using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.People.Get;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.People.List;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.People.Update;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Person;
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.Interfaces;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;

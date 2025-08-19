@@ -9,7 +9,6 @@ public static class ServiceExtensions
 {
     public static IServiceCollection AddServiceExtensions(this IServiceCollection serviceCollection)
     {
-        _ = serviceCollection.AddTransient<IVehicleService, VehicleService>();
         _ = serviceCollection.AddTransient<ISupplyService, SupplyService>();
         _ = serviceCollection.AddTransient<IServiceOrderService, ServiceOrderService>();
         _ = serviceCollection.AddSingleton<IEmailService, EmailService>();
