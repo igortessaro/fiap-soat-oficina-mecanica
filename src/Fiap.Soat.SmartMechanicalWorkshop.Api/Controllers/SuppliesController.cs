@@ -1,9 +1,9 @@
+using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Supplies.Create;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Supplies.Delete;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Supplies.Get;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Supplies.List;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Supplies.Update;
-using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Supplies;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.Interfaces;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
