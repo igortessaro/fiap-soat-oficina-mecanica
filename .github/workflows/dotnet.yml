@@ -53,22 +53,9 @@ jobs:
       - name: Unit Tests (Domain + Application with coverage)
         run: |
           dotnet test tests/Fiap.Soat.SmartMechanicalWorkshop.Domain.Tests/Fiap.Soat.SmartMechanicalWorkshop.Domain.Tests.csproj \
-            -c $CONFIGURATION --no-build --collect:"XPlat Code Coverage" --results-directory ./coverage --verbosity normal
+            -c $CONFIGURATION --no-build
           dotnet test tests/Fiap.Soat.SmartMechanicalWorkshop.Application.Tests/Fiap.Soat.SmartMechanicalWorkshop.Application.Tests.csproj \
-            -c $CONFIGURATION --no-build --collect:"XPlat Code Coverage" --results-directory ./coverage --verbosity normal
-      - name: Package coverage artifacts (PR only)
-        if: ${{ github.event_name == 'pull_request' }}
-        run: |
-          mkdir -p coverage-merged
-          # Simple gather; (advanced merge can use reportgenerator if desired)
-          cp coverage/*/*.xml coverage-merged/ || true
-      - name: Upload coverage (PR only)
-        if: ${{ github.event_name == 'pull_request' }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage
-          path: coverage-merged
-          if-no-files-found: warn
+            -c $CONFIGURATION --no-build
 
   integration_tests:
     name: Integration Tests
@@ -96,33 +83,34 @@ jobs:
     env:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Download coverage
-        uses: actions/download-artifact@v4
-        with:
-          name: coverage
-          path: coverage
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: 17
           distribution: zulu
-      - name: Cache Sonar Scanner
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Cache SonarQube Cloud packages
+        uses: actions/cache@v4
+        with:
+          path: ~\sonar\cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+      - name: Cache SonarQube Cloud scanner
+        id: cache-sonar-scanner
         uses: actions/cache@v4
         with:
           path: .\.sonar\scanner
-          key: sonar-scanner-${{ runner.os }}
-          restore-keys: sonar-scanner-
+          key: ${{ runner.os }}-sonar-scanner
+          restore-keys: ${{ runner.os }}-sonar-scanner
       - name: Install Sonar Scanner
         if: steps.cache.outputs.cache-hit != 'true'
         shell: powershell
         run: |
           New-Item -Path .\.sonar\scanner -ItemType Directory -Force
           dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
-      - name: Sonar Begin
+      - name: Build and analyze
         shell: powershell
         run: |
           .\.sonar\scanner\dotnet-sonarscanner begin `
@@ -133,9 +121,7 @@ jobs:
             /d:sonar.cs.opencover.reportsPaths="coverage/**/*.xml" `
             /d:sonar.coverage.exclusions="**Tests/**,**Integration.Tests/**,**/Configurations/**,**/Migrations/**" `
             /d:sonar.exclusions="**/*.sql,**/*Designer.cs"
-      - name: Rebuild (required for analysis)
-        run: dotnet build -c Release --no-incremental
-        shell: powershell
-      - name: Sonar End
-        shell: powershell
-        run: .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="$env:SONAR_TOKEN"
+          dotnet build --no-incremental
+          dotnet test tests/Fiap.Soat.SmartMechanicalWorkshop.Domain.Tests/Fiap.Soat.SmartMechanicalWorkshop.Domain.Tests.csproj --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage --settings coverlet.runsettings
+          dotnet test tests/Fiap.Soat.SmartMechanicalWorkshop.Application.Tests/Fiap.Soat.SmartMechanicalWorkshop.Application.Tests.csproj --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage --settings coverlet.runsettings
+          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
