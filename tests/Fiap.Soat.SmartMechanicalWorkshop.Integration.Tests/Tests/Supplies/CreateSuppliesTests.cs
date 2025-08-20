@@ -13,7 +13,7 @@ public sealed class CreateSuppliesTests : CustomWebApplicationFactory<Program>
     public async Task A0001_CreateAsync_WhenCreateAvailableService_ShouldReturn201()
     {
         // Arrange
-        var toCreate = new CreateSupplyCommand("Integration Tests", 0, 99);
+        var toCreate = new CreateSupplyCommand("Integration Tests", 99, 0);
         string json = JsonConvert.SerializeObject(toCreate);
         var content = new StringContent(json, MediaTypeHeaderValue.Parse("application/json"));
 
