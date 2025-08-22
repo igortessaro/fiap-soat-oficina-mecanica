@@ -1,14 +1,12 @@
 using Fiap.Soat.SmartMechanicalWorkshop.Api.Models.ServiceOrders;
 using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Quotes.Update;
-using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.ServiceOrders;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.ServiceOrders.Create;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.ServiceOrders.Delete;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.ServiceOrders.Get;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.ServiceOrders.List;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.ServiceOrders.Update;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.ServiceOrders;
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.Interfaces;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 using MediatR;

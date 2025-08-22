@@ -6,7 +6,6 @@ using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.AvailableServices.G
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.AvailableServices.List;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.AvailableServices.Update;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.AvailableServices;
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.Interfaces;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;

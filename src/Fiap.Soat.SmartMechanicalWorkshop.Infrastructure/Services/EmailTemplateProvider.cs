@@ -1,7 +1,6 @@
+using Fiap.Soat.SmartMechanicalWorkshop.Application.Ports;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.Interfaces;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
-using Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Services.Interfaces;
 using Microsoft.Extensions.Configuration;
 using System.Text;
 

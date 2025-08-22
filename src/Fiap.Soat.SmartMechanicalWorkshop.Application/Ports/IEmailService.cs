@@ -1,4 +1,4 @@
-namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Services.Interfaces;
+namespace Fiap.Soat.SmartMechanicalWorkshop.Application.Ports;
 
 public interface IEmailService
 {

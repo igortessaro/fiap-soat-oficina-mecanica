@@ -1,8 +1,7 @@
-using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.ServiceOrders;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.Ports;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.ServiceOrders.Update;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Repositories;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
-using Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Services.Interfaces;
 using MediatR;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Email;

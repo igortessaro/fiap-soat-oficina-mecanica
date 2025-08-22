@@ -1,13 +1,12 @@
-using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Quotes;
+using AutoMapper;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Quotes.Update;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Repositories;
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.Interfaces;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 using MediatR;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Stock;
 
-public sealed class ReplacementStockHandler(IQuoteRepository quoteRepository, ISupplyService supplyService) : INotificationHandler<UpdateQuoteStatusNotification>
+public sealed class ReplacementStockHandler(IMediator mediator, IQuoteRepository quoteRepository) : INotificationHandler<UpdateQuoteStatusNotification>
 {
     public async Task Handle(UpdateQuoteStatusNotification notification, CancellationToken cancellationToken)
     {
@@ -18,11 +17,11 @@ public sealed class ReplacementStockHandler(IQuoteRepository quoteRepository, IS
 
         foreach (var supply in quote.Supplies)
         {
-            var supplyResponse = await supplyService.ChangeStock(supply.SupplyId, supply.Quantity, false, cancellationToken);
+            var supplyResponse = await mediator.Send(new UpdateStockCommand(supply.SupplyId, supply.Quantity, false), cancellationToken);
 
             if (supplyResponse is { IsSuccess: true, Data.Quantity: <= 0 })
             {
-                await supplyService.ChangeStock(supply.SupplyId, 100 - supplyResponse.Data.Quantity, true, cancellationToken);
+                _ = await mediator.Send(new UpdateStockCommand(supply.SupplyId, 100 - supplyResponse.Data.Quantity, true), cancellationToken);
             }
         }
     }
