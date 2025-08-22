@@ -1,9 +1,9 @@
 using AutoFixture;
 using AutoMapper;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.Ports.Repositories;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.People.Create;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Person;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.Repositories;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 using Fiap.Soat.SmartMechanicalWorkshop.Tests.Shared.Factories;
 using FluentAssertions;

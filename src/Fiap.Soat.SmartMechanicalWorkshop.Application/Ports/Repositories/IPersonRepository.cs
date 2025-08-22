@@ -1,6 +1,6 @@
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 
-namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Repositories;
+namespace Fiap.Soat.SmartMechanicalWorkshop.Application.Ports.Repositories;
 
 public interface IPersonRepository : IRepository<Person>
 {

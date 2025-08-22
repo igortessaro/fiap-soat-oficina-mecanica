@@ -1,5 +1,5 @@
+using Fiap.Soat.SmartMechanicalWorkshop.Application.Ports.Repositories;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.Repositories;
 using Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 

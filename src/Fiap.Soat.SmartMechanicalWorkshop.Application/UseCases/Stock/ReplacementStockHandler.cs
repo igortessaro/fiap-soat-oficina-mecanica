@@ -1,6 +1,6 @@
 using AutoMapper;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.Ports.Repositories;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Quotes.Update;
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.Repositories;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 using MediatR;
 

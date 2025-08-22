@@ -2,7 +2,7 @@ using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 using System.Data.Common;
 using System.Linq.Expressions;
 
-namespace Fiap.Soat.SmartMechanicalWorkshop.Domain.Repositories;
+namespace Fiap.Soat.SmartMechanicalWorkshop.Application.Ports.Repositories;
 
 public interface IRepository<T> where T : class
 {

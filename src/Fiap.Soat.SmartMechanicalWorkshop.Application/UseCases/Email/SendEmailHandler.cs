@@ -1,6 +1,6 @@
 using Fiap.Soat.SmartMechanicalWorkshop.Application.Ports;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.Ports.Repositories;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.ServiceOrders.Update;
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.Repositories;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 using MediatR;
 
