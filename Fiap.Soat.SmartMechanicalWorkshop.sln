@@ -44,6 +44,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "040 - Frameworks & Drivers"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiap.Soat.SmartMechanicalWorkshop.InterfaceAdapters", "src\Fiap.Soat.SmartMechanicalWorkshop.InterfaceAdapters\Fiap.Soat.SmartMechanicalWorkshop.InterfaceAdapters.csproj", "{C3177642-A07C-4B49-98D3-2EE5074E1178}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiap.Soat.SmartMechanicalWorkshop.InterfaceAdapters.Tests", "tests\Fiap.Soat.SmartMechanicalWorkshop.InterfaceAdapters.Tests\Fiap.Soat.SmartMechanicalWorkshop.InterfaceAdapters.Tests.csproj", "{0E314F5E-9569-4708-A008-0E4E0B76C3F6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -86,6 +88,10 @@ Global
 		{C3177642-A07C-4B49-98D3-2EE5074E1178}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C3177642-A07C-4B49-98D3-2EE5074E1178}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C3177642-A07C-4B49-98D3-2EE5074E1178}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E314F5E-9569-4708-A008-0E4E0B76C3F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E314F5E-9569-4708-A008-0E4E0B76C3F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E314F5E-9569-4708-A008-0E4E0B76C3F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E314F5E-9569-4708-A008-0E4E0B76C3F6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -107,5 +113,6 @@ Global
 		{EA088CDD-F18D-40DB-8F33-469FF29FBB7B} = {9736A949-1389-4B66-8BA7-6C8183845A75}
 		{FE36A184-D53D-2F70-1A2E-8338B7D745C0} = {9736A949-1389-4B66-8BA7-6C8183845A75}
 		{C3177642-A07C-4B49-98D3-2EE5074E1178} = {D93450BC-6A35-4922-A286-126724EF5318}
+		{0E314F5E-9569-4708-A008-0E4E0B76C3F6} = {18B86828-EA31-43C1-BDC3-7B86955F1166}
 	EndGlobalSection
 EndGlobal
