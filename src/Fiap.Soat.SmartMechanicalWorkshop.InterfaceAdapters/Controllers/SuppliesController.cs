@@ -22,7 +22,7 @@ public sealed class SuppliesController(IMediator mediator) : ISuppliesController
 
     public async Task<IActionResult> GetAllAsync(PaginatedRequest paginatedQuery, CancellationToken cancellationToken)
     {
-        var response = await mediator.Send((ListSuppliesQuery)paginatedQuery, cancellationToken);
+        var response = await mediator.Send((ListSuppliesQuery) paginatedQuery, cancellationToken);
         return ActionResultPresenter.ToActionResult(response);
     }
 

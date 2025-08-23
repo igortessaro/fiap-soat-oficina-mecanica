@@ -43,7 +43,7 @@ public sealed class QuoteControllerTests
         // Assert
         var objectResult = result as ObjectResult;
         objectResult.Should().NotBeNull();
-        objectResult!.StatusCode.Should().Be((int)HttpStatusCode.OK);
+        objectResult!.StatusCode.Should().Be((int) HttpStatusCode.OK);
         objectResult.Value.Should().Be(response);
     }
 }

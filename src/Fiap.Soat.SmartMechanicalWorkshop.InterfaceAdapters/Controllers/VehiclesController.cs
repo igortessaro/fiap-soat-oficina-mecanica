@@ -22,7 +22,7 @@ public sealed class VehiclesController(IMediator mediator) : IVehiclesController
 
     public async Task<IActionResult> GetAllAsync(PaginatedRequest paginatedRequest, CancellationToken cancellationToken)
     {
-        var response = await mediator.Send((ListVehiclesQuery)paginatedRequest, cancellationToken);
+        var response = await mediator.Send((ListVehiclesQuery) paginatedRequest, cancellationToken);
         return ActionResultPresenter.ToActionResult(response);
     }
 

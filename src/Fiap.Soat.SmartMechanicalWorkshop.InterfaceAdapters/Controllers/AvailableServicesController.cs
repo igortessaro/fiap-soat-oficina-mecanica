@@ -22,7 +22,7 @@ public sealed class AvailableServicesController(IMediator mediator) : IAvailable
 
     public async Task<ActionResult> GetAllAsync(PaginatedRequest paginatedQuery, CancellationToken cancellationToken)
     {
-        var response = await mediator.Send((ListAvailableServicesQuery)paginatedQuery, cancellationToken);
+        var response = await mediator.Send((ListAvailableServicesQuery) paginatedQuery, cancellationToken);
         return ActionResultPresenter.ToActionResult(response);
     }
 

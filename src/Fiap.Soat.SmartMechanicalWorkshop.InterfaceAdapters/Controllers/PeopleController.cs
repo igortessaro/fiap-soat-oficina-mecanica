@@ -22,7 +22,7 @@ public sealed class PeopleController(IMediator mediator) : IPeopleController
 
     public async Task<IActionResult> GetAllAsync(PaginatedRequest paginatedRequest, CancellationToken cancellationToken)
     {
-        var response = await mediator.Send((ListPeopleQuery)paginatedRequest, cancellationToken);
+        var response = await mediator.Send((ListPeopleQuery) paginatedRequest, cancellationToken);
         return ActionResultPresenter.ToActionResult(response);
     }
 

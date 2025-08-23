@@ -43,7 +43,7 @@ public sealed class AvailableServicesControllerTests
         // Assert
         var objectResult = result as ObjectResult;
         objectResult.Should().NotBeNull();
-        objectResult!.StatusCode.Should().Be((int)HttpStatusCode.Created);
+        objectResult!.StatusCode.Should().Be((int) HttpStatusCode.Created);
         objectResult.Value.Should().Be(response);
     }
 
@@ -64,7 +64,7 @@ public sealed class AvailableServicesControllerTests
         // Assert
         var objectResult = result as ObjectResult;
         objectResult.Should().NotBeNull();
-        objectResult!.StatusCode.Should().Be((int)HttpStatusCode.OK);
+        objectResult!.StatusCode.Should().Be((int) HttpStatusCode.OK);
         objectResult.Value.Should().Be(response);
     }
 
@@ -86,7 +86,7 @@ public sealed class AvailableServicesControllerTests
         // Assert
         var objectResult = result as ObjectResult;
         objectResult.Should().NotBeNull();
-        objectResult!.StatusCode.Should().Be((int)HttpStatusCode.OK);
+        objectResult!.StatusCode.Should().Be((int) HttpStatusCode.OK);
         objectResult.Value.Should().Be(response);
     }
 
@@ -106,7 +106,7 @@ public sealed class AvailableServicesControllerTests
         // Assert
         var objectResult = result as ObjectResult;
         objectResult.Should().NotBeNull();
-        objectResult!.StatusCode.Should().Be((int)HttpStatusCode.NoContent);
+        objectResult!.StatusCode.Should().Be((int) HttpStatusCode.NoContent);
         objectResult.Value.Should().Be(response);
     }
 
@@ -128,7 +128,7 @@ public sealed class AvailableServicesControllerTests
         // Assert
         var objectResult = result as ObjectResult;
         objectResult.Should().NotBeNull();
-        objectResult!.StatusCode.Should().Be((int)HttpStatusCode.OK);
+        objectResult!.StatusCode.Should().Be((int) HttpStatusCode.OK);
         objectResult.Value.Should().Be(response);
     }
 }
