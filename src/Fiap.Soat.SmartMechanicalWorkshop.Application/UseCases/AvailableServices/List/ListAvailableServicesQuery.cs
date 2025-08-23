@@ -4,4 +4,8 @@ using MediatR;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.AvailableServices.List;
 
-public sealed class ListAvailableServicesQuery : PaginatedRequest, IRequest<Response<Paginate<AvailableServiceDto>>>;
+public record ListAvailableServicesQuery(int PageNumber, int PageSize) : IRequest<Response<Paginate<AvailableServiceDto>>>
+{
+    public static implicit operator ListAvailableServicesQuery(PaginatedRequest paginated) => new ListAvailableServicesQuery(paginated.PageNumber, paginated.PageSize);
+    public static implicit operator PaginatedRequest(ListAvailableServicesQuery paginated) => new PaginatedRequest(paginated.PageNumber, paginated.PageSize);
+}

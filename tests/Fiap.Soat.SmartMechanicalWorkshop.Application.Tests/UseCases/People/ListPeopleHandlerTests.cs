@@ -32,7 +32,7 @@ public sealed class ListPeopleHandlerTests
         var paginateDto = _fixture.Create<Paginate<PersonDto>>();
 
         _repositoryMock.Setup(r =>
-                r.GetAllAsync(new List<string> { nameof(Person.Vehicles), nameof(Person.Address) }, paginatedRequest, It.IsAny<CancellationToken>()))
+                r.GetAllAsync(new List<string> { nameof(Person.Vehicles), nameof(Person.Address) }, It.IsAny<PaginatedRequest>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(paginate);
         _mapperMock.Setup(m => m.Map<Paginate<PersonDto>>(paginate)).Returns(paginateDto);
 

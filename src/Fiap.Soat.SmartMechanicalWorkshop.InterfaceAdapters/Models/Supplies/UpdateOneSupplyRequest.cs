@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 
-namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Models.Supplies;
+namespace Fiap.Soat.SmartMechanicalWorkshop.InterfaceAdapters.Models.Supplies;
 
 [ExcludeFromCodeCoverage]
 public record UpdateOneSupplyRequest

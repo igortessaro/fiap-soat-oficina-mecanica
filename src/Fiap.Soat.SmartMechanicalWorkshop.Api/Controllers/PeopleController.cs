@@ -1,13 +1,7 @@
-using Fiap.Soat.SmartMechanicalWorkshop.Api.Models.Person;
-using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared;
-using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.People.Create;
-using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.People.Delete;
-using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.People.Get;
-using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.People.List;
-using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.People.Update;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Person;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
-using MediatR;
+using Fiap.Soat.SmartMechanicalWorkshop.InterfaceAdapters.Controllers.Interfaces;
+using Fiap.Soat.SmartMechanicalWorkshop.InterfaceAdapters.Models.Person;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -22,7 +16,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Controllers;
 [Route("api/v1/[controller]")]
 [ApiController]
 [Authorize]
-public sealed class PeopleController(IMediator mediator) : ControllerBase
+public sealed class PeopleController(IPeopleController controller) : ControllerBase
 {
     /// <summary>
     ///     Gets a person by its unique identifier.
@@ -34,11 +28,8 @@ public sealed class PeopleController(IMediator mediator) : ControllerBase
     [SwaggerOperation(Summary = "Get a person by ID", Description = "Returns a single person by its unique identifier.")]
     [ProducesResponseType(typeof(PersonDto), (int) HttpStatusCode.OK)]
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.NotFound)]
-    public async Task<IActionResult> GetOneAsync([FromRoute][Required] Guid id, CancellationToken cancellationToken)
-    {
-        var result = await mediator.Send(new GetPersonByIdQuery(id), cancellationToken);
-        return result.ToActionResult();
-    }
+    public async Task<IActionResult> GetOneAsync([FromRoute][Required] Guid id, CancellationToken cancellationToken) =>
+        await controller.GetOneAsync(id, cancellationToken);
 
     /// <summary>
     ///     Gets a paginated list of people.
@@ -49,11 +40,8 @@ public sealed class PeopleController(IMediator mediator) : ControllerBase
     [HttpGet]
     [SwaggerOperation(Summary = "Get all people (paginated)", Description = "Returns a paginated list of people.")]
     [ProducesResponseType(typeof(Paginate<PersonDto>), (int) HttpStatusCode.OK)]
-    public async Task<IActionResult> GetAllAsync([FromQuery][Required] ListPeopleQuery paginatedRequest, CancellationToken cancellationToken)
-    {
-        var result = await mediator.Send(paginatedRequest, cancellationToken);
-        return result.ToActionResult();
-    }
+    public async Task<IActionResult> GetAllAsync([FromQuery][Required] PaginatedRequest paginatedRequest, CancellationToken cancellationToken) =>
+        await controller.GetAllAsync(paginatedRequest, cancellationToken);
 
     /// <summary>
     ///     Creates a new person.
@@ -65,14 +53,8 @@ public sealed class PeopleController(IMediator mediator) : ControllerBase
     [SwaggerOperation(Summary = "Create a new person", Description = "Creates a new person and returns its data.")]
     [ProducesResponseType(typeof(PersonDto), (int) HttpStatusCode.Created)]
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.BadRequest)]
-    public async Task<IActionResult> CreateAsync([FromBody][Required] CreatePersonRequest request, CancellationToken cancellationToken)
-    {
-        var phone = new CreatePhoneCommand(request.Phone.AreaCode, request.Phone.Number);
-        var address = new CreateAddressCommand(request.Address.Street, request.Address.City, request.Address.State, request.Address.ZipCode);
-        CreatePersonCommand command = new(request.Fullname, request.Document, request.PersonType, request.EmployeeRole, request.Email, request.Password, phone, address);
-        var result = await mediator.Send(command, cancellationToken);
-        return result.ToActionResult();
-    }
+    public async Task<IActionResult> CreateAsync([FromBody][Required] CreatePersonRequest request, CancellationToken cancellationToken) =>
+        await controller.CreateAsync(request, cancellationToken);
 
     /// <summary>
     ///     Deletes a person by its unique identifier.
@@ -84,11 +66,8 @@ public sealed class PeopleController(IMediator mediator) : ControllerBase
     [SwaggerOperation(Summary = "Delete a person", Description = "Deletes a person by its unique identifier.")]
     [ProducesResponseType((int) HttpStatusCode.NoContent)]
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.NotFound)]
-    public async Task<IActionResult> DeleteAsync([FromRoute][Required] Guid id, CancellationToken cancellationToken)
-    {
-        var result = await mediator.Send(new DeletePersonCommand(id), cancellationToken);
-        return result.ToActionResult();
-    }
+    public async Task<IActionResult> DeleteAsync([FromRoute][Required] Guid id, CancellationToken cancellationToken) =>
+        await controller.DeleteAsync(id, cancellationToken);
 
     /// <summary>
     ///     Updates an existing person.
@@ -103,12 +82,5 @@ public sealed class PeopleController(IMediator mediator) : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.BadRequest)]
     public async Task<IActionResult> UpdateAsync([FromRoute][Required] Guid id, [FromBody][Required] UpdateOnePersonRequest request,
-        CancellationToken cancellationToken)
-    {
-        var phone = request.Phone != null ? new UpdatePhoneCommand(request.Phone.AreaCode, request.Phone.Number) : null;
-        var address = request.Address != null ? new UpdateAddressCommand(request.Address.Street, request.Address.City, request.Address.State, request.Address.ZipCode) : null;
-        UpdatePersonCommand input = new(id, request.Fullname, request.Document, request.PersonType, request.EmployeeRole, request.Email, request.Password, phone, address);
-        var result = await mediator.Send(input, cancellationToken);
-        return result.ToActionResult();
-    }
+        CancellationToken cancellationToken) => await controller.UpdateAsync(id, request, cancellationToken);
 }

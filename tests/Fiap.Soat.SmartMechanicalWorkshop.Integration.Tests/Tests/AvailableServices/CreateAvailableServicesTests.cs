@@ -1,6 +1,6 @@
-using Fiap.Soat.SmartMechanicalWorkshop.Api.Models.AvailableServices;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.AvailableServices;
 using Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Data;
+using Fiap.Soat.SmartMechanicalWorkshop.InterfaceAdapters.Models.AvailableServices;
 using Fiap.Soat.SmartMechanicalWorkshop.Tests.Shared.Factories;
 using Newtonsoft.Json;
 using System.Net;

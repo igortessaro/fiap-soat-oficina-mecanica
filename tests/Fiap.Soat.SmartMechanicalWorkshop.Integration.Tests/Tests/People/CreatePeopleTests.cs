@@ -1,8 +1,8 @@
 using Bogus;
 using Bogus.Extensions.Brazil;
-using Fiap.Soat.SmartMechanicalWorkshop.Api.Models.Person;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Person;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
+using Fiap.Soat.SmartMechanicalWorkshop.InterfaceAdapters.Models.Person;
 using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http.Headers;

@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 
-namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Models.Vehicles;
+namespace Fiap.Soat.SmartMechanicalWorkshop.InterfaceAdapters.Models.Vehicles;
 
 [ExcludeFromCodeCoverage]
 public record UpdateOneVehicleRequest

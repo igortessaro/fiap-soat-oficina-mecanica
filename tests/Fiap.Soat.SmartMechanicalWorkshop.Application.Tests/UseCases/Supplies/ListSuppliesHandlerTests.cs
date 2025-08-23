@@ -30,7 +30,7 @@ public sealed class ListSuppliesHandlerTests
         var paginate = _fixture.Create<Paginate<Supply>>();
         var paginateDto = _fixture.Create<Paginate<SupplyDto>>();
 
-        _repositoryMock.Setup(r => r.GetAllAsync(paginatedRequest, It.IsAny<CancellationToken>())).ReturnsAsync(paginate);
+        _repositoryMock.Setup(r => r.GetAllAsync(It.IsAny<PaginatedRequest>(), It.IsAny<CancellationToken>())).ReturnsAsync(paginate);
         _mapperMock.Setup(m => m.Map<Paginate<SupplyDto>>(paginate)).Returns(paginateDto);
 
         // Act

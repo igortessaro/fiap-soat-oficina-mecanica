@@ -1,7 +1,7 @@
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Models.Person;
+namespace Fiap.Soat.SmartMechanicalWorkshop.InterfaceAdapters.Models.Person;
 
 [ExcludeFromCodeCoverage]
 public record UpdateOnePersonRequest(

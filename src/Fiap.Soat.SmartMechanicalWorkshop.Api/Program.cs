@@ -4,6 +4,7 @@ using Fiap.Soat.SmartMechanicalWorkshop.Application.Mappers;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.ServiceOrders.Update;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 using Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Data;
+using Fiap.Soat.SmartMechanicalWorkshop.InterfaceAdapters.Shared;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using System.Text.Json.Serialization;
@@ -42,6 +43,7 @@ _ = builder.Services.AddRouting(options => options.LowercaseUrls = true);
 _ = builder.Services.AddAuthenticationExtension(builder.Configuration);
 _ = builder.Services.AddSwaggerExtension(builder.Configuration);
 _ = builder.Services.AddMemoryCache();
+_ = builder.Services.AddInterfaceAdapters();
 
 var app = builder.Build();
 if (app.Environment.IsDevelopment())

@@ -1,13 +1,7 @@
-using Fiap.Soat.SmartMechanicalWorkshop.Api.Models.Vehicles;
-using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared;
-using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Vehicles.Create;
-using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Vehicles.Delete;
-using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Vehicles.Get;
-using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Vehicles.List;
-using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Vehicles.Update;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Vehicles;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
-using MediatR;
+using Fiap.Soat.SmartMechanicalWorkshop.InterfaceAdapters.Controllers.Interfaces;
+using Fiap.Soat.SmartMechanicalWorkshop.InterfaceAdapters.Models.Vehicles;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -23,7 +17,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Controllers;
 [ApiController]
 [Authorize]
 [SwaggerTag("Operations related to vehicles.")]
-public class VehiclesController(IMediator mediator) : ControllerBase
+public class VehiclesController(IVehiclesController controller) : ControllerBase
 {
     /// <summary>
     ///     Gets a vehicle by its unique identifier.
@@ -35,11 +29,7 @@ public class VehiclesController(IMediator mediator) : ControllerBase
     [SwaggerOperation(Summary = "Get a vehicle by ID", Description = "Returns a single vehicle by its unique identifier.")]
     [ProducesResponseType(typeof(VehicleDto), (int) HttpStatusCode.OK)]
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.NotFound)]
-    public async Task<IActionResult> GetOneAsync([FromRoute][Required] Guid id, CancellationToken cancellationToken)
-    {
-        var result = await mediator.Send(new GetVehicleByIdQuery(id), cancellationToken);
-        return result.ToActionResult();
-    }
+    public async Task<IActionResult> GetOneAsync([FromRoute][Required] Guid id, CancellationToken cancellationToken) => await controller.GetOneAsync(id, cancellationToken);
 
     /// <summary>
     ///     Gets a paginated list of vehicles.
@@ -50,11 +40,8 @@ public class VehiclesController(IMediator mediator) : ControllerBase
     [HttpGet]
     [SwaggerOperation(Summary = "Get all vehicles (paginated)", Description = "Returns a paginated list of vehicles.")]
     [ProducesResponseType(typeof(Paginate<VehicleDto>), (int) HttpStatusCode.OK)]
-    public async Task<IActionResult> GetAllAsync([FromQuery][Required] ListVehiclesQuery paginatedRequest, CancellationToken cancellationToken)
-    {
-        var result = await mediator.Send(paginatedRequest, cancellationToken);
-        return result.ToActionResult();
-    }
+    public async Task<IActionResult> GetAllAsync([FromQuery][Required] PaginatedRequest paginatedRequest, CancellationToken cancellationToken) =>
+        await controller.GetAllAsync(paginatedRequest, cancellationToken);
 
     /// <summary>
     ///     Creates a new vehicle.
@@ -66,12 +53,8 @@ public class VehiclesController(IMediator mediator) : ControllerBase
     [SwaggerOperation(Summary = "Create a new vehicle", Description = "Creates a new vehicle and returns its data.")]
     [ProducesResponseType(typeof(VehicleDto), (int) HttpStatusCode.Created)]
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.BadRequest)]
-    public async Task<IActionResult> CreateAsync([FromBody][Required] CreateNewVehicleRequest request, CancellationToken cancellationToken)
-    {
-        CreateVehicleCommand command = new(request.LicensePlate, request.ManufactureYear, request.Brand, request.Model, request.PersonId);
-        var result = await mediator.Send(command, cancellationToken);
-        return result.ToActionResult();
-    }
+    public async Task<IActionResult> CreateAsync([FromBody][Required] CreateNewVehicleRequest request, CancellationToken cancellationToken) =>
+        await controller.CreateAsync(request, cancellationToken);
 
     /// <summary>
     ///     Deletes a vehicle by its unique identifier.
@@ -83,11 +66,8 @@ public class VehiclesController(IMediator mediator) : ControllerBase
     [SwaggerOperation(Summary = "Delete a vehicle", Description = "Deletes a vehicle by its unique identifier.")]
     [ProducesResponseType((int) HttpStatusCode.NoContent)]
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.NotFound)]
-    public async Task<IActionResult> DeleteAsync([FromRoute][Required] Guid id, CancellationToken cancellationToken)
-    {
-        var result = await mediator.Send(new DeleteVehicleCommand(id), cancellationToken);
-        return result.ToActionResult();
-    }
+    public async Task<IActionResult> DeleteAsync([FromRoute][Required] Guid id, CancellationToken cancellationToken) =>
+        await controller.DeleteAsync(id, cancellationToken);
 
     /// <summary>
     ///     Updates an existing vehicle.
@@ -102,10 +82,5 @@ public class VehiclesController(IMediator mediator) : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.BadRequest)]
     public async Task<IActionResult> UpdateAsync([FromRoute][Required] Guid id, [FromBody][Required] UpdateOneVehicleRequest request,
-        CancellationToken cancellationToken)
-    {
-        UpdateVehicleCommand command = new(id, request.LicensePlate, request.ManufactureYear, request.Brand, request.Model, request.PersonId);
-        var result = await mediator.Send(command, cancellationToken);
-        return result.ToActionResult();
-    }
+        CancellationToken cancellationToken) => await controller.UpdateAsync(id, request, cancellationToken);
 }

@@ -1,13 +1,8 @@
-using Fiap.Soat.SmartMechanicalWorkshop.Api.Models.Supplies;
-using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Supplies.Create;
-using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Supplies.Delete;
-using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Supplies.Get;
-using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Supplies.List;
-using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Supplies.Update;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Supplies;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
-using MediatR;
+using Fiap.Soat.SmartMechanicalWorkshop.InterfaceAdapters.Controllers.Interfaces;
+using Fiap.Soat.SmartMechanicalWorkshop.InterfaceAdapters.Models.Supplies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
@@ -20,7 +15,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Controllers;
 [Route("api/v1/[controller]")]
 [ApiController]
 [Authorize]
-public sealed class SuppliesController(IMediator mediator) : ControllerBase
+public sealed class SuppliesController(ISuppliesController controller) : ControllerBase
 {
     /// <summary>
     ///     Gets a supply by its unique identifier.
@@ -33,11 +28,8 @@ public sealed class SuppliesController(IMediator mediator) : ControllerBase
     [HttpGet("{id:guid}")]
     [ProducesResponseType(typeof(SupplyDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> GetOneAsync([FromRoute][Required] Guid id, CancellationToken cancellationToken)
-    {
-        var result = await mediator.Send(new GetSupplyByIdQuery(id), cancellationToken);
-        return result.ToActionResult();
-    }
+    public async Task<IActionResult> GetOneAsync([FromRoute][Required] Guid id, CancellationToken cancellationToken) =>
+        await controller.GetOneAsync(id, cancellationToken);
 
     /// <summary>
     ///     Gets a paginated list of all supplies.
@@ -48,11 +40,8 @@ public sealed class SuppliesController(IMediator mediator) : ControllerBase
     /// <response code="200">Returns the paginated list of supplies.</response>
     [HttpGet]
     [ProducesResponseType(typeof(Paginate<SupplyDto>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetAllAsync([FromQuery][Required] ListSuppliesQuery paginatedQuery, CancellationToken cancellationToken)
-    {
-        var result = await mediator.Send(paginatedQuery, cancellationToken);
-        return result.ToActionResult();
-    }
+    public async Task<IActionResult> GetAllAsync([FromQuery][Required] PaginatedRequest paginatedQuery, CancellationToken cancellationToken) =>
+        await controller.GetAllAsync(paginatedQuery, cancellationToken);
 
     /// <summary>
     ///     Creates a new supply.
@@ -65,11 +54,8 @@ public sealed class SuppliesController(IMediator mediator) : ControllerBase
     [HttpPost]
     [ProducesResponseType(typeof(SupplyDto), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> CreateAsync([FromBody][Required] CreateSupplyCommand command, CancellationToken cancellationToken)
-    {
-        var result = await mediator.Send(command, cancellationToken);
-        return result.ToActionResult();
-    }
+    public async Task<IActionResult> CreateAsync([FromBody][Required] CreateSupplyCommand command, CancellationToken cancellationToken) =>
+        await controller.CreateAsync(command, cancellationToken);
 
     /// <summary>
     ///     Deletes a supply by its unique identifier.
@@ -82,11 +68,8 @@ public sealed class SuppliesController(IMediator mediator) : ControllerBase
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> DeleteAsync([FromRoute][Required] Guid id, CancellationToken cancellationToken)
-    {
-        var result = await mediator.Send(new DeleteSupplyCommand(id), cancellationToken);
-        return result.ToActionResult();
-    }
+    public async Task<IActionResult> DeleteAsync([FromRoute][Required] Guid id, CancellationToken cancellationToken) =>
+        await controller.DeleteAsync(id, cancellationToken);
 
     /// <summary>
     ///     Updates an existing supply.
@@ -101,9 +84,5 @@ public sealed class SuppliesController(IMediator mediator) : ControllerBase
     [ProducesResponseType(typeof(SupplyDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UpdateAsync([FromRoute][Required] Guid id, [FromBody][Required] UpdateOneSupplyRequest request,
-        CancellationToken cancellationToken)
-    {
-        var result = await mediator.Send(new UpdateSupplyCommand(id, request.Name, request.Quantity, request.Price), cancellationToken);
-        return result.ToActionResult();
-    }
+        CancellationToken cancellationToken) => await controller.UpdateAsync(id, request, cancellationToken);
 }

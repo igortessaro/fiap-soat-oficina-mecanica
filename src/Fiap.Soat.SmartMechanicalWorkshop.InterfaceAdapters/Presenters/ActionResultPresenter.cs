@@ -6,4 +6,6 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.InterfaceAdapters.Presenters;
 public static class ActionResultPresenter
 {
     public static ActionResult ToActionResult(Response result) => new ObjectResult(result) { StatusCode = (int?) result.StatusCode };
+
+    public static ActionResult ToActionResult<T>(Response<T> result) => new ObjectResult(result) { StatusCode = (int?) result.StatusCode };
 }

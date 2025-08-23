@@ -1,8 +1,7 @@
-using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.AvailableServices.Create;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Models.AvailableServices;
+namespace Fiap.Soat.SmartMechanicalWorkshop.InterfaceAdapters.Models.AvailableServices;
 
 [ExcludeFromCodeCoverage]
 public record CreateAvailableServiceRequest(
