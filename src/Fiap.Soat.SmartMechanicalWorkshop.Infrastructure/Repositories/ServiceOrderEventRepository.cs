@@ -1,4 +1,4 @@
-using Fiap.Soat.SmartMechanicalWorkshop.Application.Ports.Repositories;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.Adapters.Gateways.Repositories;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.ServiceOrders;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;

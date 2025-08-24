@@ -25,7 +25,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Fiap.Soat.SmartMechanicalWorkshop.Infrastructure\Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.csproj" />
-        <ProjectReference Include="..\Fiap.Soat.SmartMechanicalWorkshop.InterfaceAdapters\Fiap.Soat.SmartMechanicalWorkshop.InterfaceAdapters.csproj" />
     </ItemGroup>
 
     <ItemGroup>

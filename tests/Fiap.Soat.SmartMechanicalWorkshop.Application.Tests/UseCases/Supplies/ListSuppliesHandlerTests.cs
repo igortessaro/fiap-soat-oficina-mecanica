@@ -1,6 +1,6 @@
 using AutoFixture;
 using AutoMapper;
-using Fiap.Soat.SmartMechanicalWorkshop.Application.Ports.Repositories;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.Adapters.Gateways.Repositories;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Supplies.List;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Supplies;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;

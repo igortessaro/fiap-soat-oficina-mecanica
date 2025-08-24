@@ -29,7 +29,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\Fiap.Soat.SmartMechanicalWorkshop.InterfaceAdapters\Fiap.Soat.SmartMechanicalWorkshop.InterfaceAdapters.csproj" />
       <ProjectReference Include="..\Fiap.Soat.SmartMechanicalWorkshop.Tests.Shared\Fiap.Soat.SmartMechanicalWorkshop.Tests.Shared.csproj" />
     </ItemGroup>
 

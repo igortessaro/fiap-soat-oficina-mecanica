@@ -1,5 +1,5 @@
 using AutoFixture;
-using Fiap.Soat.SmartMechanicalWorkshop.Application.Ports.Repositories;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.Adapters.Gateways.Repositories;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Authentication.Login;
 using Fiap.Soat.SmartMechanicalWorkshop.Tests.Shared.Factories;
 using FluentAssertions;

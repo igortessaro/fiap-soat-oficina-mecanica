@@ -1,5 +1,5 @@
 using AutoFixture;
-using Fiap.Soat.SmartMechanicalWorkshop.Application.Ports.Repositories;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.Adapters.Gateways.Repositories;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.AvailableServices.Delete;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 using FluentAssertions;

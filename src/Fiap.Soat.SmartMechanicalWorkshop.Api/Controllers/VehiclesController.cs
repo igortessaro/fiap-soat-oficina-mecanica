@@ -1,11 +1,12 @@
+using Fiap.Soat.SmartMechanicalWorkshop.Application.Adapters.Controllers.Interfaces;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.Models.Vehicles;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Vehicles;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
-using Fiap.Soat.SmartMechanicalWorkshop.InterfaceAdapters.Controllers.Interfaces;
-using Fiap.Soat.SmartMechanicalWorkshop.InterfaceAdapters.Models.Vehicles;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Controllers;
@@ -13,6 +14,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Controllers;
 /// <summary>
 ///     Controller for managing vehicles in the Smart Mechanical Workshop API.
 /// </summary>
+[ExcludeFromCodeCoverage]
 [Route("api/v1/[controller]")]
 [ApiController]
 [Authorize]

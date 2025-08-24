@@ -1,11 +1,13 @@
+using Fiap.Soat.SmartMechanicalWorkshop.Application.Adapters.Controllers.Interfaces;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.Models.Authentication;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
-using Fiap.Soat.SmartMechanicalWorkshop.InterfaceAdapters.Controllers.Interfaces;
-using Fiap.Soat.SmartMechanicalWorkshop.InterfaceAdapters.Models.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Controllers;
 
+[ExcludeFromCodeCoverage]
 [ApiController]
 [Route("auth")]
 public class AuthController(IAuthenticationController controller) : ControllerBase

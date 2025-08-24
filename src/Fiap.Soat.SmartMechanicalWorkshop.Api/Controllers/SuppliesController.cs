@@ -1,17 +1,19 @@
+using Fiap.Soat.SmartMechanicalWorkshop.Application.Adapters.Controllers.Interfaces;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.Models.Supplies;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Supplies.Create;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Supplies;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
-using Fiap.Soat.SmartMechanicalWorkshop.InterfaceAdapters.Controllers.Interfaces;
-using Fiap.Soat.SmartMechanicalWorkshop.InterfaceAdapters.Models.Supplies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Controllers;
 
 /// <summary>
 ///     Controller for managing supplies.
 /// </summary>
+[ExcludeFromCodeCoverage]
 [Route("api/v1/[controller]")]
 [ApiController]
 [Authorize]
