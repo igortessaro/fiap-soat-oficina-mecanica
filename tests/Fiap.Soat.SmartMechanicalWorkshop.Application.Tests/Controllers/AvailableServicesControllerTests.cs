@@ -37,7 +37,7 @@ public sealed class AvailableServicesControllerTests
     {
         // Arrange
         var request = _fixture.Create<CreateAvailableServiceRequest>();
-        var response = new Response<AvailableServiceDto>(_fixture.Create<AvailableServiceDto>(), HttpStatusCode.Created);
+        var response = new Response<AvailableService>(_fixture.Create<AvailableService>(), HttpStatusCode.Created);
 
         _mediatorMock.Setup(m => m.Send(It.IsAny<CreateAvailableServiceCommand>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(response);
@@ -49,7 +49,7 @@ public sealed class AvailableServicesControllerTests
         var objectResult = result as ObjectResult;
         objectResult.Should().NotBeNull();
         objectResult!.StatusCode.Should().Be((int) HttpStatusCode.Created);
-        objectResult.Value.Should().Be(response);
+        objectResult.Value.Should().BeOfType<Response<AvailableServiceDto>>();
     }
 
     [Fact]
@@ -57,11 +57,11 @@ public sealed class AvailableServicesControllerTests
     {
         // Arrange
         var id = _fixture.Create<Guid>();
-        var availableService = _fixture.Create<AvailableService>();
-        var availableServiceDto = _fixture.Create<AvailableServiceDto>();
+        var query = new GetAvailableServiceByIdQuery(id);
+        var response = new Response<AvailableServiceDto>(_fixture.Create<AvailableServiceDto>(), HttpStatusCode.OK);
 
-        _availableServiceRepositoryMock.Setup(x => x.GetAsync(id, CancellationToken.None)).ReturnsAsync(availableService);
-        _mapperMock.Setup(x => x.Map<AvailableServiceDto>(availableService)).Returns(availableServiceDto);
+        _mediatorMock.Setup(m => m.Send(query, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(response);
 
         // Act
         var result = await _controller.GetAsync(id, CancellationToken.None);
@@ -70,8 +70,7 @@ public sealed class AvailableServicesControllerTests
         var objectResult = result as ObjectResult;
         objectResult.Should().NotBeNull();
         objectResult!.StatusCode.Should().Be((int) HttpStatusCode.OK);
-        _availableServiceRepositoryMock.Verify(x => x.GetAsync(id, CancellationToken.None), Times.Once);
-        _mapperMock.Verify(x => x.Map<AvailableServiceDto>(availableService), Times.Once);
+        objectResult.Value.Should().Be(response);
     }
 
     [Fact]

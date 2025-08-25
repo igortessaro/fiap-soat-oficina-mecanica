@@ -11,19 +11,19 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.AvailableServic
 public sealed class CreateAvailableServiceHandler(
     IMapper mapper,
     IAvailableServiceRepository availableServiceRepository,
-    ISupplyRepository supplyRepository) : IRequestHandler<CreateAvailableServiceCommand, Response<AvailableServiceDto>>
+    ISupplyRepository supplyRepository) : IRequestHandler<CreateAvailableServiceCommand, Response<AvailableService>>
 {
-    public async Task<Response<AvailableServiceDto>> Handle(CreateAvailableServiceCommand request, CancellationToken cancellationToken)
+    public async Task<Response<AvailableService>> Handle(CreateAvailableServiceCommand request, CancellationToken cancellationToken)
     {
         var entity = mapper.Map<AvailableService>(request);
         if (await availableServiceRepository.AnyAsync(x => request.Name.ToLower().Equals(x.Name.ToLower()), cancellationToken))
         {
-            return ResponseFactory.Fail<AvailableServiceDto>($"AvailableService with name {request.Name} already exists", HttpStatusCode.Conflict);
+            return ResponseFactory.Fail<AvailableService>($"AvailableService with name {request.Name} already exists", HttpStatusCode.Conflict);
         }
 
         if (!request.Supplies.Any())
         {
-            return ResponseFactory.Ok(mapper.Map<AvailableServiceDto>(await availableServiceRepository.AddAsync(entity, cancellationToken)), HttpStatusCode.Created);
+            return ResponseFactory.Ok(await availableServiceRepository.AddAsync(entity, cancellationToken), HttpStatusCode.Created);
         }
 
         foreach (var supply in request.Supplies)
@@ -31,13 +31,13 @@ public sealed class CreateAvailableServiceHandler(
             var foundSupply = await supplyRepository.GetByIdAsync(supply.SupplyId, cancellationToken);
             if (foundSupply is null)
             {
-                return ResponseFactory.Fail<AvailableServiceDto>($"Supply with ID {supply} not found", HttpStatusCode.NotFound);
+                return ResponseFactory.Fail<AvailableService>($"Supply with ID {supply} not found", HttpStatusCode.NotFound);
             }
 
             _ = entity.AddSupply(supply.SupplyId, supply.Quantity);
         }
 
         var created = await availableServiceRepository.AddAsync(entity, cancellationToken);
-        return ResponseFactory.Ok(mapper.Map<AvailableServiceDto>(created), HttpStatusCode.Created);
+        return ResponseFactory.Ok(created, HttpStatusCode.Created);
     }
 }

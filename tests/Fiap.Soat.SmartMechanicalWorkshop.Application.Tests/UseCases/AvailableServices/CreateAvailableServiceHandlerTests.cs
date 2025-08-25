@@ -31,18 +31,16 @@ public sealed class CreateAvailableServiceHandlerTests
             .With(x => x.Supplies, [])
             .Create();
         var entity = _fixture.Create<AvailableService>();
-        var dto = _fixture.Create<AvailableServiceDto>();
 
         _mapperMock.Setup(m => m.Map<AvailableService>(request)).Returns(entity);
         _repositoryMock.Setup(r => r.AddAsync(entity, It.IsAny<CancellationToken>())).ReturnsAsync(entity);
-        _mapperMock.Setup(m => m.Map<AvailableServiceDto>(entity)).Returns(dto);
 
         // Act
         var result = await _useCase.Handle(request, CancellationToken.None);
 
         // Assert
         result.StatusCode.Should().Be(HttpStatusCode.Created);
-        result.Data.Should().Be(dto);
+        result.Data.Should().Be(entity);
     }
 
     [Fact]
@@ -76,18 +74,16 @@ public sealed class CreateAvailableServiceHandlerTests
             .Create();
         var entity = _fixture.Create<AvailableService>();
         var supply = _fixture.Create<Supply>();
-        var dto = _fixture.Create<AvailableServiceDto>();
 
         _mapperMock.Setup(m => m.Map<AvailableService>(request)).Returns(entity);
         _supplyRepositoryMock.Setup(s => s.GetByIdAsync(supplyId, It.IsAny<CancellationToken>())).ReturnsAsync(supply);
         _repositoryMock.Setup(r => r.AddAsync(entity, It.IsAny<CancellationToken>())).ReturnsAsync(entity);
-        _mapperMock.Setup(m => m.Map<AvailableServiceDto>(entity)).Returns(dto);
 
         // Act
         var result = await _useCase.Handle(request, CancellationToken.None);
 
         // Assert
         result.StatusCode.Should().Be(HttpStatusCode.Created);
-        result.Data.Should().Be(dto);
+        result.Data.Should().Be(entity);
     }
 }

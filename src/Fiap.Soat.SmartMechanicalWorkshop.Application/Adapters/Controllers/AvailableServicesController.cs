@@ -33,7 +33,9 @@ public sealed class AvailableServicesController(IMediator mediator) : IAvailable
         var supplies = request.Supplies?.Select(x => new CreateServiceSupplyCommand(x.SupplyId, x.Quantity)).ToList() ?? [];
         var command = new CreateAvailableServiceCommand(request.Name, request.Price, supplies);
         var response = await mediator.Send(command, cancellationToken);
-        return ActionResultPresenter.ToActionResult(response);
+        if (!response.IsSuccess) ActionResultPresenter.ToActionResult(response);
+        var result = AvailableServicePresenter.ToDto(response.Data, response.StatusCode);
+        return ActionResultPresenter.ToActionResult(result);
     }
 
     public async Task<IActionResult> DeleteAsync(Guid id, CancellationToken cancellationToken)
