@@ -124,4 +124,4 @@ jobs:
           dotnet build --no-incremental
           dotnet test tests/Fiap.Soat.SmartMechanicalWorkshop.Domain.Tests/Fiap.Soat.SmartMechanicalWorkshop.Domain.Tests.csproj --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage --settings coverlet.runsettings
           dotnet test tests/Fiap.Soat.SmartMechanicalWorkshop.Application.Tests/Fiap.Soat.SmartMechanicalWorkshop.Application.Tests.csproj --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage --settings coverlet.runsettings
-          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="$env:SONAR_TOKEN"
