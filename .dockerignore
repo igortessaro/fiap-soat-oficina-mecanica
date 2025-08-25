@@ -28,3 +28,12 @@ README.md
 !.git/config
 !.git/packed-refs
 !.git/refs/heads/**
+.vscode
+**/bin/
+**/obj/
+**/TestResults/
+**/coverage/
+**/*.user
+**/*.suo
+Dockerfile
+docker-compose*.yml
