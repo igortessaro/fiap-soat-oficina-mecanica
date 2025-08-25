@@ -142,33 +142,6 @@ public sealed class ServiceOrderTests
         mockState.Verify(s => s.ChangeStatus(order, ServiceOrderStatus.Completed), Times.Once);
     }
 
-    // [Theory]
-    // [InlineData(ServiceOrderStatus.Received, typeof(ReceivedState))]
-    // [InlineData(ServiceOrderStatus.UnderDiagnosis, typeof(UnderDiagnosisState))]
-    // [InlineData(ServiceOrderStatus.WaitingApproval, typeof(WaitingApprovalState))]
-    // [InlineData(ServiceOrderStatus.InProgress, typeof(InProgressState))]
-    // [InlineData(ServiceOrderStatus.Completed, typeof(CompletedState))]
-    // [InlineData(ServiceOrderStatus.Delivered, typeof(DeliveredState))]
-    // [InlineData(ServiceOrderStatus.Cancelled, typeof(CancelledState))]
-    // [InlineData(ServiceOrderStatus.Rejected, typeof(RejectedState))]
-    // public void ChangeStatus_ShouldSetCorrectState(ServiceOrderStatus status, Type expectedType)
-    // {
-    //     // Arrange
-    //     var order = new ServiceOrder("t", "d", Guid.NewGuid(), Guid.NewGuid());
-    //     order.SetState(new ReceivedState());
-    //     typeof(ServiceOrder)
-    //         .GetProperty("Status", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Public)
-    //         ?.SetValue(order, status);
-    //
-    //     // Act
-    //     order.ChangeStatus(expectedType);
-    //
-    //     // Assert
-    //     order.GetType().GetField("_state", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
-    //         ?.GetValue(order)
-    //         .Should().BeOfType(expectedType);
-    // }
-
     [Theory]
     [InlineData(ServiceOrderStatus.Received, ServiceOrderStatus.UnderDiagnosis)]
     [InlineData(ServiceOrderStatus.UnderDiagnosis, ServiceOrderStatus.WaitingApproval)]
@@ -177,7 +150,6 @@ public sealed class ServiceOrderTests
     [InlineData(ServiceOrderStatus.WaitingApproval, ServiceOrderStatus.Cancelled)]
     [InlineData(ServiceOrderStatus.InProgress, ServiceOrderStatus.Completed)]
     [InlineData(ServiceOrderStatus.Completed, ServiceOrderStatus.Delivered)]
-    // [InlineData(ServiceOrderStatus.Delivered, typeof(DeliveredState))]
     [InlineData(ServiceOrderStatus.Cancelled, ServiceOrderStatus.Delivered)]
     [InlineData(ServiceOrderStatus.Rejected, ServiceOrderStatus.WaitingApproval)]
     [InlineData(ServiceOrderStatus.Delivered, ServiceOrderStatus.Delivered)]
@@ -197,7 +169,7 @@ public sealed class ServiceOrderTests
         // Assert
         order.Status.Should().Be(nextStatus);
     }
-    // Received, UnderDiagnosis, WaitingApproval, InProgress, Completed, Delivered, Cancelled, Rejected
+
     [Theory]
     [InlineData(ServiceOrderStatus.Received, ServiceOrderStatus.WaitingApproval)]
     [InlineData(ServiceOrderStatus.Received, ServiceOrderStatus.InProgress)]

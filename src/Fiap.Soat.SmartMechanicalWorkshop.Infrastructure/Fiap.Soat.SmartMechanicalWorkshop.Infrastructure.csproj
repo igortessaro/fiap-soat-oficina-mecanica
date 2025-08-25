@@ -26,11 +26,12 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Fiap.Soat.SmartMechanicalWorkshop.Domain\Fiap.Soat.SmartMechanicalWorkshop.Domain.csproj"/>
+        <Folder Include="Migrations\"/>
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Migrations\"/>
+      <ProjectReference Include="..\Fiap.Soat.SmartMechanicalWorkshop.Application\Fiap.Soat.SmartMechanicalWorkshop.Application.csproj" />
+      <ProjectReference Include="..\Fiap.Soat.SmartMechanicalWorkshop.Domain\Fiap.Soat.SmartMechanicalWorkshop.Domain.csproj" />
     </ItemGroup>
 
 </Project>

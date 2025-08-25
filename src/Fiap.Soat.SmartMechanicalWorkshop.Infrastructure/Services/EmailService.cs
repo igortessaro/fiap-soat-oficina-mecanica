@@ -1,5 +1,5 @@
+using Fiap.Soat.SmartMechanicalWorkshop.Application.Adapters.Gateways.Services;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
-using Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Services.Interfaces;
 using Microsoft.Extensions.Options;
 using System.Net.Mail;
 
