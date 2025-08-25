@@ -1,6 +1,5 @@
 using AutoMapper;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.Adapters.Gateways.Repositories;
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.AvailableServices;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 using MediatR;

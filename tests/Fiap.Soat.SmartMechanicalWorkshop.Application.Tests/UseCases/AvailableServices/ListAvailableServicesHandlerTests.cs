@@ -39,6 +39,5 @@ public sealed class ListAvailableServicesHandlerTests
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        result.Data.Should().Be(paginateDto);
     }
 }

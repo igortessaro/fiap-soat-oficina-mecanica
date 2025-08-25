@@ -1,21 +1,19 @@
-using AutoMapper;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.Adapters.Gateways.Repositories;
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.AvailableServices;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 using MediatR;
 using System.Net;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.AvailableServices.Get;
 
-public sealed class GetAvailableServiceByIdHandler(
-    IMapper mapper,
-    IAvailableServiceRepository availableServiceRepository) : IRequestHandler<GetAvailableServiceByIdQuery, Response<AvailableServiceDto>>
+public sealed class GetAvailableServiceByIdHandler(IAvailableServiceRepository availableServiceRepository)
+    : IRequestHandler<GetAvailableServiceByIdQuery, Response<AvailableService>>
 {
-    public async Task<Response<AvailableServiceDto>> Handle(GetAvailableServiceByIdQuery request, CancellationToken cancellationToken)
+    public async Task<Response<AvailableService>> Handle(GetAvailableServiceByIdQuery request, CancellationToken cancellationToken)
     {
         var entity = await availableServiceRepository.GetAsync(request.Id, cancellationToken);
         return entity != null
-            ? ResponseFactory.Ok(mapper.Map<AvailableServiceDto>(entity))
-            : ResponseFactory.Fail<AvailableServiceDto>("AvailableService Not Found", HttpStatusCode.NotFound);
+            ? ResponseFactory.Ok(entity)
+            : ResponseFactory.Fail<AvailableService>("AvailableService Not Found", HttpStatusCode.NotFound);
     }
 }

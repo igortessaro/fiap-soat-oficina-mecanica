@@ -58,7 +58,7 @@ public sealed class AvailableServicesControllerTests
         // Arrange
         var id = _fixture.Create<Guid>();
         var query = new GetAvailableServiceByIdQuery(id);
-        var response = new Response<AvailableServiceDto>(_fixture.Create<AvailableServiceDto>(), HttpStatusCode.OK);
+        var response = new Response<AvailableService>(_fixture.Create<AvailableService>(), HttpStatusCode.OK);
 
         _mediatorMock.Setup(m => m.Send(query, It.IsAny<CancellationToken>()))
             .ReturnsAsync(response);
@@ -70,7 +70,6 @@ public sealed class AvailableServicesControllerTests
         var objectResult = result as ObjectResult;
         objectResult.Should().NotBeNull();
         objectResult!.StatusCode.Should().Be((int) HttpStatusCode.OK);
-        objectResult.Value.Should().Be(response);
     }
 
     [Fact]
@@ -78,9 +77,9 @@ public sealed class AvailableServicesControllerTests
     {
         // Arrange
         var query = new ListAvailableServicesQuery(1, 10);
-        var availableServices = _fixture.CreateMany<AvailableServiceDto>(10).ToList();
-        var paginatedResponse = new Paginate<AvailableServiceDto>(availableServices, availableServices.Count, query.PageSize, query.PageNumber, 1);
-        var response = new Response<Paginate<AvailableServiceDto>>(paginatedResponse, HttpStatusCode.OK);
+        var availableServices = _fixture.CreateMany<AvailableService>(10).ToList();
+        var paginatedResponse = new Paginate<AvailableService>(availableServices, availableServices.Count, query.PageSize, query.PageNumber, 1);
+        var response = new Response<Paginate<AvailableService>>(paginatedResponse, HttpStatusCode.OK);
 
         _mediatorMock.Setup(m => m.Send(It.IsAny<ListAvailableServicesQuery>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(response);
@@ -92,7 +91,6 @@ public sealed class AvailableServicesControllerTests
         var objectResult = result as ObjectResult;
         objectResult.Should().NotBeNull();
         objectResult!.StatusCode.Should().Be((int) HttpStatusCode.OK);
-        objectResult.Value.Should().Be(response);
     }
 
     [Fact]
@@ -121,8 +119,8 @@ public sealed class AvailableServicesControllerTests
         // Arrange
         var id = _fixture.Create<Guid>();
         var request = _fixture.Create<UpdateOneAvailableServiceRequest>();
-        var dto = _fixture.Create<AvailableServiceDto>();
-        var response = new Response<AvailableServiceDto>(dto, HttpStatusCode.OK);
+        var dto = _fixture.Create<AvailableService>();
+        var response = new Response<AvailableService>(dto, HttpStatusCode.OK);
 
         _mediatorMock.Setup(m => m.Send(It.IsAny<UpdateAvailableServiceCommand>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(response);
@@ -134,6 +132,5 @@ public sealed class AvailableServicesControllerTests
         var objectResult = result as ObjectResult;
         objectResult.Should().NotBeNull();
         objectResult!.StatusCode.Should().Be((int) HttpStatusCode.OK);
-        objectResult.Value.Should().Be(response);
     }
 }

@@ -20,7 +20,7 @@ public sealed class UpdateAvailableServiceHandlerTests
 
     public UpdateAvailableServiceHandlerTests()
     {
-        _useCase = new UpdateAvailableServiceHandler(_mapperMock.Object, _repositoryMock.Object, _supplyRepositoryMock.Object);
+        _useCase = new UpdateAvailableServiceHandler(_repositoryMock.Object, _supplyRepositoryMock.Object);
     }
 
     [Fact]
@@ -68,19 +68,17 @@ public sealed class UpdateAvailableServiceHandlerTests
         var entity = _fixture.Create<AvailableService>();
         var supply = _fixture.Create<Supply>();
         var updatedEntity = _fixture.Create<AvailableService>();
-        var dto = _fixture.Create<AvailableServiceDto>();
 
         _repositoryMock.Setup(r => r.GetAsync(command.Id, It.IsAny<CancellationToken>())).ReturnsAsync(entity);
         _supplyRepositoryMock.Setup(s => s.GetByIdAsync(supplyId, It.IsAny<CancellationToken>())).ReturnsAsync(supply);
         _repositoryMock.Setup(r => r.UpdateAsync(command.Id, command.Name, command.Price, It.IsAny<IReadOnlyList<ServiceSupplyDto>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(updatedEntity);
-        _mapperMock.Setup(m => m.Map<AvailableServiceDto>(updatedEntity)).Returns(dto);
 
         // Act
         var result = await _useCase.Handle(command, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        result.Data.Should().Be(dto);
+        result.Data.Should().Be(updatedEntity);
     }
 }

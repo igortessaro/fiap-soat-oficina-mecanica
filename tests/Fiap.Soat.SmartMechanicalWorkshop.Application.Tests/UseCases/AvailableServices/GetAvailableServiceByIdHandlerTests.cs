@@ -19,7 +19,7 @@ public sealed class GetAvailableServiceByIdHandlerTests
 
     public GetAvailableServiceByIdHandlerTests()
     {
-        _useCase = new GetAvailableServiceByIdHandler(_mapperMock.Object, _repositoryMock.Object);
+        _useCase = new GetAvailableServiceByIdHandler(_repositoryMock.Object);
     }
 
     [Fact]
@@ -28,17 +28,15 @@ public sealed class GetAvailableServiceByIdHandlerTests
         // Arrange
         var id = Guid.NewGuid();
         var entity = _fixture.Create<AvailableService>();
-        var dto = _fixture.Create<AvailableServiceDto>();
 
         _repositoryMock.Setup(r => r.GetAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync(entity);
-        _mapperMock.Setup(m => m.Map<AvailableServiceDto>(entity)).Returns(dto);
 
         // Act
         var result = await _useCase.Handle(new GetAvailableServiceByIdQuery(id), CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        result.Data.Should().Be(dto);
+        result.Data.Should().Be(entity);
     }
 
     [Fact]
