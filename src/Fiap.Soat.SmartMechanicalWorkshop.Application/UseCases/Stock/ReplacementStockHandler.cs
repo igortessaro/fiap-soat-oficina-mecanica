@@ -1,4 +1,3 @@
-using AutoMapper;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.Adapters.Gateways.Repositories;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Quotes.Update;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;

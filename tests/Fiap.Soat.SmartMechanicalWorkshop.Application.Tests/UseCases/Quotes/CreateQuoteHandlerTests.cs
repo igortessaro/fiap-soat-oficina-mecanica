@@ -21,7 +21,7 @@ public sealed class CreateQuoteHandlerTests
 
     public CreateQuoteHandlerTests()
     {
-        _useCase = new CreateQuoteHandler(_mapperMock.Object, _quoteRepositoryMock.Object);
+        _useCase = new CreateQuoteHandler(_quoteRepositoryMock.Object);
     }
 
     [Fact]

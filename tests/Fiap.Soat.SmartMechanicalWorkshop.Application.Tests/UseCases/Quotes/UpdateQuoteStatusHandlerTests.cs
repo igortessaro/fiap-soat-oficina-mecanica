@@ -22,7 +22,7 @@ public sealed class UpdateQuoteStatusHandlerTests
 
     public UpdateQuoteStatusHandlerTests()
     {
-        _useCase = new UpdateQuoteStatusHandler(_mapperMock.Object, _mediatorMock.Object, _quoteRepositoryMock.Object);
+        _useCase = new UpdateQuoteStatusHandler(_mediatorMock.Object, _quoteRepositoryMock.Object);
     }
 
     [Fact]

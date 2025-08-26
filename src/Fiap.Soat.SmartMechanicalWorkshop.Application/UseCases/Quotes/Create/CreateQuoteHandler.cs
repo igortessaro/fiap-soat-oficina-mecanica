@@ -7,7 +7,7 @@ using MediatR;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Quotes.Create;
 
-public sealed class CreateQuoteHandler(IMapper mapper, IQuoteRepository quoteRepository) : INotificationHandler<UpdateServiceOrderStatusNotification>
+public sealed class CreateQuoteHandler(IQuoteRepository quoteRepository) : INotificationHandler<UpdateServiceOrderStatusNotification>
 {
     public async Task Handle(UpdateServiceOrderStatusNotification notification, CancellationToken cancellationToken)
     {

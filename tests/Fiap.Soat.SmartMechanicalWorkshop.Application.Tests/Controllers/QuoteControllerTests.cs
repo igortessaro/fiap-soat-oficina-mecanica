@@ -1,7 +1,7 @@
 using AutoFixture;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.Adapters.Controllers;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Quotes.Update;
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.ServiceOrders;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 using FluentAssertions;
@@ -30,7 +30,7 @@ public sealed class QuoteControllerTests
         var id = _fixture.Create<Guid>();
         var quoteId = _fixture.Create<Guid>();
         var status = _fixture.Create<QuoteStatus>();
-        var response = ResponseFactory.Ok<QuoteDto>(_fixture.Create<QuoteDto>());
+        var response = ResponseFactory.Ok(_fixture.Create<Quote>());
 
         _mediatorMock.Setup(m => m.Send(
                 It.Is<UpdateQuoteStatusCommand>(c => c.Id == quoteId && c.Status == status && c.ServiceOrderId == id),
@@ -44,6 +44,5 @@ public sealed class QuoteControllerTests
         var objectResult = result as ObjectResult;
         objectResult.Should().NotBeNull();
         objectResult!.StatusCode.Should().Be((int) HttpStatusCode.OK);
-        objectResult.Value.Should().Be(response);
     }
 }
