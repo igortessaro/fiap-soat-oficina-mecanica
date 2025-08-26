@@ -28,7 +28,7 @@ public sealed class ListPeopleHandlerTests
         var paginateDto = _fixture.Create<Paginate<Person>>();
 
         _repositoryMock.Setup(r =>
-                r.GetAllAsync(new List<string> { nameof(Person.Vehicles), nameof(Person.Address) }, It.IsAny<PaginatedRequest>(), It.IsAny<CancellationToken>()))
+                r.GetAllAsync(new List<string> { nameof(Person.Vehicles), nameof(Person.Address) }, It.IsAny<PaginatedRequest>(), It.IsAny<CancellationToken>(), null))
             .ReturnsAsync(paginate);
 
         // Act

@@ -30,7 +30,7 @@ public sealed class ListVehiclesHandlerTests
         var paginate = _fixture.Create<Paginate<Vehicle>>();
         var paginateDto = _fixture.Create<Paginate<VehicleDto>>();
 
-        _repositoryMock.Setup(r => r.GetAllAsync(It.IsAny<PaginatedRequest>(), It.IsAny<CancellationToken>())).ReturnsAsync(paginate);
+    _repositoryMock.Setup(r => r.GetAllAsync(It.IsAny<PaginatedRequest>(), It.IsAny<CancellationToken>(), null)).ReturnsAsync(paginate);
         _mapperMock.Setup(m => m.Map<Paginate<VehicleDto>>(paginate)).Returns(paginateDto);
 
         // Act
