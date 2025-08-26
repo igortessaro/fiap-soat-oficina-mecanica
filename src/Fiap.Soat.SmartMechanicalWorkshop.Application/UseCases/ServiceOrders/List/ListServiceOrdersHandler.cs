@@ -27,15 +27,15 @@ public sealed class ListServiceOrdersHandler(
             )
             .ThenBy(x => x.CreatedAt);
 
-        var excludedStatuses = new[] {ServiceOrderStatus.Delivered,ServiceOrderStatus.Completed,ServiceOrderStatus.Cancelled, ServiceOrderStatus.Rejected};    
+        var excludedStatuses = new[] { ServiceOrderStatus.Delivered, ServiceOrderStatus.Completed, ServiceOrderStatus.Cancelled, ServiceOrderStatus.Rejected };
 
         Expression<Func<ServiceOrder, bool>> predicate = request.PersonId.HasValue
         ? x => x.ClientId == request.PersonId && !excludedStatuses.Contains(x.Status)
         : x => !excludedStatuses.Contains(x.Status);
 
         var response = request.PersonId.HasValue
-            ? await serviceOrderRepository.GetAllAsync(includes, predicate, paginatedRequest, cancellationToken,orderBy)
-            : await serviceOrderRepository.GetAllAsync(includes, paginatedRequest, cancellationToken,orderBy);
+            ? await serviceOrderRepository.GetAllAsync(includes, predicate, paginatedRequest, cancellationToken, orderBy)
+            : await serviceOrderRepository.GetAllAsync(includes, paginatedRequest, cancellationToken, orderBy);
         var mappedResponse = mapper.Map<Paginate<ServiceOrderDto>>(response);
         return ResponseFactory.Ok(mappedResponse);
     }
