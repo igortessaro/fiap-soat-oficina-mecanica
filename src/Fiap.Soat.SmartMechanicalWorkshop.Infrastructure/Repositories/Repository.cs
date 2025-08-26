@@ -41,7 +41,7 @@ public abstract class Repository<T>(DbContext context) : IRepository<T> where T 
     public Task<Paginate<T>> GetAllAsync(Expression<Func<T, bool>> predicate, PaginatedRequest paginatedRequest, CancellationToken cancellationToken, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null) =>
         GetAllAsync(_dbSet.Where(predicate), paginatedRequest, cancellationToken, orderBy);
 
-        public Task<Paginate<T>> GetAllAsync(IReadOnlyList<string> includes, Expression<Func<T, bool>> predicate, PaginatedRequest paginatedRequest, CancellationToken cancellationToken, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null)
+    public Task<Paginate<T>> GetAllAsync(IReadOnlyList<string> includes, Expression<Func<T, bool>> predicate, PaginatedRequest paginatedRequest, CancellationToken cancellationToken, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null)
     {
         var query = _dbSet.AsQueryable();
         query = includes.Aggregate(query, (current, include) => current.Include(include));
