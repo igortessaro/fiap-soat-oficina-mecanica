@@ -8,36 +8,47 @@ using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 using FluentAssertions;
 using Moq;
 
-namespace Fiap.Soat.SmartMechanicalWorkshop.Application.Tests.UseCases.AvailableServices;
-
-public sealed class ListAvailableServicesHandlerTests
+namespace Fiap.Soat.SmartMechanicalWorkshop.Application.Tests.UseCases.AvailableServices
 {
-    private readonly IFixture _fixture = new Fixture();
-    private readonly Mock<IMapper> _mapperMock = new();
-    private readonly Mock<IAvailableServiceRepository> _repositoryMock = new();
-    private readonly ListAvailableServicesHandler _useCase;
-
-    public ListAvailableServicesHandlerTests()
+    public sealed class ListAvailableServicesHandlerTests
     {
-        _useCase = new ListAvailableServicesHandler(_mapperMock.Object, _repositoryMock.Object);
-    }
+        private readonly IFixture _fixture = new Fixture();
+        private readonly Mock<IMapper> _mapperMock = new();
+        private readonly Mock<IAvailableServiceRepository> _repositoryMock = new();
+        private readonly ListAvailableServicesHandler _useCase;
 
-    [Fact]
-    public async Task GetAllAsync_ShouldReturnPaginated()
-    {
-        // Arrange
-        var paginatedRequest = _fixture.Create<ListAvailableServicesQuery>();
-        var paginate = _fixture.Create<Paginate<AvailableService>>();
-        var paginateDto = _fixture.Create<Paginate<AvailableServiceDto>>();
-        string[] includes = [$"{nameof(AvailableService.AvailableServiceSupplies)}.{nameof(AvailableServiceSupply.Supply)}"];
+        public ListAvailableServicesHandlerTests()
+        {
+            _useCase = new ListAvailableServicesHandler(_mapperMock.Object, _repositoryMock.Object);
+        }
 
-        _repositoryMock.Setup(r => r.GetAllAsync(includes, It.IsAny<PaginatedRequest>(), It.IsAny<CancellationToken>(), null)).ReturnsAsync(paginate);
-        _mapperMock.Setup(m => m.Map<Paginate<AvailableServiceDto>>(paginate)).Returns(paginateDto);
+        [Fact]
+        public async Task GetAllAsync_ShouldReturnPaginated()
+        {
+            // Arrange
+            var paginatedRequest = _fixture.Create<ListAvailableServicesQuery>();
+            var paginate = _fixture.Create<Paginate<AvailableService>>();
+            var paginateDto = _fixture.Create<Paginate<AvailableServiceDto>>();
 
-        // Act
-        var result = await _useCase.Handle(paginatedRequest, CancellationToken.None);
+            _repositoryMock
+                .Setup(r => r.GetAllAsync(
+                    It.IsAny<IReadOnlyList<string>>(),
+                    It.IsAny<ListAvailableServicesQuery>(),
+                    It.IsAny<CancellationToken>(),
+                    It.IsAny<Func<IQueryable<AvailableService>, IOrderedQueryable<AvailableService>>>()))
+                .ReturnsAsync(paginate);
 
-        // Assert
-        result.IsSuccess.Should().BeTrue();
+            // Necessário porque o handler acessa mapper.ConfigurationProvider.ToString()
+            _mapperMock
+                .SetupGet(m => m.ConfigurationProvider)
+                .Returns(Mock.Of<IConfigurationProvider>());
+
+            // Act
+            var result = await _useCase.Handle(paginatedRequest, CancellationToken.None);
+
+            // Assert
+            result.IsSuccess.Should().BeTrue();
+            result.Data.Should().BeEquivalentTo(paginate);
+        }
     }
 }
