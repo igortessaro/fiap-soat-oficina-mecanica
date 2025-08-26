@@ -33,9 +33,7 @@ public sealed class ListServiceOrdersHandler(
         ? x => x.ClientId == request.PersonId && !excludedStatuses.Contains(x.Status)
         : x => !excludedStatuses.Contains(x.Status);
 
-        var response = request.PersonId.HasValue
-            ? await serviceOrderRepository.GetAllAsync(includes, predicate, paginatedRequest, cancellationToken, orderBy)
-            : await serviceOrderRepository.GetAllAsync(includes, paginatedRequest, cancellationToken, orderBy);
+        var response = await serviceOrderRepository.GetAllAsync(includes, predicate, paginatedRequest, cancellationToken, orderBy);
         var mappedResponse = mapper.Map<Paginate<ServiceOrderDto>>(response);
         return ResponseFactory.Ok(mappedResponse);
     }

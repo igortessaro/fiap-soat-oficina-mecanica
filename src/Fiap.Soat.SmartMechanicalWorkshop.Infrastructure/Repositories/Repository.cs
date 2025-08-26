@@ -104,12 +104,11 @@ public abstract class Repository<T>(DbContext context) : IRepository<T> where T 
         }
 
         var orderedQuery = orderBy != null
-        ? orderBy(query)
-        : query.OrderBy(item => item.CreatedAt);
+            ? orderBy(query)
+            : query.OrderBy(item => item.CreatedAt);
 
-        var items = await query
+        var items = await orderedQuery
             .AsNoTracking()
-            .OrderBy(item => item.CreatedAt)
             .Skip((paginatedRequest.PageNumber - 1) * paginatedRequest.PageSize)
             .Take(paginatedRequest.PageSize)
             .ToListAsync(cancellationToken);
