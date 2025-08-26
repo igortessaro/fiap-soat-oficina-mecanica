@@ -4,7 +4,6 @@ using Bogus;
 using Bogus.Extensions.Brazil;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.Adapters.Gateways.Repositories;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.People.Update;
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Person;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 using Fiap.Soat.SmartMechanicalWorkshop.Tests.Shared.Factories;
@@ -39,7 +38,6 @@ public sealed class UpdatePersonHandlerTests
             .With(x => x.Email, faker.Internet.Email())
             .Create();
         var updatedPerson = _fixture.Create<Person>();
-        var personDto = _fixture.Create<PersonDto>();
         var phone = _fixture.Create<Phone>();
         var address = _fixture.Create<Address>();
         string password = PeopleFactory.CreateClient().Password;
@@ -50,14 +48,13 @@ public sealed class UpdatePersonHandlerTests
         _mapperMock.Setup(m => m.Map<Phone>(input.Phone)).Returns(phone);
         _mapperMock.Setup(m => m.Map<Address>(input.Address)).Returns(address);
         _repositoryMock.Setup(r => r.UpdateAsync(It.IsAny<Person>(), It.IsAny<CancellationToken>())).ReturnsAsync(updatedPerson);
-        _mapperMock.Setup(m => m.Map<PersonDto>(updatedPerson)).Returns(personDto);
 
         // Act
         var result = await _useCase.Handle(input, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        result.Data.Should().Be(personDto);
+        result.Data.Should().Be(updatedPerson);
     }
 
     [Fact]

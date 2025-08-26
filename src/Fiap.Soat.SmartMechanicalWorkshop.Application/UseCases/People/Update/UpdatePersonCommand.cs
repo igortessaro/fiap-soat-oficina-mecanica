@@ -1,4 +1,4 @@
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Person;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 using MediatR;
@@ -14,7 +14,7 @@ public record UpdatePersonCommand(
     string Email,
     string Password,
     UpdatePhoneCommand? Phone,
-    UpdateAddressCommand? Address) : IRequest<Response<PersonDto>>;
+    UpdateAddressCommand? Address) : IRequest<Response<Person>>;
 
 public record UpdatePhoneCommand(string AreaCode, string Number);
 

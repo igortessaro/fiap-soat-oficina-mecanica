@@ -2,7 +2,6 @@ using AutoFixture;
 using AutoMapper;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.Adapters.Gateways.Repositories;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.People.Create;
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Person;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 using Fiap.Soat.SmartMechanicalWorkshop.Tests.Shared.Factories;
@@ -34,17 +33,15 @@ public sealed class CreatePersonHandlerTests
             .Without(x => x.EmployeeRole)
             .Create();
         var person = PeopleFactory.CreateClient();
-        var personDto = _fixture.Create<PersonDto>();
 
         _mapperMock.Setup(m => m.Map<Person>(request)).Returns(person);
         _repositoryMock.Setup(r => r.AddAsync(person, It.IsAny<CancellationToken>())).ReturnsAsync(person);
-        _mapperMock.Setup(m => m.Map<PersonDto>(person)).Returns(personDto);
 
         // Act
         var result = await _useCase.Handle(request, CancellationToken.None);
 
         // Assert
         result.StatusCode.Should().Be(HttpStatusCode.Created);
-        result.Data.Should().Be(personDto);
+        result.Data.Should().Be(person);
     }
 }

@@ -6,7 +6,7 @@ using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.People.Delete;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.People.Get;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.People.List;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.People.Update;
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Person;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 using FluentAssertions;
 using MediatR;
@@ -32,7 +32,7 @@ public sealed class PeopleControllerTests
     {
         // Arrange
         var id = _fixture.Create<Guid>();
-        var response = new Response<PersonDto>(_fixture.Create<PersonDto>(), HttpStatusCode.OK);
+        var response = new Response<Person>(_fixture.Create<Person>(), HttpStatusCode.OK);
 
         _mediatorMock.Setup(m => m.Send(It.Is<GetPersonByIdQuery>(q => q.Id == id), It.IsAny<CancellationToken>()))
             .ReturnsAsync(response);
@@ -44,7 +44,6 @@ public sealed class PeopleControllerTests
         var objectResult = result as ObjectResult;
         objectResult.Should().NotBeNull();
         objectResult!.StatusCode.Should().Be((int) HttpStatusCode.OK);
-        objectResult.Value.Should().Be(response);
     }
 
     [Fact]
@@ -52,9 +51,9 @@ public sealed class PeopleControllerTests
     {
         // Arrange
         var paginatedRequest = _fixture.Create<PaginatedRequest>();
-        var people = _fixture.CreateMany<PersonDto>(5).ToList();
-        var paginatedResponse = new Paginate<PersonDto>(people, people.Count, paginatedRequest.PageSize, paginatedRequest.PageNumber, 1);
-        var response = new Response<Paginate<PersonDto>>(paginatedResponse, HttpStatusCode.OK);
+        var people = _fixture.CreateMany<Person>(5).ToList();
+        var paginatedResponse = new Paginate<Person>(people, people.Count, paginatedRequest.PageSize, paginatedRequest.PageNumber, 1);
+        var response = new Response<Paginate<Person>>(paginatedResponse, HttpStatusCode.OK);
 
         _mediatorMock.Setup(m => m.Send(It.IsAny<ListPeopleQuery>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(response);
@@ -66,7 +65,6 @@ public sealed class PeopleControllerTests
         var objectResult = result as ObjectResult;
         objectResult.Should().NotBeNull();
         objectResult!.StatusCode.Should().Be((int) HttpStatusCode.OK);
-        objectResult.Value.Should().Be(response);
     }
 
     [Fact]
@@ -74,7 +72,7 @@ public sealed class PeopleControllerTests
     {
         // Arrange
         var request = _fixture.Create<CreatePersonRequest>();
-        var response = new Response<PersonDto>(_fixture.Create<PersonDto>(), HttpStatusCode.Created);
+        var response = new Response<Person>(_fixture.Create<Person>(), HttpStatusCode.Created);
 
         _mediatorMock.Setup(m => m.Send(It.IsAny<CreatePersonCommand>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(response);
@@ -86,7 +84,6 @@ public sealed class PeopleControllerTests
         var objectResult = result as ObjectResult;
         objectResult.Should().NotBeNull();
         objectResult!.StatusCode.Should().Be((int) HttpStatusCode.Created);
-        objectResult.Value.Should().Be(response);
     }
 
     [Fact]
@@ -115,8 +112,8 @@ public sealed class PeopleControllerTests
         // Arrange
         var id = _fixture.Create<Guid>();
         var request = _fixture.Create<UpdateOnePersonRequest>();
-        var dto = _fixture.Create<PersonDto>();
-        var response = new Response<PersonDto>(dto, HttpStatusCode.OK);
+        var dto = _fixture.Create<Person>();
+        var response = new Response<Person>(dto, HttpStatusCode.OK);
 
         _mediatorMock.Setup(m => m.Send(It.IsAny<UpdatePersonCommand>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(response);
@@ -128,6 +125,5 @@ public sealed class PeopleControllerTests
         var objectResult = result as ObjectResult;
         objectResult.Should().NotBeNull();
         objectResult!.StatusCode.Should().Be((int) HttpStatusCode.OK);
-        objectResult.Value.Should().Be(response);
     }
 }

@@ -1,4 +1,4 @@
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Person;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 using MediatR;
@@ -13,7 +13,7 @@ public record CreatePersonCommand(
     string Email,
     string Password,
     CreatePhoneCommand Phone,
-    CreateAddressCommand Address) : IRequest<Response<PersonDto>>;
+    CreateAddressCommand Address) : IRequest<Response<Person>>;
 
 public record CreatePhoneCommand(string AreaCode, string Number);
 

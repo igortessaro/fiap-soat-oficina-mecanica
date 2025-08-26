@@ -25,7 +25,6 @@ public sealed class AvailableServicesController(IMediator mediator) : IAvailable
     public async Task<ActionResult> GetAllAsync(PaginatedRequest paginatedQuery, CancellationToken cancellationToken)
     {
         var response = await mediator.Send((ListAvailableServicesQuery) paginatedQuery, cancellationToken);
-        if (!response.IsSuccess) ActionResultPresenter.ToActionResult(response);
         var result = ResponseMapper.Map(response, AvailableServicePresenter.ToDto);
         return ActionResultPresenter.ToActionResult(result);
     }
