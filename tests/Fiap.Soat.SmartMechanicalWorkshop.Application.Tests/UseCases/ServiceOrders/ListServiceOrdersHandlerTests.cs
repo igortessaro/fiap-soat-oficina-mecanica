@@ -29,7 +29,12 @@ public sealed class ListServiceOrdersHandlerTests
         // Arrange
         var paginate = _fixture.Create<Paginate<ServiceOrder>>();
         var paginateDto = _fixture.Create<Paginate<ServiceOrderDto>>();
-        _repositoryMock.Setup(r => r.GetAllAsync(It.IsAny<IReadOnlyList<string>>(), It.IsAny<Expression<Func<ServiceOrder, bool>>>(), It.IsAny<PaginatedRequest>(), It.IsAny<CancellationToken>(), null))
+        _repositoryMock.Setup(r => r.GetAllAsync(
+            It.IsAny<IReadOnlyList<string>>(),
+            It.IsAny<Expression<Func<ServiceOrder, bool>>>(),
+            It.IsAny<PaginatedRequest>(),
+            It.IsAny<CancellationToken>(),
+            It.IsAny<Func<IQueryable<ServiceOrder>, IOrderedQueryable<ServiceOrder>>>()))
             .ReturnsAsync(paginate);
         _mapperMock.Setup(m => m.Map<Paginate<ServiceOrderDto>>(paginate)).Returns(paginateDto);
 
