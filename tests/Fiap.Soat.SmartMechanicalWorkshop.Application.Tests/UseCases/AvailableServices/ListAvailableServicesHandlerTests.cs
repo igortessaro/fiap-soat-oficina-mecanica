@@ -33,7 +33,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Application.Tests.UseCases.Available
             _repositoryMock
                 .Setup(r => r.GetAllAsync(
                     It.IsAny<IReadOnlyList<string>>(),
-                    It.IsAny<ListAvailableServicesQuery>(),
+                    It.IsAny<PaginatedRequest>(),
                     It.IsAny<CancellationToken>(),
                     It.IsAny<Func<IQueryable<AvailableService>, IOrderedQueryable<AvailableService>>>()))
                 .ReturnsAsync(paginate);
