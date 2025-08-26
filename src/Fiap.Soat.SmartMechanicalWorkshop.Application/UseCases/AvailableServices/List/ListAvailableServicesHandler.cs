@@ -13,8 +13,6 @@ public sealed class ListAvailableServicesHandler(
     public async Task<Response<Paginate<AvailableService>>> Handle(ListAvailableServicesQuery request, CancellationToken cancellationToken)
     {
         var result = await repository.GetAllAsync(["AvailableServiceSupplies.Supply"], request, cancellationToken);
-        // Exemplo de uso do mapper para evitar o warning
-        mapper.ConfigurationProvider.ToString();
         return ResponseFactory.Ok(result);
     }
 }
