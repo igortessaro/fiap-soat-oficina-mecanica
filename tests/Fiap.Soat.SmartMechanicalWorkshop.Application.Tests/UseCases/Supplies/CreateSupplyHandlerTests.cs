@@ -2,7 +2,6 @@ using AutoFixture;
 using AutoMapper;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.Adapters.Gateways.Repositories;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Supplies.Create;
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Supplies;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 using FluentAssertions;
 using Moq;
@@ -29,17 +28,15 @@ public sealed class CreateSupplyHandlerTests
         var request = _fixture.Create<CreateSupplyCommand>();
         var entity = _fixture.Create<Supply>();
         var createdEntity = _fixture.Create<Supply>();
-        var dto = _fixture.Create<SupplyDto>();
 
         _mapperMock.Setup(m => m.Map<Supply>(request)).Returns(entity);
         _repositoryMock.Setup(r => r.AddAsync(entity, It.IsAny<CancellationToken>())).ReturnsAsync(createdEntity);
-        _mapperMock.Setup(m => m.Map<SupplyDto>(createdEntity)).Returns(dto);
 
         // Act
         var result = await _useCase.Handle(request, CancellationToken.None);
 
         // Assert
         result.StatusCode.Should().Be(HttpStatusCode.Created);
-        result.Data.Should().Be(dto);
+        result.Data.Should().Be(createdEntity);
     }
 }

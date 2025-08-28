@@ -6,7 +6,7 @@ using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Supplies.Delete;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Supplies.Get;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Supplies.List;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Supplies.Update;
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Supplies;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 using FluentAssertions;
 using MediatR;
@@ -32,7 +32,7 @@ public sealed class SuppliesControllerTests
     {
         // Arrange
         var id = _fixture.Create<Guid>();
-        var response = new Response<SupplyDto>(_fixture.Create<SupplyDto>(), HttpStatusCode.OK);
+        var response = new Response<Supply>(_fixture.Create<Supply>(), HttpStatusCode.OK);
 
         _mediatorMock.Setup(m => m.Send(It.Is<GetSupplyByIdQuery>(q => q.Id == id), It.IsAny<CancellationToken>()))
             .ReturnsAsync(response);
@@ -44,7 +44,6 @@ public sealed class SuppliesControllerTests
         var objectResult = result as ObjectResult;
         objectResult.Should().NotBeNull();
         objectResult!.StatusCode.Should().Be((int) HttpStatusCode.OK);
-        objectResult.Value.Should().Be(response);
     }
 
     [Fact]
@@ -52,9 +51,9 @@ public sealed class SuppliesControllerTests
     {
         // Arrange
         var paginatedRequest = _fixture.Create<PaginatedRequest>();
-        var supplies = _fixture.CreateMany<SupplyDto>(5).ToList();
-        var paginatedResponse = new Paginate<SupplyDto>(supplies, supplies.Count, paginatedRequest.PageSize, paginatedRequest.PageNumber, 1);
-        var response = new Response<Paginate<SupplyDto>>(paginatedResponse, HttpStatusCode.OK);
+        var supplies = _fixture.CreateMany<Supply>(5).ToList();
+        var paginatedResponse = new Paginate<Supply>(supplies, supplies.Count, paginatedRequest.PageSize, paginatedRequest.PageNumber, 1);
+        var response = new Response<Paginate<Supply>>(paginatedResponse, HttpStatusCode.OK);
 
         _mediatorMock.Setup(m => m.Send(It.IsAny<ListSuppliesQuery>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(response);
@@ -66,7 +65,6 @@ public sealed class SuppliesControllerTests
         var objectResult = result as ObjectResult;
         objectResult.Should().NotBeNull();
         objectResult!.StatusCode.Should().Be((int) HttpStatusCode.OK);
-        objectResult.Value.Should().Be(response);
     }
 
     [Fact]
@@ -74,7 +72,7 @@ public sealed class SuppliesControllerTests
     {
         // Arrange
         var command = _fixture.Create<CreateSupplyCommand>();
-        var response = new Response<SupplyDto>(_fixture.Create<SupplyDto>(), HttpStatusCode.Created);
+        var response = new Response<Supply>(_fixture.Create<Supply>(), HttpStatusCode.Created);
 
         _mediatorMock.Setup(m => m.Send(command, It.IsAny<CancellationToken>()))
             .ReturnsAsync(response);
@@ -86,7 +84,6 @@ public sealed class SuppliesControllerTests
         var objectResult = result as ObjectResult;
         objectResult.Should().NotBeNull();
         objectResult!.StatusCode.Should().Be((int) HttpStatusCode.Created);
-        objectResult.Value.Should().Be(response);
     }
 
     [Fact]
@@ -115,8 +112,8 @@ public sealed class SuppliesControllerTests
         // Arrange
         var id = _fixture.Create<Guid>();
         var request = _fixture.Create<UpdateOneSupplyRequest>();
-        var dto = _fixture.Create<SupplyDto>();
-        var response = new Response<SupplyDto>(dto, HttpStatusCode.OK);
+        var dto = _fixture.Create<Supply>();
+        var response = new Response<Supply>(dto, HttpStatusCode.OK);
 
         _mediatorMock.Setup(m => m.Send(It.IsAny<UpdateSupplyCommand>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(response);
@@ -128,6 +125,5 @@ public sealed class SuppliesControllerTests
         var objectResult = result as ObjectResult;
         objectResult.Should().NotBeNull();
         objectResult!.StatusCode.Should().Be((int) HttpStatusCode.OK);
-        objectResult.Value.Should().Be(response);
     }
 }
