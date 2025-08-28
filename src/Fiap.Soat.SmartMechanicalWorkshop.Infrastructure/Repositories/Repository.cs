@@ -27,25 +27,25 @@ public abstract class Repository<T>(DbContext context) : IRepository<T> where T 
         return _dbSet.AsNoTracking().FirstOrDefaultAsync(item => item.Id == id, cancellationToken);
     }
 
-    public virtual Task<Paginate<T>> GetAllAsync(PaginatedRequest paginatedRequest, CancellationToken cancellationToken) =>
-        GetAllAsync(_dbSet, paginatedRequest, cancellationToken);
+    public virtual Task<Paginate<T>> GetAllAsync(PaginatedRequest paginatedRequest, CancellationToken cancellationToken, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null) =>
+        GetAllAsync(_dbSet, paginatedRequest, cancellationToken, orderBy);
 
     public Task<Paginate<T>> GetAllAsync(IReadOnlyList<string> includes, PaginatedRequest paginatedRequest,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null)
     {
         var query = _dbSet.AsQueryable();
         query = includes.Aggregate(query, (current, include) => current.Include(include));
-        return GetAllAsync(query, paginatedRequest, cancellationToken);
+        return GetAllAsync(query, paginatedRequest, cancellationToken, orderBy);
     }
 
-    public Task<Paginate<T>> GetAllAsync(Expression<Func<T, bool>> predicate, PaginatedRequest paginatedRequest, CancellationToken cancellationToken) =>
-        GetAllAsync(_dbSet.Where(predicate), paginatedRequest, cancellationToken);
+    public Task<Paginate<T>> GetAllAsync(Expression<Func<T, bool>> predicate, PaginatedRequest paginatedRequest, CancellationToken cancellationToken, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null) =>
+        GetAllAsync(_dbSet.Where(predicate), paginatedRequest, cancellationToken, orderBy);
 
-    public Task<Paginate<T>> GetAllAsync(IReadOnlyList<string> includes, Expression<Func<T, bool>> predicate, PaginatedRequest paginatedRequest, CancellationToken cancellationToken)
+    public Task<Paginate<T>> GetAllAsync(IReadOnlyList<string> includes, Expression<Func<T, bool>> predicate, PaginatedRequest paginatedRequest, CancellationToken cancellationToken, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null)
     {
         var query = _dbSet.AsQueryable();
         query = includes.Aggregate(query, (current, include) => current.Include(include));
-        return GetAllAsync(query.Where(predicate), paginatedRequest, cancellationToken);
+        return GetAllAsync(query.Where(predicate), paginatedRequest, cancellationToken, orderBy);
     }
 
     public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken)
@@ -89,7 +89,7 @@ public abstract class Repository<T>(DbContext context) : IRepository<T> where T 
 
     protected IQueryable<T> Query(bool noTracking = true) => noTracking ? _dbSet.AsQueryable().AsNoTracking() : _dbSet.AsQueryable();
 
-    private static async Task<Paginate<T>> GetAllAsync(IQueryable<T> query, PaginatedRequest paginatedRequest, CancellationToken cancellationToken)
+    private static async Task<Paginate<T>> GetAllAsync(IQueryable<T> query, PaginatedRequest paginatedRequest, CancellationToken cancellationToken, Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null)
     {
         int totalCount = await query.AsNoTracking().CountAsync(cancellationToken);
         if (paginatedRequest.PageNumber == 0)
@@ -103,9 +103,12 @@ public abstract class Repository<T>(DbContext context) : IRepository<T> where T 
             );
         }
 
-        var items = await query
+        var orderedQuery = orderBy != null
+            ? orderBy(query)
+            : query.OrderBy(item => item.CreatedAt);
+
+        var items = await orderedQuery
             .AsNoTracking()
-            .OrderBy(item => item.CreatedAt)
             .Skip((paginatedRequest.PageNumber - 1) * paginatedRequest.PageSize)
             .Take(paginatedRequest.PageSize)
             .ToListAsync(cancellationToken);

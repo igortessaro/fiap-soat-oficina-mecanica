@@ -1,19 +1,17 @@
 using AutoFixture;
-using AutoMapper;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.Adapters.Gateways.Repositories;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.ServiceOrders.List;
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.ServiceOrders;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 using FluentAssertions;
 using Moq;
+using System.Linq.Expressions;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Application.Tests.UseCases.ServiceOrders;
 
 public sealed class ListServiceOrdersHandlerTests
 {
     private readonly IFixture _fixture = new Fixture();
-    private readonly Mock<IMapper> _mapperMock = new();
     private readonly Mock<IServiceOrderRepository> _repositoryMock = new();
     private readonly ListServiceOrdersHandler _useCase;
 
@@ -27,8 +25,12 @@ public sealed class ListServiceOrdersHandlerTests
     {
         // Arrange
         var paginate = _fixture.Create<Paginate<ServiceOrder>>();
-
-        _repositoryMock.Setup(r => r.GetAllAsync(It.IsAny<IReadOnlyList<string>>(), It.IsAny<PaginatedRequest>(), It.IsAny<CancellationToken>()))
+        _repositoryMock.Setup(r => r.GetAllAsync(
+            It.IsAny<IReadOnlyList<string>>(),
+            It.IsAny<Expression<Func<ServiceOrder, bool>>>(),
+            It.IsAny<PaginatedRequest>(),
+            It.IsAny<CancellationToken>(),
+            It.IsAny<Func<IQueryable<ServiceOrder>, IOrderedQueryable<ServiceOrder>>>()))
             .ReturnsAsync(paginate);
 
         // Act
