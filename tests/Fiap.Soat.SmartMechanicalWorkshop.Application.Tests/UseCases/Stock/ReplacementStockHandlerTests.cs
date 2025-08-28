@@ -45,7 +45,7 @@ public sealed class ReplacementStockHandlerTests
         var quote = _fixture.Create<Quote>().Approve();
         var notification = new UpdateQuoteStatusNotification(Guid.NewGuid(), quote);
         _quoteRepositoryMock.Setup(r => r.GetDetailedByIdAsync(notification.Quote.Id, It.IsAny<CancellationToken>()))
-            .ReturnsAsync((Quote?)null);
+            .ReturnsAsync((Quote?) null);
 
         // Act
         await _handler.Handle(notification, CancellationToken.None);

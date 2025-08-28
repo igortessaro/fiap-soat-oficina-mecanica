@@ -27,7 +27,7 @@ public sealed class UpdateStockHandlerTests
     {
         var command = _fixture.Create<UpdateStockCommand>();
         _supplyRepositoryMock.Setup(r => r.GetByIdAsync(command.Id, It.IsAny<CancellationToken>()))
-            .ReturnsAsync((Supply?)null);
+            .ReturnsAsync((Supply?) null);
 
         var result = await _handler.Handle(command, CancellationToken.None);
 
