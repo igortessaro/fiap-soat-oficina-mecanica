@@ -1,6 +1,7 @@
 using AutoMapper;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.AvailableServices.Create;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.People.Create;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.ServiceOrders.Create;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Supplies.Create;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Vehicles.Create;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Vehicles.Update;
@@ -52,6 +53,7 @@ public class AutoMapperProfiles : Profile
         CreateMap<Email, EmailDto>().ReverseMap();
 
         CreateMap<ServiceOrder, ServiceOrderDto>().ReverseMap();
+        CreateMap<CreateServiceOrderCommand, ServiceOrder>().ReverseMap();
         CreateMap<Paginate<ServiceOrder>, Paginate<ServiceOrderDto>>().ReverseMap();
 
         CreateMap<Quote, QuoteDto>().ReverseMap();

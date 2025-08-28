@@ -2,5 +2,5 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Application.Adapters.Gateways.Servic
 
 public interface IEmailService
 {
-    Task<bool> SendEmailAsync(string to, string subject, string bodyHtml);
+    Task SendEmailAsync(string to, string subject, string bodyHtml);
 }
