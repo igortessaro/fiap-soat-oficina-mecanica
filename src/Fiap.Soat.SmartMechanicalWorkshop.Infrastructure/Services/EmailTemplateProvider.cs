@@ -2,10 +2,12 @@ using Fiap.Soat.SmartMechanicalWorkshop.Application.Adapters.Gateways.Services;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 using Microsoft.Extensions.Configuration;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Services;
 
+[ExcludeFromCodeCoverage]
 public class EmailTemplateProvider(IConfiguration configuration) : IEmailTemplateProvider
 {
     public string GetTemplate(ServiceOrder serviceOrder)

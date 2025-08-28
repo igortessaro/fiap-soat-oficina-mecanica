@@ -2,10 +2,12 @@ using Fiap.Soat.SmartMechanicalWorkshop.Application.Adapters.Gateways.Services;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 using Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Services.Interfaces;
 using Microsoft.Extensions.Options;
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Mail;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Services;
 
+[ExcludeFromCodeCoverage]
 public class EmailService(IOptions<EmailSettings> options, IEmailSender emailSender) : IEmailService
 {
     private readonly EmailSettings _emailSettings = options.Value;

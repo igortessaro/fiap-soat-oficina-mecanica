@@ -1,8 +1,10 @@
 using Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Services.Interfaces;
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Mail;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Services;
 
+[ExcludeFromCodeCoverage]
 public sealed class EmailSender(SmtpClient smtpClient) : IEmailSender, IDisposable
 {
     private bool _isDisposed;
