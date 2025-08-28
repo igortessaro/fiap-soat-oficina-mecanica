@@ -1,9 +1,7 @@
 using AutoFixture;
-using AutoMapper;
 using Bogus;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.Adapters.Gateways.Repositories;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Vehicles.Update;
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Vehicles;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 using Fiap.Soat.SmartMechanicalWorkshop.Tests.Shared.Factories;
 using FluentAssertions;
@@ -15,13 +13,12 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Application.Tests.UseCases.Vehicles;
 public sealed class UpdateVehicleHandlerTests
 {
     private readonly Fixture _fixture = new();
-    private readonly Mock<IMapper> _mapperMock = new();
     private readonly Mock<IVehicleRepository> _repositoryMock = new();
     private readonly UpdateVehicleHandler _useCase;
 
     public UpdateVehicleHandlerTests()
     {
-        _useCase = new UpdateVehicleHandler(_mapperMock.Object, _repositoryMock.Object);
+        _useCase = new UpdateVehicleHandler(_repositoryMock.Object);
     }
 
     [Fact]
@@ -37,18 +34,16 @@ public sealed class UpdateVehicleHandlerTests
             faker.Vehicle.Manufacturer(),
             faker.Vehicle.Model(),
             entity.PersonId);
-        var dto = new VehicleDto(entity.Id, command.LicensePlate, command.ManufactureYear ?? 0, command.Brand, command.Model, entity.PersonId);
 
         _repositoryMock.Setup(r => r.GetByIdAsync(command.Id, It.IsAny<CancellationToken>())).ReturnsAsync(entity);
         _repositoryMock.Setup(r => r.UpdateAsync(It.IsAny<Vehicle>(), It.IsAny<CancellationToken>())).ReturnsAsync(entity);
-        _mapperMock.Setup(m => m.Map<VehicleDto>(entity)).Returns(dto);
 
         // Act
         var result = await _useCase.Handle(command, CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        result.Data.Should().Be(dto);
+        result.Data.Should().Be(entity);
     }
 
     [Fact]
@@ -80,7 +75,6 @@ public sealed class UpdateVehicleHandlerTests
         // Assert
         _repositoryMock.Verify(r => r.GetByIdAsync(command.Id, It.IsAny<CancellationToken>()), Times.Once);
         _repositoryMock.Verify(r => r.UpdateAsync(It.IsAny<Vehicle>(), It.IsAny<CancellationToken>()), Times.Never);
-        _mapperMock.Verify(m => m.Map<VehicleDto>(It.IsAny<Vehicle>()), Times.Never);
 
         result.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         result.IsSuccess.Should().BeFalse();

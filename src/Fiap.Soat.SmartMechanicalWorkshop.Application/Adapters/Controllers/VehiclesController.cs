@@ -1,5 +1,6 @@
 using Fiap.Soat.SmartMechanicalWorkshop.Application.Adapters.Controllers.Interfaces;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.Adapters.Presenters;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.Mappers;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.Models.Vehicles;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Vehicles.Create;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Vehicles.Delete;
@@ -17,20 +18,23 @@ public sealed class VehiclesController(IMediator mediator) : IVehiclesController
     public async Task<IActionResult> GetOneAsync(Guid id, CancellationToken cancellationToken)
     {
         var response = await mediator.Send(new GetVehicleByIdQuery(id), cancellationToken);
-        return ActionResultPresenter.ToActionResult(response);
+        var result = ResponseMapper.Map(response, VehiclePresenter.ToDto);
+        return ActionResultPresenter.ToActionResult(result);
     }
 
     public async Task<IActionResult> GetAllAsync(PaginatedRequest paginatedRequest, CancellationToken cancellationToken)
     {
         var response = await mediator.Send((ListVehiclesQuery) paginatedRequest, cancellationToken);
-        return ActionResultPresenter.ToActionResult(response);
+        var result = ResponseMapper.Map(response, VehiclePresenter.ToDto);
+        return ActionResultPresenter.ToActionResult(result);
     }
 
     public async Task<IActionResult> CreateAsync(CreateNewVehicleRequest request, CancellationToken cancellationToken)
     {
         CreateVehicleCommand command = new(request.LicensePlate, request.ManufactureYear, request.Brand, request.Model, request.PersonId);
         var response = await mediator.Send(command, cancellationToken);
-        return ActionResultPresenter.ToActionResult(response);
+        var result = ResponseMapper.Map(response, VehiclePresenter.ToDto);
+        return ActionResultPresenter.ToActionResult(result);
     }
 
     public async Task<IActionResult> DeleteAsync(Guid id, CancellationToken cancellationToken)
@@ -43,6 +47,7 @@ public sealed class VehiclesController(IMediator mediator) : IVehiclesController
     {
         UpdateVehicleCommand command = new(id, request.LicensePlate, request.ManufactureYear, request.Brand, request.Model, request.PersonId);
         var response = await mediator.Send(command, cancellationToken);
-        return ActionResultPresenter.ToActionResult(response);
+        var result = ResponseMapper.Map(response, VehiclePresenter.ToDto);
+        return ActionResultPresenter.ToActionResult(result);
     }
 }

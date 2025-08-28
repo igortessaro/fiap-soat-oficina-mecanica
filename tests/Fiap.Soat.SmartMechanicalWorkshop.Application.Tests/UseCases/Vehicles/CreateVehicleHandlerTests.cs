@@ -33,11 +33,9 @@ public sealed class CreateVehicleHandlerTests
             .Create();
         var entity = new Vehicle(request.Model, request.Brand, request.ManufactureYear, request.LicensePlate, request.PersonId);
         var person = _fixture.Create<Person>();
-        var dto = _fixture.Create<VehicleDto>();
 
         _mapperMock.Setup(m => m.Map<Vehicle>(request)).Returns(entity);
         _personRepositoryMock.Setup(x => x.GetByIdAsync(request.PersonId, It.IsAny<CancellationToken>())).ReturnsAsync(person);
-        _mapperMock.Setup(m => m.Map<VehicleDto>(entity)).Returns(dto);
         _repositoryMock.Setup(x => x.AddAsync(entity, It.IsAny<CancellationToken>()))
             .ReturnsAsync(entity);
 
@@ -47,7 +45,7 @@ public sealed class CreateVehicleHandlerTests
         // Assert
         _repositoryMock.Verify(x => x.AddAsync(entity, It.IsAny<CancellationToken>()), Times.Once);
         result.StatusCode.Should().Be(HttpStatusCode.Created);
-        result.Data.Should().Be(dto);
+        result.Data.Should().Be(entity);
     }
 
     [Fact]
