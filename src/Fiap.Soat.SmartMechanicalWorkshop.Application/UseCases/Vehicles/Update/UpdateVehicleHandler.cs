@@ -1,0 +1,28 @@
+using Fiap.Soat.SmartMechanicalWorkshop.Application.Adapters.Gateways.Repositories;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
+using MediatR;
+using System.Net;
+
+namespace Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Vehicles.Update;
+
+public sealed class UpdateVehicleHandler(IVehicleRepository repository) : IRequestHandler<UpdateVehicleCommand, Response<Vehicle>>
+{
+    public async Task<Response<Vehicle>> Handle(UpdateVehicleCommand request, CancellationToken cancellationToken)
+    {
+        var foundEntity = await repository.GetByIdAsync(request.Id, cancellationToken);
+        if (foundEntity is null)
+        {
+            return ResponseFactory.Fail<Vehicle>("Vehicle not found", HttpStatusCode.NotFound);
+        }
+
+        _ = foundEntity.Update(request.ManufactureYear, request.LicensePlate, request.Brand, request.Model);
+        if (!foundEntity.LicensePlate.IsValid())
+        {
+            return ResponseFactory.Fail<Vehicle>("Invalid license plate format");
+        }
+
+        var updatedEntity = await repository.UpdateAsync(foundEntity, cancellationToken);
+        return ResponseFactory.Ok(updatedEntity);
+    }
+}

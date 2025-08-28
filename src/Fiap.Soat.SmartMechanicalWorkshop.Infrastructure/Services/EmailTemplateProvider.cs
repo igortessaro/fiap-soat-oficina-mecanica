@@ -1,17 +1,18 @@
+using Fiap.Soat.SmartMechanicalWorkshop.Application.Adapters.Gateways.Services;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.Interfaces;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
-using Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Services.Interfaces;
 using Microsoft.Extensions.Configuration;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Services;
 
+[ExcludeFromCodeCoverage]
 public class EmailTemplateProvider(IConfiguration configuration) : IEmailTemplateProvider
 {
     public string GetTemplate(ServiceOrder serviceOrder)
     {
-        string? emailBaseUrl = configuration["Email:BaseUrl"];
+        string? emailBaseUrl = configuration["BaseUrl"];
         var quoteId = serviceOrder.Quotes.FirstOrDefault(x => x.Status == QuoteStatus.Pending)?.Id ?? Guid.Empty;
         string approveUrl = $"{emailBaseUrl}/api/v1/serviceorders/{serviceOrder.Id}/quote/{quoteId}/approved";
         string rejectUrl = $"{emailBaseUrl}/api/v1/serviceorders/{serviceOrder.Id}/quote/{quoteId}/rejected";

@@ -1,0 +1,13 @@
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
+
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
+
+namespace Fiap.Soat.SmartMechanicalWorkshop.Application.Adapters.Gateways.Repositories;
+
+public interface IServiceOrderRepository : IRepository<ServiceOrder>
+{
+    Task<ServiceOrder?> GetAsync(Guid id, CancellationToken cancellationToken);
+    Task<ServiceOrder?> GetDetailedAsync(Guid id, CancellationToken cancellationToken);
+    Task<ServiceOrder> UpdateAsync(Guid id, string title, string description, IReadOnlyList<AvailableService> services, CancellationToken cancellationToken);
+
+}

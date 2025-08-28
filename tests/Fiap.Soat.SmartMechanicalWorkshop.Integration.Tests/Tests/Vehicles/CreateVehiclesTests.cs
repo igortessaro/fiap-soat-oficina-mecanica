@@ -1,3 +1,4 @@
+using Fiap.Soat.SmartMechanicalWorkshop.Application.Models.Vehicles;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Vehicles;
 using Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Data;
 using Fiap.Soat.SmartMechanicalWorkshop.Tests.Shared.Factories;

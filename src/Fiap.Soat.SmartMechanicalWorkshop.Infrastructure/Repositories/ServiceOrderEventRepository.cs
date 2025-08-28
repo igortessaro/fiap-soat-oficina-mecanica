@@ -1,6 +1,6 @@
+using Fiap.Soat.SmartMechanicalWorkshop.Application.Adapters.Gateways.Repositories;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.ServiceOrders;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.Repositories;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 using Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +9,7 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Repositories;
 
 public sealed class ServiceOrderEventRepository(AppDbContext appDbContext) : Repository<ServiceOrderEvent>(appDbContext), IServiceOrderEventRepository
 {
-    public async Task<ServiceOrderExecutionTimeReport> GetAverageExecutionTimesAsync(DateTime startDate, DateTime endDate, CancellationToken cancellationToken)
+    public async Task<ServiceOrderExecutionTimeReportDto> GetAverageExecutionTimesAsync(DateTime startDate, DateTime endDate, CancellationToken cancellationToken)
     {
         var query = Query()
             .Where(e => e.CreatedAt >= startDate && e.CreatedAt <= endDate);
@@ -35,14 +35,14 @@ public sealed class ServiceOrderEventRepository(AppDbContext appDbContext) : Rep
             .ToListAsync(cancellationToken);
 
         int totalCount = grouped.Count;
-        if (totalCount == 0) return new ServiceOrderExecutionTimeReport(0, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero);
+        if (totalCount == 0) return new ServiceOrderExecutionTimeReportDto(0, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero, TimeSpan.Zero);
 
         double avgTotal = grouped.Average(x => (x.DeliveredAt - x.ReceivedAt)?.TotalSeconds ?? 0);
         double avgAttendance = grouped.Average(x => (x.InProgressAt - x.ReceivedAt)?.TotalSeconds ?? 0);
         double avgExecution = grouped.Average(x => (x.CompletedAt - x.InProgressAt)?.TotalSeconds ?? 0);
         double avgDelivery = grouped.Average(x => (x.DeliveredAt - x.CompletedAt)?.TotalSeconds ?? 0);
 
-        return new ServiceOrderExecutionTimeReport(
+        return new ServiceOrderExecutionTimeReportDto(
             totalCount,
             TimeSpan.FromSeconds(avgTotal),
             TimeSpan.FromSeconds(avgAttendance),

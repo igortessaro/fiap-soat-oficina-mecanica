@@ -1,9 +1,10 @@
-using Fiap.Soat.MechanicalWorkshop.Application.Commands;
 using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared.Extensions;
 using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared.Middlewares;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.Mappers;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.Shared;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.ServiceOrders.Update;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 using Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Data;
-using Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Shared.Mappings;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using System.Text.Json.Serialization;
@@ -35,13 +36,14 @@ _ = builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("
 _ = builder.Services.AddServiceExtensions();
 _ = builder.Services.AddRepositoryExtensions();
 _ = builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
-_ = builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ServiceOrderChangeStatusCommand).Assembly));
+_ = builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(UpdateServiceOrderStatusCommand).Assembly));
 _ = builder.Services.AddHttpContextAccessor();
 _ = builder.Services.AddHealthChecks();
 _ = builder.Services.AddRouting(options => options.LowercaseUrls = true);
 _ = builder.Services.AddAuthenticationExtension(builder.Configuration);
 _ = builder.Services.AddSwaggerExtension(builder.Configuration);
 _ = builder.Services.AddMemoryCache();
+_ = builder.Services.AddInterfaceAdapters();
 
 var app = builder.Build();
 if (app.Environment.IsDevelopment())

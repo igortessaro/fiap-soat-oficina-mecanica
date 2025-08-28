@@ -1,4 +1,4 @@
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Supplies;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Supplies.Create;
 using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http.Headers;
@@ -13,7 +13,7 @@ public sealed class CreateSuppliesTests : CustomWebApplicationFactory<Program>
     public async Task A0001_CreateAsync_WhenCreateAvailableService_ShouldReturn201()
     {
         // Arrange
-        var toCreate = new CreateNewSupplyRequest { Name = "Integration Tests", Price = 99, Quantity = 0 };
+        var toCreate = new CreateSupplyCommand("Integration Tests", 99, 0);
         string json = JsonConvert.SerializeObject(toCreate);
         var content = new StringContent(json, MediaTypeHeaderValue.Parse("application/json"));
 

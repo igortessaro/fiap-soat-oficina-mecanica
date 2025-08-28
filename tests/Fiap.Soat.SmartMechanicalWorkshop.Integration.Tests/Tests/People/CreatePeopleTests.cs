@@ -1,5 +1,6 @@
 using Bogus;
 using Bogus.Extensions.Brazil;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.Models.Person;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Person;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 using Newtonsoft.Json;

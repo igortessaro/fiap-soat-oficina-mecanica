@@ -30,6 +30,9 @@ services:
       ASPNETCORE_ENVIRONMENT: Production
       ConnectionStrings__DefaultConnection: "server=${DB_HOST};port=${DB_PORT};database=${MYSQL_DATABASE};user=${MYSQL_USER};password=${MYSQL_PASSWORD};SslMode=none;AllowPublicKeyRetrieval=True;"
       Jwt__Key: ${JWT_KEY}
+      BaseUrl: ${BASE_URL}
+      Email__SmtpHost: ${SMTP_HOST}
+      Email__SmtpPort: ${SMTP_PORT}
     ports:
       - "5180:8080"
     healthcheck:

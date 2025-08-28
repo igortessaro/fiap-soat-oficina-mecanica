@@ -1,15 +1,13 @@
-using Fiap.Soat.MechanicalWorkshop.Application.Commands;
-using Fiap.Soat.MechanicalWorkshop.Application.Notifications;
-using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.Adapters.Controllers.Interfaces;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.Models.ServiceOrders;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.ServiceOrders;
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.Interfaces;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
-using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Controllers;
@@ -17,10 +15,11 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Controllers;
 /// <summary>
 ///     Controller for managing service orders in the Smart Mechanical Workshop API.
 /// </summary>
+[ExcludeFromCodeCoverage]
 [Route("api/v1/[controller]")]
 [ApiController]
 [Authorize]
-public sealed class ServiceOrdersController(IServiceOrderService service, IMediator mediator) : ControllerBase
+public sealed class ServiceOrdersController(IServiceOrdersController controller, IQuoteController quoteController) : ControllerBase
 {
     /// <summary>
     ///     Gets a service order by its unique identifier.
@@ -32,11 +31,8 @@ public sealed class ServiceOrdersController(IServiceOrderService service, IMedia
     [SwaggerOperation(Summary = "Get a service orders by id", Description = "Returns a single service orders by its unique identifier.")]
     [ProducesResponseType(typeof(ServiceOrderDto), (int) HttpStatusCode.OK)]
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.NotFound)]
-    public async Task<IActionResult> GetOneAsync([FromRoute][Required] Guid id, CancellationToken cancellationToken)
-    {
-        var result = await service.GetOneAsync(id, cancellationToken);
-        return result.ToActionResult();
-    }
+    public async Task<IActionResult> GetOneAsync([FromRoute][Required] Guid id, CancellationToken cancellationToken) =>
+        await controller.GetOneAsync(id, cancellationToken);
 
     /// <summary>
     ///     Gets a paginated list of service orders.
@@ -48,14 +44,8 @@ public sealed class ServiceOrdersController(IServiceOrderService service, IMedia
     [HttpGet]
     [SwaggerOperation(Summary = "Get all service orders (paginated)", Description = "Returns a paginated list of service orders.")]
     [ProducesResponseType(typeof(Paginate<ServiceOrderDto>), (int) HttpStatusCode.OK)]
-    public async Task<IActionResult> GetAllAsync(
-        [FromQuery][Required] PaginatedRequest paginatedRequest,
-        [FromQuery] Guid? personId,
-        CancellationToken cancellationToken)
-    {
-        var result = await service.GetAllAsync(personId, paginatedRequest, cancellationToken);
-        return result.ToActionResult();
-    }
+    public async Task<IActionResult> GetAllAsync([FromQuery][Required] PaginatedRequest paginatedRequest, [FromQuery] Guid? personId,
+        CancellationToken cancellationToken) => await controller.GetAllAsync(paginatedRequest, personId, cancellationToken);
 
     /// <summary>
     ///     Gets the average execution time of service orders.
@@ -69,15 +59,11 @@ public sealed class ServiceOrdersController(IServiceOrderService service, IMedia
         Summary = "Get average execution time of service orders",
         Description = "Returns the average execution time for all service orders."
     )]
-    [ProducesResponseType(typeof(Response<ServiceOrderExecutionTimeReport>), (int) HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(Response<ServiceOrderExecutionTimeReportDto>), (int) HttpStatusCode.OK)]
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.BadRequest)]
-    public async Task<IActionResult> GetAverageExecutionTime([FromQuery] DateOnly startDate, [FromQuery] DateOnly endDate,
-        CancellationToken cancellationToken)
-    {
-        var result = await mediator.Send(new GetAverageExecutionTimeCommand(startDate, endDate), cancellationToken);
-        return result.ToActionResult();
-    }
+    public async Task<IActionResult> GetAverageExecutionTime([FromQuery] DateOnly startDate, [FromQuery] DateOnly endDate, CancellationToken cancellationToken) =>
+        await controller.GetAverageExecutionTime(startDate, endDate, cancellationToken);
 
     /// <summary>
     ///     Creates a new service order.
@@ -89,12 +75,8 @@ public sealed class ServiceOrdersController(IServiceOrderService service, IMedia
     [SwaggerOperation(Summary = "Create a new service order", Description = "Creates a new service order and returns its data.")]
     [ProducesResponseType(typeof(ServiceOrderDto), (int) HttpStatusCode.Created)]
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.BadRequest)]
-    public async Task<IActionResult> CreateAsync([FromBody][Required] CreateServiceOrderRequest request, CancellationToken cancellationToken)
-    {
-        var result = await service.CreateAsync(request, cancellationToken);
-        if (result.IsSuccess) await mediator.Publish(new ServiceOrderChangeStatusNotification(result.Data.Id, result.Data), cancellationToken);
-        return result.ToActionResult();
-    }
+    public async Task<IActionResult> CreateAsync([FromBody][Required] CreateServiceOrderRequest request, CancellationToken cancellationToken) =>
+        await controller.CreateAsync(request, cancellationToken);
 
     /// <summary>
     ///     Deletes a service order by its unique identifier.
@@ -106,11 +88,7 @@ public sealed class ServiceOrdersController(IServiceOrderService service, IMedia
     [SwaggerOperation(Summary = "Delete a service order", Description = "Deletes a service order by its unique identifier.")]
     [ProducesResponseType((int) HttpStatusCode.NoContent)]
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.NotFound)]
-    public async Task<IActionResult> DeleteAsync([FromRoute][Required] Guid id, CancellationToken cancellationToken)
-    {
-        var result = await service.DeleteAsync(id, cancellationToken);
-        return result.ToActionResult();
-    }
+    public async Task<IActionResult> DeleteAsync([FromRoute][Required] Guid id, CancellationToken cancellationToken) => await controller.DeleteAsync(id, cancellationToken);
 
     /// <summary>
     ///     Updates an existing service order.
@@ -125,12 +103,7 @@ public sealed class ServiceOrdersController(IServiceOrderService service, IMedia
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.BadRequest)]
     public async Task<IActionResult> UpdateAsync([FromRoute][Required] Guid id, [FromBody][Required] UpdateOneServiceOrderRequest request,
-        CancellationToken cancellationToken)
-    {
-        UpdateOneServiceOrderInput input = new(id, request.Title, request.Description, request.ServiceIds);
-        var result = await service.UpdateAsync(input, cancellationToken);
-        return result.ToActionResult();
-    }
+        CancellationToken cancellationToken) => await controller.UpdateAsync(id, request, cancellationToken);
 
     /// <summary>
     ///     Partially updates the status of a service order by its unique identifier.
@@ -148,11 +121,7 @@ public sealed class ServiceOrdersController(IServiceOrderService service, IMedia
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.BadRequest)]
     public async Task<IActionResult> PatchAsync([FromRoute][Required] Guid id, [FromBody][Required] PatchServiceOrderRequest request,
-        CancellationToken cancellationToken)
-    {
-        var result = await mediator.Send(new ServiceOrderChangeStatusCommand(id, request.Status), cancellationToken);
-        return result.ToActionResult();
-    }
+        CancellationToken cancellationToken) => await controller.PatchAsync(id, request, cancellationToken);
 
     [HttpPatch("{id:guid}/quote/{quoteId:guid}/{status}")]
     [SwaggerOperation(
@@ -162,13 +131,6 @@ public sealed class ServiceOrdersController(IServiceOrderService service, IMedia
     [ProducesResponseType(typeof(ServiceOrderDto), (int) HttpStatusCode.OK)]
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.NotFound)]
     [ProducesResponseType(typeof(ProblemDetails), (int) HttpStatusCode.BadRequest)]
-    public async Task<IActionResult> PatchQuoteAsync(
-        [FromRoute][Required] Guid id,
-        [FromRoute][Required] Guid quoteId,
-        [FromRoute][Required] QuoteStatus status,
-        CancellationToken cancellationToken)
-    {
-        var result = await mediator.Send(new QuoteChangeStatusCommand(quoteId, status, id), cancellationToken);
-        return result.ToActionResult();
-    }
+    public async Task<IActionResult> PatchQuoteAsync([FromRoute][Required] Guid id, [FromRoute][Required] Guid quoteId, [FromRoute][Required] QuoteStatus status,
+        CancellationToken cancellationToken) => await quoteController.PatchQuoteAsync(id, quoteId, status, cancellationToken);
 }

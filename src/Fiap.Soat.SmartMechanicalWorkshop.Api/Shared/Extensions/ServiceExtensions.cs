@@ -1,7 +1,9 @@
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services;
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.Interfaces;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.Adapters.Gateways.Services;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 using Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Services;
 using Fiap.Soat.SmartMechanicalWorkshop.Infrastructure.Services.Interfaces;
+using Microsoft.Extensions.Options;
+using System.Net.Mail;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Shared.Extensions;
 
@@ -9,16 +11,20 @@ public static class ServiceExtensions
 {
     public static IServiceCollection AddServiceExtensions(this IServiceCollection serviceCollection)
     {
-        _ = serviceCollection.AddTransient<IVehicleService, VehicleService>();
-        _ = serviceCollection.AddTransient<ISupplyService, SupplyService>();
-        _ = serviceCollection.AddTransient<IAvailableService, AvailableServiceService>();
-        _ = serviceCollection.AddTransient<IPersonService, PersonService>();
-        _ = serviceCollection.AddTransient<IServiceOrderService, ServiceOrderService>();
-        _ = serviceCollection.AddSingleton<IEmailService, EmailService>();
-        _ = serviceCollection.AddSingleton<IEmailTemplateProvider, EmailTemplateProvider>();
-        _ = serviceCollection.AddTransient<IQuoteService, QuoteService>();
-        _ = serviceCollection.AddTransient<IServiceOrderEventService, ServiceOrderEventService>();
-        _ = serviceCollection.AddTransient<IAuthService, AuthService>();
+        _ = serviceCollection.AddScoped<IEmailService, EmailService>();
+        _ = serviceCollection.AddScoped<IEmailTemplateProvider, EmailTemplateProvider>();
+        _ = serviceCollection.AddScoped<IEmailSender, EmailSender>(opt =>
+        {
+            var emailSettings = opt.GetRequiredService<IOptions<EmailSettings>>().Value;
+            var smtpClient = new SmtpClient
+            {
+                Host = emailSettings.SmtpHost,
+                Port = emailSettings.SmtpPort,
+                EnableSsl = emailSettings.EnableSsl,
+                Credentials = new System.Net.NetworkCredential(emailSettings.SmtpUsername, emailSettings.SmtpPassword)
+            };
+            return new EmailSender(smtpClient);
+        });
 
         return serviceCollection;
     }

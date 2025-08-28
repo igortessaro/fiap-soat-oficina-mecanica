@@ -1,15 +1,16 @@
-using Fiap.Soat.SmartMechanicalWorkshop.Api.Shared;
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Auth;
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.Services.Interfaces;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.Adapters.Controllers.Interfaces;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.Models.Authentication;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Fiap.Soat.SmartMechanicalWorkshop.Api.Controllers;
 
+[ExcludeFromCodeCoverage]
 [ApiController]
 [Route("auth")]
-public class AuthController(IAuthService authService) : ControllerBase
+public class AuthController(IAuthenticationController controller) : ControllerBase
 {
     /// <summary>
     ///     Authenticates a user and returns a JWT token if successful.
@@ -27,9 +28,5 @@ public class AuthController(IAuthService authService) : ControllerBase
     )]
     [SwaggerResponse(200, "Returns JWT token on successful authentication.", typeof(Response<string>))]
     [SwaggerResponse(404, "Returns when user/password is not found", typeof(NotFoundResult))]
-    public async Task<IActionResult> Login([FromBody] LoginRequest login, CancellationToken cancellationToken)
-    {
-        var response = await authService.LoginAsync(login, cancellationToken);
-        return response.ToActionResult();
-    }
+    public async Task<IActionResult> Login([FromBody] LoginRequest login, CancellationToken cancellationToken) => await controller.Login(login, cancellationToken);
 }

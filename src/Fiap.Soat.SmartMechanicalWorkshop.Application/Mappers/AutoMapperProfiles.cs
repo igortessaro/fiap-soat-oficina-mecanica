@@ -1,0 +1,67 @@
+using AutoMapper;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.AvailableServices.Create;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.People.Create;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.ServiceOrders.Create;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Supplies.Create;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Vehicles.Create;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.Vehicles.Update;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.AvailableServices;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Person;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.ServiceOrders;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Supplies;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Vehicles;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
+using System.Diagnostics.CodeAnalysis;
+
+namespace Fiap.Soat.SmartMechanicalWorkshop.Application.Mappers;
+
+[ExcludeFromCodeCoverage]
+public class AutoMapperProfiles : Profile
+{
+    public AutoMapperProfiles()
+    {
+        CreateMap<Vehicle, VehicleDto>().ReverseMap();
+        CreateMap<Paginate<Vehicle>, Paginate<VehicleDto>>().ReverseMap();
+        CreateMap<Vehicle, CreateVehicleCommand>()
+            .ReverseMap()
+            .ConstructUsing(dest => new Vehicle(dest.Model, dest.Brand, dest.ManufactureYear, dest.LicensePlate, dest.PersonId));
+        CreateMap<Vehicle, UpdateVehicleCommand>().ReverseMap();
+
+        CreateMap<AvailableService, AvailableServiceDto>()
+            .ConstructUsing(dest => new AvailableServiceDto(dest.Id, dest.Name, dest.Price, dest.AvailableServiceSupplies.Select(x => new SupplyDto(x.SupplyId, x.Supply.Name, x.Quantity, x.Supply.Price)).ToList()))
+            .ReverseMap();
+        CreateMap<Paginate<AvailableService>, Paginate<AvailableServiceDto>>().ReverseMap();
+        CreateMap<AvailableService, CreateAvailableServiceCommand>()
+            .ReverseMap();
+
+        CreateMap<Supply, SupplyDto>().ReverseMap();
+        CreateMap<Paginate<Supply>, Paginate<SupplyDto>>().ReverseMap();
+        CreateMap<Supply, CreateSupplyCommand>().ReverseMap();
+
+        CreateMap<Person, PersonDto>().ReverseMap();
+        CreateMap<Paginate<Person>, Paginate<PersonDto>>().ReverseMap();
+        CreateMap<Person, CreatePersonCommand>().ReverseMap();
+
+        CreateMap<Phone, PhoneDto>().ReverseMap();
+        CreateMap<Phone, CreatePhoneCommand>().ReverseMap();
+
+        CreateMap<Address, AddressDto>().ReverseMap();
+        CreateMap<Address, CreateAddressCommand>().ReverseMap();
+
+        CreateMap<Email, EmailDto>().ReverseMap();
+
+        CreateMap<ServiceOrder, ServiceOrderDto>().ReverseMap();
+        CreateMap<CreateServiceOrderCommand, ServiceOrder>().ReverseMap();
+        CreateMap<Paginate<ServiceOrder>, Paginate<ServiceOrderDto>>().ReverseMap();
+
+        CreateMap<Quote, QuoteDto>().ReverseMap();
+        CreateMap<ServiceOrderEvent, ServiceOrderEventDto>().ReverseMap();
+
+        CreateMap<AvailableServiceSupply, SupplyDto>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.SupplyId))
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Supply.Name))
+            .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Supply.Price));
+    }
+}

@@ -22,7 +22,6 @@ public static class SwaggerExtensions
                     Description =
                         "Veja a documentação no [ReDoc](/docs) <br> Repositorio do projeto: [GitHub](https://github.com/igortessaro/fiap-soat-oficina-mecanica)"
                 });
-            // Adiciona suporte para o header Authorization
             options.AddSecurityDefinition("Bearer",
                 new OpenApiSecurityScheme
                 {

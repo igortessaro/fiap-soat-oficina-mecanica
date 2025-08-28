@@ -16,9 +16,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solutions_items", "solution
 		.gitignore = .gitignore
 		docker-compose.yml = docker-compose.yml
 		README.md = README.md
+		docker-compose.dev.yml = docker-compose.dev.yml
+		Dockerfile = Dockerfile
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiap.Soat.MechanicalWorkshop.Application", "src\Fiap.Soat.MechanicalWorkshop.Application\Fiap.Soat.MechanicalWorkshop.Application.csproj", "{CBA2917B-B21C-42EB-B9C9-9219F34C8D90}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiap.Soat.SmartMechanicalWorkshop.Application", "src\Fiap.Soat.SmartMechanicalWorkshop.Application\Fiap.Soat.SmartMechanicalWorkshop.Application.csproj", "{CBA2917B-B21C-42EB-B9C9-9219F34C8D90}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{C6AD246A-9FEA-4262-8C40-6471838CD80A}"
 EndProject
@@ -29,6 +31,14 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiap.Soat.SmartMechanicalWorkshop.Integration.Tests", "tests\Fiap.Soat.SmartMechanicalWorkshop.Integration.Tests\Fiap.Soat.SmartMechanicalWorkshop.Integration.Tests.csproj", "{D160A1FA-B3DD-48F9-8E7A-681D85243347}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiap.Soat.SmartMechanicalWorkshop.Tests.Shared", "tests\Fiap.Soat.SmartMechanicalWorkshop.Tests.Shared\Fiap.Soat.SmartMechanicalWorkshop.Tests.Shared.csproj", "{26A7D3C5-508D-4A19-B23E-1B13FC15D146}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fiap.Soat.SmartMechanicalWorkshop.Application.Tests", "tests\Fiap.Soat.SmartMechanicalWorkshop.Application.Tests\Fiap.Soat.SmartMechanicalWorkshop.Application.Tests.csproj", "{08656D27-799A-4297-BE27-30371F13E650}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "010 - Enterprise Business Rules", "010 - Enterprise Business Rules", "{58B7FFC5-CA49-45DE-BE6A-A92717907AEB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "020 - Application Business Rules", "020 - Application Business Rules", "{59A227DE-7A14-43DA-AD43-31059C628C7D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "040 - Frameworks & Drivers", "040 - Frameworks & Drivers", "{9736A949-1389-4B66-8BA7-6C8183845A75}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -64,6 +74,10 @@ Global
 		{26A7D3C5-508D-4A19-B23E-1B13FC15D146}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{26A7D3C5-508D-4A19-B23E-1B13FC15D146}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{26A7D3C5-508D-4A19-B23E-1B13FC15D146}.Release|Any CPU.Build.0 = Release|Any CPU
+		{08656D27-799A-4297-BE27-30371F13E650}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08656D27-799A-4297-BE27-30371F13E650}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08656D27-799A-4297-BE27-30371F13E650}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08656D27-799A-4297-BE27-30371F13E650}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -72,12 +86,16 @@ Global
 		SolutionGuid = {068A6EDA-0255-42A7-9465-489ED096619A}
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{CBA2917B-B21C-42EB-B9C9-9219F34C8D90} = {C6AD246A-9FEA-4262-8C40-6471838CD80A}
-		{FE36A184-D53D-2F70-1A2E-8338B7D745C0} = {C6AD246A-9FEA-4262-8C40-6471838CD80A}
-		{3A45BDDB-5333-4393-BFA1-1C1E48EF4B06} = {C6AD246A-9FEA-4262-8C40-6471838CD80A}
-		{EA088CDD-F18D-40DB-8F33-469FF29FBB7B} = {C6AD246A-9FEA-4262-8C40-6471838CD80A}
 		{A32FE7F8-74B9-475B-A4FA-C4BCCA4C0AED} = {18B86828-EA31-43C1-BDC3-7B86955F1166}
 		{D160A1FA-B3DD-48F9-8E7A-681D85243347} = {18B86828-EA31-43C1-BDC3-7B86955F1166}
 		{26A7D3C5-508D-4A19-B23E-1B13FC15D146} = {18B86828-EA31-43C1-BDC3-7B86955F1166}
+		{08656D27-799A-4297-BE27-30371F13E650} = {18B86828-EA31-43C1-BDC3-7B86955F1166}
+		{58B7FFC5-CA49-45DE-BE6A-A92717907AEB} = {C6AD246A-9FEA-4262-8C40-6471838CD80A}
+		{3A45BDDB-5333-4393-BFA1-1C1E48EF4B06} = {58B7FFC5-CA49-45DE-BE6A-A92717907AEB}
+		{59A227DE-7A14-43DA-AD43-31059C628C7D} = {C6AD246A-9FEA-4262-8C40-6471838CD80A}
+		{CBA2917B-B21C-42EB-B9C9-9219F34C8D90} = {59A227DE-7A14-43DA-AD43-31059C628C7D}
+		{9736A949-1389-4B66-8BA7-6C8183845A75} = {C6AD246A-9FEA-4262-8C40-6471838CD80A}
+		{EA088CDD-F18D-40DB-8F33-469FF29FBB7B} = {9736A949-1389-4B66-8BA7-6C8183845A75}
+		{FE36A184-D53D-2F70-1A2E-8338B7D745C0} = {9736A949-1389-4B66-8BA7-6C8183845A75}
 	EndGlobalSection
 EndGlobal
