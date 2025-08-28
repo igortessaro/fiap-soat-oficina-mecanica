@@ -15,7 +15,7 @@ public static class PersonPresenter
             entity.EmployeeRole,
             entity.Phone,
             entity.Email,
-            AddressPresenter.ToDto(entity.Address),
+            entity.Address is null ? null : AddressPresenter.ToDto(entity.Address),
             entity.Vehicles.Select(VehiclePresenter.ToDto).ToList());
     }
 }

@@ -10,19 +10,19 @@ using System.Net;
 namespace Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.ServiceOrders.Update;
 
 public sealed class UpdateServiceOrderStatusHandler(IMapper mapper, IMediator mediator, IServiceOrderRepository serviceOrderRepository)
-    : IRequestHandler<UpdateServiceOrderStatusCommand, Response<ServiceOrderDto>>, INotificationHandler<UpdateQuoteStatusNotification>
+    : IRequestHandler<UpdateServiceOrderStatusCommand, Response<ServiceOrder>>, INotificationHandler<UpdateQuoteStatusNotification>
 {
-    public async Task<Response<ServiceOrderDto>> Handle(UpdateServiceOrderStatusCommand request, CancellationToken cancellationToken)
+    public async Task<Response<ServiceOrder>> Handle(UpdateServiceOrderStatusCommand request, CancellationToken cancellationToken)
     {
         var entity = await serviceOrderRepository.GetByIdAsync(request.Id, cancellationToken);
         if (entity is null)
         {
-            return ResponseFactory.Fail<ServiceOrderDto>("Service Order not found", HttpStatusCode.NotFound);
+            return ResponseFactory.Fail<ServiceOrder>("Service Order not found", HttpStatusCode.NotFound);
         }
 
         _ = entity.ChangeStatus(request.Status);
         _ = await serviceOrderRepository.UpdateAsync(entity, cancellationToken);
-        var response = mapper.Map<ServiceOrderDto>(await serviceOrderRepository.GetDetailedAsync(request.Id, cancellationToken));
+        var response = (await serviceOrderRepository.GetDetailedAsync(request.Id, cancellationToken))!;
         await mediator.Publish(new UpdateServiceOrderStatusNotification(request.Id, response), cancellationToken);
         return ResponseFactory.Ok(response);
     }

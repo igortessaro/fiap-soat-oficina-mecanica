@@ -1,4 +1,3 @@
-using AutoMapper;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.Adapters.Gateways.Repositories;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.ServiceOrders.Update;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
@@ -17,7 +16,7 @@ public sealed class CreateQuoteHandler(IQuoteRepository quoteRepository) : INoti
 
         var quote = new Quote(serviceOrder.Id);
         serviceOrder.AvailableServices.ToList().ForEach(availableService => quote.AddService(availableService.Id, availableService.Price));
-        serviceOrder.AvailableServices.SelectMany(x => x.Supplies).ToList().ForEach(supply => quote.AddSupply(supply.Id, supply.Price, supply.Quantity));
+        serviceOrder.AvailableServices.SelectMany(x => x.AvailableServiceSupplies).ToList().ForEach(availableServiceSupply => quote.AddSupply(availableServiceSupply.SupplyId, availableServiceSupply.Supply.Price, availableServiceSupply.Supply.Quantity));
         _ = await quoteRepository.AddAsync(quote, cancellationToken);
     }
 }

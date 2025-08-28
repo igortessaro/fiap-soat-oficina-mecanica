@@ -1,5 +1,6 @@
 using Fiap.Soat.SmartMechanicalWorkshop.Application.Adapters.Controllers.Interfaces;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.Adapters.Presenters;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.Mappers;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.Models.ServiceOrders;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.ServiceOrders.Create;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.ServiceOrders.Delete;
@@ -17,14 +18,16 @@ public sealed class ServiceOrdersController(IMediator mediator) : IServiceOrders
     public async Task<IActionResult> GetOneAsync(Guid id, CancellationToken cancellationToken)
     {
         var response = await mediator.Send(new GetServiceOrderByIdQuery(id), cancellationToken);
-        return ActionResultPresenter.ToActionResult(response);
+        var result = ResponseMapper.Map(response, ServiceOrderPresenter.ToDto);
+        return ActionResultPresenter.ToActionResult(result);
     }
 
     public async Task<IActionResult> GetAllAsync(PaginatedRequest paginatedRequest, Guid? personId, CancellationToken cancellationToken)
     {
         var query = new ListServiceOrdersQuery(paginatedRequest.PageNumber, paginatedRequest.PageSize, personId);
         var response = await mediator.Send(query, cancellationToken);
-        return ActionResultPresenter.ToActionResult(response);
+        var result = ResponseMapper.Map(response, ServiceOrderPresenter.ToDto);
+        return ActionResultPresenter.ToActionResult(result);
     }
 
     public async Task<IActionResult> GetAverageExecutionTime(DateOnly startDate, DateOnly endDate, CancellationToken cancellationToken)
@@ -37,8 +40,8 @@ public sealed class ServiceOrdersController(IMediator mediator) : IServiceOrders
     {
         CreateServiceOrderCommand command = new(request.ClientId, request.VehicleId, request.ServiceIds, request.Title, request.Description);
         var response = await mediator.Send(command, cancellationToken);
-        if (response.IsSuccess) await mediator.Publish(new UpdateServiceOrderStatusNotification(response.Data.Id, response.Data), cancellationToken);
-        return ActionResultPresenter.ToActionResult(response);
+        var result = ResponseMapper.Map(response, ServiceOrderPresenter.ToDto);
+        return ActionResultPresenter.ToActionResult(result);
     }
 
     public async Task<IActionResult> DeleteAsync(Guid id, CancellationToken cancellationToken)
@@ -51,12 +54,14 @@ public sealed class ServiceOrdersController(IMediator mediator) : IServiceOrders
     {
         UpdateServiceOrderCommand command = new(id, request.Title, request.Description, request.ServiceIds);
         var response = await mediator.Send(command, cancellationToken);
-        return ActionResultPresenter.ToActionResult(response);
+        var result = ResponseMapper.Map(response, ServiceOrderPresenter.ToDto);
+        return ActionResultPresenter.ToActionResult(result);
     }
 
     public async Task<IActionResult> PatchAsync(Guid id, PatchServiceOrderRequest request, CancellationToken cancellationToken)
     {
         var response = await mediator.Send(new UpdateServiceOrderStatusCommand(id, request.Status), cancellationToken);
-        return ActionResultPresenter.ToActionResult(response);
+        var result = ResponseMapper.Map(response, ServiceOrderPresenter.ToDto);
+        return ActionResultPresenter.ToActionResult(result);
     }
 }

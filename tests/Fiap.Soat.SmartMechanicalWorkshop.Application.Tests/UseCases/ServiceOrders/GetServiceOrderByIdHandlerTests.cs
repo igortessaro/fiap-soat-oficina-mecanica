@@ -19,7 +19,7 @@ public sealed class GetServiceOrderByIdHandlerTests
 
     public GetServiceOrderByIdHandlerTests()
     {
-        _useCase = new GetServiceOrderByIdHandler(_mapperMock.Object, _repositoryMock.Object);
+        _useCase = new GetServiceOrderByIdHandler(_repositoryMock.Object);
     }
 
     [Fact]
@@ -28,16 +28,14 @@ public sealed class GetServiceOrderByIdHandlerTests
         // Arrange
         var id = Guid.NewGuid();
         var entity = _fixture.Create<ServiceOrder>();
-        var dto = _fixture.Create<ServiceOrderDto>();
         _repositoryMock.Setup(r => r.GetDetailedAsync(id, It.IsAny<CancellationToken>())).ReturnsAsync(entity);
-        _mapperMock.Setup(m => m.Map<ServiceOrderDto>(entity)).Returns(dto);
 
         // Act
         var result = await _useCase.Handle(new GetServiceOrderByIdQuery(id), CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        result.Data.Should().Be(dto);
+        result.Data.Should().Be(entity);
     }
 
     [Fact]

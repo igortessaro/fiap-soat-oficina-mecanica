@@ -19,7 +19,7 @@ public sealed class ListServiceOrdersHandlerTests
 
     public ListServiceOrdersHandlerTests()
     {
-        _useCase = new ListServiceOrdersHandler(_mapperMock.Object, _repositoryMock.Object);
+        _useCase = new ListServiceOrdersHandler(_repositoryMock.Object);
     }
 
     [Fact]
@@ -27,17 +27,15 @@ public sealed class ListServiceOrdersHandlerTests
     {
         // Arrange
         var paginate = _fixture.Create<Paginate<ServiceOrder>>();
-        var paginateDto = _fixture.Create<Paginate<ServiceOrderDto>>();
 
         _repositoryMock.Setup(r => r.GetAllAsync(It.IsAny<IReadOnlyList<string>>(), It.IsAny<PaginatedRequest>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(paginate);
-        _mapperMock.Setup(m => m.Map<Paginate<ServiceOrderDto>>(paginate)).Returns(paginateDto);
 
         // Act
         var result = await _useCase.Handle(new ListServiceOrdersQuery(10, 10, null), CancellationToken.None);
 
         // Assert
         result.IsSuccess.Should().BeTrue();
-        result.Data.Should().Be(paginateDto);
+        result.Data.Should().Be(paginate);
     }
 }

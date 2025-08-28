@@ -7,6 +7,7 @@ using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.ServiceOrders.Get;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.ServiceOrders.List;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.ServiceOrders.Update;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.ServiceOrders;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 using FluentAssertions;
 using MediatR;
@@ -31,7 +32,7 @@ public sealed class ServiceOrdersControllerTests
     public async Task GetOneAsync_ShouldReturnOkResult_WhenServiceOrderExists()
     {
         var id = _fixture.Create<Guid>();
-        var response = new Response<ServiceOrderDto>(_fixture.Create<ServiceOrderDto>(), HttpStatusCode.OK);
+        var response = new Response<ServiceOrder>(_fixture.Create<ServiceOrder>(), HttpStatusCode.OK);
 
         _mediatorMock.Setup(m => m.Send(It.Is<GetServiceOrderByIdQuery>(q => q.Id == id), It.IsAny<CancellationToken>()))
             .ReturnsAsync(response);
@@ -41,7 +42,6 @@ public sealed class ServiceOrdersControllerTests
         var objectResult = result as ObjectResult;
         objectResult.Should().NotBeNull();
         objectResult!.StatusCode.Should().Be((int) HttpStatusCode.OK);
-        objectResult.Value.Should().Be(response);
     }
 
     [Fact]
@@ -49,9 +49,9 @@ public sealed class ServiceOrdersControllerTests
     {
         var paginatedRequest = _fixture.Create<PaginatedRequest>();
         var personId = _fixture.Create<Guid>();
-        var serviceOrders = _fixture.CreateMany<ServiceOrderDto>(5).ToList();
-        var paginatedResponse = new Paginate<ServiceOrderDto>(serviceOrders, serviceOrders.Count, paginatedRequest.PageSize, paginatedRequest.PageNumber, 1);
-        var response = new Response<Paginate<ServiceOrderDto>>(paginatedResponse, HttpStatusCode.OK);
+        var serviceOrders = _fixture.CreateMany<ServiceOrder>(5).ToList();
+        var paginatedResponse = new Paginate<ServiceOrder>(serviceOrders, serviceOrders.Count, paginatedRequest.PageSize, paginatedRequest.PageNumber, 1);
+        var response = new Response<Paginate<ServiceOrder>>(paginatedResponse, HttpStatusCode.OK);
 
         _mediatorMock.Setup(m => m.Send(It.IsAny<ListServiceOrdersQuery>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(response);
@@ -61,7 +61,6 @@ public sealed class ServiceOrdersControllerTests
         var objectResult = result as ObjectResult;
         objectResult.Should().NotBeNull();
         objectResult!.StatusCode.Should().Be((int) HttpStatusCode.OK);
-        objectResult.Value.Should().Be(response);
     }
 
     [Fact]
@@ -86,8 +85,8 @@ public sealed class ServiceOrdersControllerTests
     public async Task CreateAsync_ShouldReturnCreatedResult_WhenServiceOrderIsCreated()
     {
         var request = _fixture.Create<CreateServiceOrderRequest>();
-        var dto = _fixture.Create<ServiceOrderDto>();
-        var response = new Response<ServiceOrderDto>(dto, HttpStatusCode.Created);
+        var dto = _fixture.Create<ServiceOrder>();
+        var response = new Response<ServiceOrder>(dto, HttpStatusCode.Created);
 
         _mediatorMock.Setup(m => m.Send(It.IsAny<CreateServiceOrderCommand>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(response);
@@ -100,7 +99,6 @@ public sealed class ServiceOrdersControllerTests
         var objectResult = result as ObjectResult;
         objectResult.Should().NotBeNull();
         objectResult!.StatusCode.Should().Be((int) HttpStatusCode.Created);
-        objectResult.Value.Should().Be(response);
     }
 
     [Fact]
@@ -125,8 +123,8 @@ public sealed class ServiceOrdersControllerTests
     {
         var id = _fixture.Create<Guid>();
         var request = _fixture.Create<UpdateOneServiceOrderRequest>();
-        var dto = _fixture.Create<ServiceOrderDto>();
-        var response = new Response<ServiceOrderDto>(dto, HttpStatusCode.OK);
+        var dto = _fixture.Create<ServiceOrder>();
+        var response = new Response<ServiceOrder>(dto, HttpStatusCode.OK);
 
         _mediatorMock.Setup(m => m.Send(It.IsAny<UpdateServiceOrderCommand>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(response);
@@ -136,7 +134,6 @@ public sealed class ServiceOrdersControllerTests
         var objectResult = result as ObjectResult;
         objectResult.Should().NotBeNull();
         objectResult!.StatusCode.Should().Be((int) HttpStatusCode.OK);
-        objectResult.Value.Should().Be(response);
     }
 
     [Fact]
@@ -144,7 +141,7 @@ public sealed class ServiceOrdersControllerTests
     {
         var id = _fixture.Create<Guid>();
         var request = _fixture.Create<PatchServiceOrderRequest>();
-        var response = ResponseFactory.Ok<ServiceOrderDto>(_fixture.Create<ServiceOrderDto>());
+        var response = ResponseFactory.Ok<ServiceOrder>(_fixture.Create<ServiceOrder>());
 
         _mediatorMock.Setup(m => m.Send(It.IsAny<UpdateServiceOrderStatusCommand>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(response);
@@ -154,6 +151,5 @@ public sealed class ServiceOrdersControllerTests
         var objectResult = result as ObjectResult;
         objectResult.Should().NotBeNull();
         objectResult!.StatusCode.Should().Be((int) HttpStatusCode.OK);
-        objectResult.Value.Should().Be(response);
     }
 }

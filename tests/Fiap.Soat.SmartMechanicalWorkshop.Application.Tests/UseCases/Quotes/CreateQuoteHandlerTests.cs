@@ -7,6 +7,7 @@ using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.AvailableServices;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.ServiceOrders;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.Supplies;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
+using Fiap.Soat.SmartMechanicalWorkshop.Domain.States.ServiceOrder;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.ValueObjects;
 using Moq;
 
@@ -28,9 +29,11 @@ public sealed class CreateQuoteHandlerTests
     public async Task CreateAsync_ShouldReturnBadRequest_WhenStatusIsNotWaitingApproval()
     {
         // Arrange
-        var serviceOrder = _fixture.Build<ServiceOrderDto>()
-            .With(x => x.Status, ServiceOrderStatus.Delivered)
-            .Create();
+        var serviceOrder = new ServiceOrder("title", "description", Guid.NewGuid(), Guid.NewGuid());
+        serviceOrder.SyncState()
+            .SetState(new UnderDiagnosisState())
+            .SetState(new WaitingApprovalState())
+            .SetState(new InProgressState());
 
         // Act
         await _useCase.Handle(new UpdateServiceOrderStatusNotification(serviceOrder.Id, serviceOrder), CancellationToken.None);
@@ -43,10 +46,10 @@ public sealed class CreateQuoteHandlerTests
     public async Task CreateAsync_ShouldReturnBadRequest_WhenNoAvailableServices()
     {
         // Arrange
-        var serviceOrder = _fixture.Build<ServiceOrderDto>()
-            .With(x => x.Status, ServiceOrderStatus.WaitingApproval)
-            .With(x => x.AvailableServices, Array.Empty<AvailableServiceDto>())
-            .Create();
+        var serviceOrder = new ServiceOrder("title", "description", Guid.NewGuid(), Guid.NewGuid());
+        serviceOrder.SyncState()
+            .SetState(new UnderDiagnosisState())
+            .SetState(new WaitingApprovalState());
 
         // Act
         await _useCase.Handle(new UpdateServiceOrderStatusNotification(serviceOrder.Id, serviceOrder), CancellationToken.None);
@@ -59,13 +62,16 @@ public sealed class CreateQuoteHandlerTests
     public async Task CreateAsync_ShouldReturnOk_WhenValid()
     {
         // Arrange
-        var availableService = _fixture.Build<AvailableServiceDto>()
-            .With(x => x.Supplies, _fixture.CreateMany<SupplyDto>(2).ToArray())
-            .Create();
-        var serviceOrder = _fixture.Build<ServiceOrderDto>()
-            .With(x => x.Status, ServiceOrderStatus.WaitingApproval)
-            .With(x => x.AvailableServices, [availableService])
-            .Create();
+        var availableService = new AvailableService("available service", 100);
+        var availableServiceSupplies = _fixture
+            .Build<AvailableServiceSupply>()
+            .CreateMany(2)
+            .ToArray();
+        availableServiceSupplies.ToList().ForEach(x => x.GetType().GetProperty("Supply")!.SetValue(x, new Supply("name", 50, 1)));
+        availableService.GetType().GetProperty("AvailableServiceSupplies")!.SetValue(availableService, availableServiceSupplies);
+        var serviceOrder = new ServiceOrder("title", "description", Guid.NewGuid(), Guid.NewGuid());
+        serviceOrder.GetType().GetProperty("Status")!.SetValue(serviceOrder, ServiceOrderStatus.WaitingApproval);
+        serviceOrder.AvailableServices.Add(availableService);
         var quoteDto = _fixture.Build<QuoteDto>()
             .With(x => x.ServiceOrderId, serviceOrder.Id)
             .With(x => x.Status, QuoteStatus.Pending)
@@ -77,9 +83,9 @@ public sealed class CreateQuoteHandlerTests
             expectedQuote.AddService(svc.Id, svc.Price);
         }
 
-        foreach (var supply in serviceOrder.AvailableServices.SelectMany(x => x.Supplies))
+        foreach (var supply in serviceOrder.AvailableServices.SelectMany(x => x.AvailableServiceSupplies))
         {
-            expectedQuote.AddSupply(supply.Id, supply.Price, supply.Quantity);
+            expectedQuote.AddSupply(supply.SupplyId, supply.Supply.Price, supply.Supply.Quantity);
         }
 
         _quoteRepositoryMock.Setup(r => r.AddAsync(It.IsAny<Quote>(), It.IsAny<CancellationToken>()))
