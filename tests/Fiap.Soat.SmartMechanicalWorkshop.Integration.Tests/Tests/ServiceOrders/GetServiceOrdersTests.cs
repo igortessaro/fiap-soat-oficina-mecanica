@@ -24,7 +24,7 @@ public sealed class GetServiceOrdersTests : CustomWebApplicationFactory<Program>
     }
 
     [Fact]
-    public async Task US011_GetOneAsync_WhenVehicleFound_ShouldReturn200()
+    public async Task US011_GetOneAsync_WhenServiceOrderFound_ShouldReturn200()
     {
         // Arrange
         await using var scope = Services.CreateAsyncScope();

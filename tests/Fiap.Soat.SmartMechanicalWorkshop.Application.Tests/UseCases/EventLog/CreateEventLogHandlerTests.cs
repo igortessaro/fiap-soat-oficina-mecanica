@@ -2,7 +2,6 @@ using AutoFixture;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.Adapters.Gateways.Repositories;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.EventLog;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.ServiceOrders.Update;
-using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.ServiceOrders;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 using Moq;
 
@@ -24,7 +23,7 @@ public sealed class CreateEventLogHandlerTests
     {
         // Arrange
         var serviceOrderId = Guid.NewGuid();
-        var serviceOrder = _fixture.Create<ServiceOrderDto>();
+        var serviceOrder = _fixture.Create<ServiceOrder>();
         var eventEntity = new ServiceOrderEvent(serviceOrderId, serviceOrder.Status);
 
         _repositoryMock

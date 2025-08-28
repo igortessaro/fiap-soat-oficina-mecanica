@@ -98,20 +98,18 @@ public sealed class CreateServiceOrderHandlerTests
         var entity = _fixture.Create<ServiceOrder>();
         var availableService = _fixture.Create<AvailableService>();
         var createdEntity = _fixture.Create<ServiceOrder>();
-        var dto = _fixture.Create<ServiceOrderDto>();
 
         _mapperMock.Setup(m => m.Map<ServiceOrder>(command)).Returns(entity);
         _personRepositoryMock.Setup(r => r.AnyAsync(It.IsAny<Expression<Func<Person, bool>>>(), It.IsAny<CancellationToken>())).ReturnsAsync(true);
         _vehicleRepositoryMock.Setup(r => r.AnyAsync(It.IsAny<Expression<Func<Vehicle, bool>>>(), It.IsAny<CancellationToken>())).ReturnsAsync(true);
         _availableServiceRepositoryMock.Setup(r => r.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>())).ReturnsAsync(availableService);
         _repositoryMock.Setup(r => r.AddAsync(entity, It.IsAny<CancellationToken>())).ReturnsAsync(createdEntity);
-        _mapperMock.Setup(m => m.Map<ServiceOrderDto>(createdEntity)).Returns(dto);
 
         // Act
         var result = await _useCase.Handle(command, CancellationToken.None);
 
         // Assert
         result.StatusCode.Should().Be(HttpStatusCode.Created);
-        result.Data.Should().Be(dto);
+        result.Data.Should().Be(createdEntity);
     }
 }
