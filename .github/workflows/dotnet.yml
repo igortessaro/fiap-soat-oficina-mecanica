@@ -77,7 +77,7 @@ jobs:
 
   sonar:
     name: SonarCloud
-    if: ${{ github.event_name == 'pull_request' }}
+    if: ${{ github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main') }}
     needs: build_unit
     runs-on: windows-latest   # keep windows if you prefer; linux also works
     env:
