@@ -131,7 +131,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: build_unit
     env:
-      DOCKERHUB_REPOSITORY_NAME: igortessaro/smartmechanicalworkshop-api
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+      DOCKERHUB_REPOSITORY_NAME: smartmechanicalworkshop-api
     if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
     steps:
       - name: Checkout code
@@ -143,8 +144,8 @@ jobs:
       - name: Login to DockerHub
         uses: docker/login-action@v3
         with:
-          username: igortessaro
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          username: ${{ env.DOCKERHUB_USERNAME }}
+          password: ${{ env.DOCKERHUB_TOKEN }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
@@ -152,4 +153,4 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ env.DOCKERHUB_REPOSITORY_NAME }}:latest
+          tags: ${{ env.DOCKERHUB_USERNAME }}/${{ env.DOCKERHUB_REPOSITORY_NAME }}:latest
