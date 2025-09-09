@@ -78,7 +78,7 @@ jobs:
   sonar:
     name: SonarCloud
     if: ${{ github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main') }}
-    needs: build_unit
+    needs: integration_tests
     runs-on: windows-latest   # keep windows if you prefer; linux also works
     env:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -133,7 +133,7 @@ jobs:
     env:
       DOCKERHUB_USERNAME: ${{ vars.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-      DOCKERHUB_REPOSITORY_NAME: smartmechanicalworkshop-api
+      DOCKERHUB_REPOSITORY_NAME: smart-mechanical-workshop-api
     if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
     steps:
       - name: Checkout code
