@@ -1,6 +1,6 @@
 services:
   db:
-    image: mysql:8.4
+    image: ${DOCKERHUB_USERNAME}/smart-mechanical-workshop-db:latest
     container_name: smart-mechanical-workshop-mysql
     restart: unless-stopped
     environment:
@@ -12,7 +12,6 @@ services:
       - "${DB_PORT}:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./docker/mysql/init:/docker-entrypoint-initdb.d
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$$MYSQL_ROOT_PASSWORD"]
       timeout: 20s
@@ -21,9 +20,7 @@ services:
       - mechanical-workshop-network
 
   api:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: ${DOCKERHUB_USERNAME}/smart-mechanical-workshop-api:latest
     container_name: smart-mechanical-workshop-api
     restart: unless-stopped
     environment:
