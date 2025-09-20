@@ -40,32 +40,39 @@ src/
 ### Tecnologias e Dependências
 
 #### Framework Base
+
 - **.NET 9.0** - Framework principal da aplicação
 - **ASP.NET Core** - Framework web para APIs REST
 
 #### Banco de Dados
+
 - **Entity Framework Core 8.0** - ORM para acesso a dados
 - **Pomelo.EntityFrameworkCore.MySql** - Provider para MySQL
 - **MySQL 8.4** - Sistema de gerenciamento de banco de dados
 
 #### Arquitetura e Padrões
+
 - **MediatR** - Implementação do padrão Mediator para CQRS
 - **AutoMapper** - Mapeamento automático entre objetos
 - **FluentResults** - Tratamento de resultados de operações
 - **FluentValidation** - Validação de dados de entrada
 
 #### Autenticação e Segurança
+
 - **JWT Bearer Authentication** - Autenticação baseada em tokens JWT
 
 #### Documentação e Testes
+
 - **Swagger/OpenAPI** - Documentação interativa da API
 - **xUnit** - Framework de testes unitários
 - **AutoFixture** - Geração automática de dados para testes
 
 #### Logging e Monitoramento
+
 - **Serilog** - Sistema de logging estruturado
 
 #### Comunicação
+
 - **MailHog** - Servidor SMTP para desenvolvimento e testes de e-mail
 
 ### Estrutura de Pastas
@@ -92,10 +99,18 @@ fiap-soat-oficina-mecanica/
 ### Pré-requisitos
 
 #### Para execução com Docker (Recomendado)
+
 - **Docker Desktop** ou **Docker Engine** (versão 20.10+)
 - **Docker Compose** (versão 2.0+)
 
+#### Para execução com Kubernetes
+
+- **Kubernetes cluster** (minikube, kind, EKS, GKE, AKS, etc.)
+- **kubectl** (versão 1.25+)
+- **Kustomize** (incluído no kubectl 1.14+)
+
 #### Para desenvolvimento local
+
 - **.NET SDK 9.0** ou superior
 - **MySQL 8.0** ou superior
 - **Git** para controle de versão
@@ -133,6 +148,7 @@ dotnet run
 ```
 
 **Configuração de banco local:**
+
 ```json
 "ConnectionStrings": {
   "DefaultConnection": "server=localhost;port=3306;database=workshopdb;user=workshopuser;password=workshop123;SslMode=none;AllowPublicKeyRetrieval=True;"
@@ -140,6 +156,7 @@ dotnet run
 ```
 
 **Serviços disponíveis:**
+
 - API: https://localhost:7286 (HTTPS) ou http://localhost:5287 (HTTP)
 - MailHog: http://localhost:8025
 - MySQL: localhost:3306
@@ -152,11 +169,43 @@ docker compose -p "fiap-smart-mechanical-workshop" down
 docker compose -f docker-compose.dev.yml -p "fiap-smart-mechanical-workshop-dev" down
 ```
 
+### Opção 3: Deploy no Kubernetes
+
+Para deployar a aplicação em um cluster Kubernetes, utilize nossa infraestrutura configurada com Kustomize:
+
+```bash
+# Navegar para o diretório k8s
+cd k8s
+
+# Deploy para development
+./deploy.sh development
+
+# Deploy para staging
+./deploy.sh staging
+
+# Deploy para production
+./deploy.sh production
+
+# Verificar status dos serviços
+./status.sh development
+```
+
+**📖 Para instruções detalhadas de Kubernetes, consulte: [k8s/README.md](k8s/README.md)**
+
+A infraestrutura Kubernetes inclui:
+
+- **Multi-ambiente**: Development, Staging e Production
+- **Auto-scaling**: HPA baseado em CPU
+- **LoadBalancer**: Exposição externa automática
+- **Persistent Storage**: Para dados do MySQL
+- **Ingress**: HTTPS para produção
+- **Monitoramento**: Scripts de debug e status
+
 ## Gerenciamento de Migrations do Banco de Dados
 
 O projeto utiliza **Entity Framework Core** para gerenciar as migrations do banco de dados. Siga os passos abaixo para trabalhar com migrations:
 
-### Pré-requisitos
+### Pré-requisitos(Migrations)
 
 Instale a ferramenta global do Entity Framework (caso ainda não tenha):
 
@@ -175,6 +224,7 @@ dotnet ef migrations add NOME_DA_MIGRATION \
 ```
 
 **Parâmetros:**
+
 - `--project`: Indica onde estão as classes de contexto e migrations
 - `--startup-project`: Indica onde está o projeto de inicialização (API)
 
@@ -237,7 +287,7 @@ A aplicação utiliza **autenticação JWT (JSON Web Token)** para proteger todo
 
 | E-mail | Perfil | Senha |
 |--------|--------|-------|
-| joao.silva@email.com | Employee | Pa$$w0rd! |
+| <joao.silva@email.com> | Employee | Pa$$w0rd! |
 
 ### Exemplo de Requisição de Login
 
@@ -264,6 +314,7 @@ curl --location 'http://localhost:5180/auth/login' \
 ### Como Usar o Token
 
 #### No Swagger
+
 1. Faça login usando o endpoint `/auth/login`
 2. Copie o token retornado
 3. Clique no botão **"Authorize"** no topo da página do Swagger
@@ -271,6 +322,7 @@ curl --location 'http://localhost:5180/auth/login' \
 5. Todos os endpoints protegidos agora funcionarão automaticamente
 
 #### Em Requisições HTTP
+
 Adicione o header de autorização em todas as requisições:
 
 ```bash
