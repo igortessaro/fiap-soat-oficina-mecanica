@@ -29,8 +29,8 @@ patches:
       BASE_URL: "http://localhost:5180"
       DB_HOST: "dev-mysql-service"
       DB_PORT: "3306"
-      MYSQL_DATABASE: "workshopdb_dev"
-      MYSQL_USER: "workshopuser_dev"
+      MYSQL_DATABASE: "workshopdb"
+      MYSQL_USER: "workshopuser"
       SMTP_HOST: "dev-mailhog-service"
       SMTP_PORT: "1025"
   target:
@@ -79,7 +79,7 @@ patches:
           - name: api
             env:
             - name: ConnectionStrings__DefaultConnection
-              value: "server=dev-mysql-service;port=3306;database=workshopdb_dev;user=workshopuser_dev;password=workshop123;SslMode=none;AllowPublicKeyRetrieval=True;"
+              value: "server=dev-mysql-service;port=3306;database=workshopdb;user=workshopuser;password=workshop123;SslMode=none;AllowPublicKeyRetrieval=True;"
   target:
     kind: Deployment
     name: api-deployment
