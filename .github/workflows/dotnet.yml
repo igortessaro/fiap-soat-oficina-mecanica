@@ -154,6 +154,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
+          platforms: linux/amd64,linux/arm64
           tags: ${{ env.DOCKERHUB_USERNAME }}/${{ env.DOCKERHUB_REPOSITORY_NAME }}:latest
 
   docker_db_publish:
@@ -184,4 +185,5 @@ jobs:
           context: ./docker/mysql
           file: ./docker/mysql/Dockerfile
           push: true
+          platforms: linux/amd64,linux/arm64
           tags: ${{ env.DOCKERHUB_USERNAME }}/${{ env.DOCKERHUB_DB_REPOSITORY_NAME }}:latest
