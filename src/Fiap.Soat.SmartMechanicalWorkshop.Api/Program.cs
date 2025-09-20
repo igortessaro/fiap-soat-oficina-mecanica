@@ -46,13 +46,6 @@ _ = builder.Services.AddMemoryCache();
 _ = builder.Services.AddInterfaceAdapters();
 
 var app = builder.Build();
-if (app.Environment.IsDevelopment())
-{
-    using var scope = app.Services.CreateScope();
-    await using var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    await dbContext.Database.MigrateAsync();
-    await dbContext.Database.EnsureCreatedAsync();
-}
 
 _ = app.UseSwagger();
 _ = app.UseSwaggerUI(c =>
