@@ -6,7 +6,7 @@ metadata:
     app.kubernetes.io/name: mysql
     app.kubernetes.io/component: database
 spec:
-  type: LoadBalancer # MySQL exposto externamente (apenas dev)
+  type: ClusterIP
   ports:
   - port: 3306
     targetPort: 3306
@@ -23,7 +23,7 @@ metadata:
     app.kubernetes.io/name: smart-mechanical-workshop-api
     app.kubernetes.io/component: api
 spec:
-  type: LoadBalancer  # API exposta externamente
+  type: ClusterIP
   ports:
   - port: 5180
     targetPort: 8080
@@ -40,7 +40,7 @@ metadata:
     app.kubernetes.io/name: mailhog
     app.kubernetes.io/component: mail-testing
 spec:
-  type: LoadBalancer  # MailHog exposto externamente (apenas dev)
+  type: ClusterIP
   ports:
   - port: 1025
     targetPort: 1025

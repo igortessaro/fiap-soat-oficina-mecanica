@@ -33,6 +33,7 @@ patches:
       MYSQL_USER: "workshopuser_staging"
       SMTP_HOST: "staging-mailhog-service"
       SMTP_PORT: "1025"
+      DEFAULT_CONNECTION_STRING: "server=staging-mysql-service;port=3306;database=workshopdb_staging;user=workshopuser_staging;password=workshop123;SslMode=none;AllowPublicKeyRetrieval=True;"
   target:
     kind: ConfigMap
     name: smart-mechanical-workshop-config
@@ -52,7 +53,7 @@ patches:
     metadata:
       name: mailhog-service
     spec:
-      type: LoadBalancer
+      type: ClusterIP
   target:
     kind: Service
     name: mailhog-service
@@ -62,7 +63,7 @@ patches:
     metadata:
       name: mysql-service
     spec:
-      type: LoadBalancer
+      type: ClusterIP
   target:
     kind: Service
     name: mysql-service

@@ -10,10 +10,10 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-    - api.your-domain.com
+    - api.workshop.com
     secretName: smart-mechanical-workshop-tls
   rules:
-  - host: api.your-domain.com
+  - host: api.workshop.com
     http:
       paths:
       - path: /

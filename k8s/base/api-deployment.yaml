@@ -37,7 +37,10 @@ spec:
               name: smart-mechanical-workshop-config
               key: ASPNETCORE_ENVIRONMENT
         - name: ConnectionStrings__DefaultConnection
-          value: "server=$(DB_HOST);port=$(DB_PORT);database=$(MYSQL_DATABASE);user=$(MYSQL_USER);password=$(MYSQL_PASSWORD);SslMode=none;AllowPublicKeyRetrieval=True;"
+          valueFrom:
+            configMapKeyRef:
+              name: smart-mechanical-workshop-config
+              key: DEFAULT_CONNECTION_STRING
         - name: DB_HOST
           valueFrom:
             configMapKeyRef:

@@ -33,6 +33,7 @@ patches:
       MYSQL_USER: "workshopuser"
       SMTP_HOST: "dev-mailhog-service"
       SMTP_PORT: "1025"
+      DEFAULT_CONNECTION_STRING: "server=dev-mysql-service;port=3306;database=workshopdb;user=workshopuser;password=workshop123;SslMode=none;AllowPublicKeyRetrieval=True;"
   target:
     kind: ConfigMap
     name: smart-mechanical-workshop-config
@@ -73,13 +74,6 @@ patches:
       name: api-deployment
     spec:
       replicas: 1
-      template:
-        spec:
-          containers:
-          - name: api
-            env:
-            - name: ConnectionStrings__DefaultConnection
-              value: "server=dev-mysql-service;port=3306;database=workshopdb;user=workshopuser;password=workshop123;SslMode=none;AllowPublicKeyRetrieval=True;"
   target:
     kind: Deployment
     name: api-deployment

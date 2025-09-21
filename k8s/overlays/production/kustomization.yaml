@@ -34,6 +34,7 @@ patches:
       MYSQL_USER: "workshopuser"
       SMTP_HOST: "prod-mailhog-service"
       SMTP_PORT: "1025"
+      DEFAULT_CONNECTION_STRING: "server=prod-mysql-service;port=3306;database=workshopdb;user=workshopuser;password=workshop123;SslMode=none;AllowPublicKeyRetrieval=True;"
   target:
     kind: ConfigMap
     name: smart-mechanical-workshop-config
