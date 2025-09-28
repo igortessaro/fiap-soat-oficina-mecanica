@@ -220,7 +220,7 @@ main() {
 
     # Run deployment steps
     check_prerequisites
-    start_localstack
+    # start_localstack
     deploy_terraform
     configure_kubectl
     deploy_k8s_manifests

@@ -4,15 +4,15 @@ This directory contains the complete Infrastructure as Code (IaC) setup for the 
 
 ## 📋 Table of Contents
 
-- [Architecture Overview](#architecture-overview)
-- [Directory Structure](#directory-structure)
-- [Prerequisites](#prerequisites)
-- [Quick Start](#quick-start)
-- [Environment Management](#environment-management)
-- [Security Best Practices](#security-best-practices)
-- [Monitoring and Logging](#monitoring-and-logging)
-- [Troubleshooting](#troubleshooting)
-- [Contributing](#contributing)
+-   [Architecture Overview](#architecture-overview)
+-   [Directory Structure](#directory-structure)
+-   [Prerequisites](#prerequisites)
+-   [Quick Start](#quick-start)
+-   [Environment Management](#environment-management)
+-   [Security Best Practices](#security-best-practices)
+-   [Monitoring and Logging](#monitoring-and-logging)
+-   [Troubleshooting](#troubleshooting)
+-   [Contributing](#contributing)
 
 ## 🏗️ Architecture Overview
 
@@ -33,14 +33,14 @@ This directory contains the complete Infrastructure as Code (IaC) setup for the 
 
 ### Components
 
-- **VPC**: Secure network isolation with public and private subnets
-- **EKS**: Managed Kubernetes cluster for container orchestration
-- **RDS**: MySQL database with automated backups and encryption
-- **ALB**: Application Load Balancer with SSL termination
-- **ASG**: Auto Scaling Groups for high availability
-- **IAM**: Fine-grained security roles and policies
-- **KMS**: Encryption key management
-- **Secrets Manager**: Secure credential storage
+-   **VPC**: Secure network isolation with public and private subnets
+-   **EKS**: Managed Kubernetes cluster for container orchestration
+-   **RDS**: MySQL database with automated backups and encryption
+-   **ALB**: Application Load Balancer with SSL termination
+-   **ASG**: Auto Scaling Groups for high availability
+-   **IAM**: Fine-grained security roles and policies
+-   **KMS**: Encryption key management
+-   **Secrets Manager**: Secure credential storage
 
 ## 📁 Directory Structure
 
@@ -92,15 +92,15 @@ terraform/
 
 ### Required Software
 
-| Tool | Version | Purpose |
-|------|---------|---------|
-| **Terraform** | >= 1.0 | Infrastructure provisioning |
-| **AWS CLI** | >= 2.0 | AWS resource management |
-| **kubectl** | >= 1.25 | Kubernetes management |
-| **Helm** | >= 3.0 | Kubernetes package management |
-| **Docker** | >= 20.10 | LocalStack container runtime |
-| **LocalStack** | >= 2.0 | Local AWS simulation |
-| **jq** | latest | JSON processing |
+| Tool           | Version  | Purpose                       |
+| -------------- | -------- | ----------------------------- |
+| **Terraform**  | >= 1.0   | Infrastructure provisioning   |
+| **AWS CLI**    | >= 2.0   | AWS resource management       |
+| **kubectl**    | >= 1.25  | Kubernetes management         |
+| **Helm**       | >= 3.0   | Kubernetes package management |
+| **Docker**     | >= 20.10 | LocalStack container runtime  |
+| **LocalStack** | >= 2.0   | Local AWS simulation          |
+| **jq**         | latest   | JSON processing               |
 
 ### Installation Commands
 
@@ -132,8 +132,17 @@ aws sts get-caller-identity
 ### 1. Local Development (LocalStack)
 
 ```bash
-# Start LocalStack
-localstack start
+# Start LocalStack(with docker)
+#localstack start
+docker run \
+  --name localstack-workshop \
+  --rm -d \
+  -p 127.0.0.1:4566:4566 \
+  -p 127.0.0.1:4510-4559:4510-4559 \
+  -p 127.0.0.1:443:443 \
+  -e LOCALSTACK_AUTH_TOKEN=${LOCALSTACK_AUTH_TOKEN:?} \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  localstack/localstack-pro
 
 # Deploy local environment
 make local-deploy
@@ -181,16 +190,16 @@ make aws-deploy-production
 
 ### Environment Comparison
 
-| Feature | Local | Staging | Production |
-|---------|-------|---------|------------|
-| **Infrastructure** | LocalStack | AWS | AWS |
-| **EKS Nodes** | 1 x t3.small | 2 x m5.large | 3 x m5.xlarge |
-| **RDS Instance** | db.t3.micro | db.r6g.medium | db.r6g.large |
-| **Multi-AZ** | No | No | Yes |
-| **Backup Retention** | 0 days | 7 days | 30 days |
-| **SSL/TLS** | No | Optional | Required |
-| **Monitoring** | Basic | Enhanced | Full |
-| **Cost** | Free | Low | Production |
+| Feature              | Local        | Staging       | Production    |
+| -------------------- | ------------ | ------------- | ------------- |
+| **Infrastructure**   | LocalStack   | AWS           | AWS           |
+| **EKS Nodes**        | 1 x t3.small | 2 x m5.large  | 3 x m5.xlarge |
+| **RDS Instance**     | db.t3.micro  | db.r6g.medium | db.r6g.large  |
+| **Multi-AZ**         | No           | No            | Yes           |
+| **Backup Retention** | 0 days       | 7 days        | 30 days       |
+| **SSL/TLS**          | No           | Optional      | Required      |
+| **Monitoring**       | Basic        | Enhanced      | Full          |
+| **Cost**             | Free         | Low           | Production    |
 
 ### Configuration Management
 
@@ -209,9 +218,9 @@ terraform/environments/production/terraform.tfvars
 
 ### Terraform Backend Configuration
 
-- **Local**: Local state file (no remote backend)
-- **Staging**: S3 backend with DynamoDB locking
-- **Production**: S3 backend with DynamoDB locking (separate bucket)
+-   **Local**: Local state file (no remote backend)
+-   **Staging**: S3 backend with DynamoDB locking
+-   **Production**: S3 backend with DynamoDB locking (separate bucket)
 
 ## 🔒 Security Best Practices
 
@@ -229,24 +238,24 @@ aws secretsmanager create-secret \
 
 ### 2. Network Security
 
-- **Private Subnets**: Database and application nodes in private subnets
-- **Security Groups**: Least-privilege access rules
-- **NACLs**: Additional network-level security
-- **VPC Endpoints**: Secure AWS service access
+-   **Private Subnets**: Database and application nodes in private subnets
+-   **Security Groups**: Least-privilege access rules
+-   **NACLs**: Additional network-level security
+-   **VPC Endpoints**: Secure AWS service access
 
 ### 3. Encryption
 
-- **At Rest**: RDS encryption, EBS volume encryption
-- **In Transit**: TLS for all communications
-- **KMS**: Customer-managed encryption keys
-- **Secrets**: AWS Secrets Manager integration
+-   **At Rest**: RDS encryption, EBS volume encryption
+-   **In Transit**: TLS for all communications
+-   **KMS**: Customer-managed encryption keys
+-   **Secrets**: AWS Secrets Manager integration
 
 ### 4. IAM Security
 
-- **IRSA**: IAM Roles for Service Accounts
-- **Least Privilege**: Minimal required permissions
-- **MFA**: Multi-factor authentication for human users
-- **Rotation**: Regular credential rotation
+-   **IRSA**: IAM Roles for Service Accounts
+-   **Least Privilege**: Minimal required permissions
+-   **MFA**: Multi-factor authentication for human users
+-   **Rotation**: Regular credential rotation
 
 ## 📊 Monitoring and Logging
 
@@ -427,39 +436,43 @@ aws rds restore-db-instance-to-point-in-time \
 ### Development Workflow
 
 1. **Create Feature Branch**
-   ```bash
-   git checkout -b feature/new-infrastructure-component
-   ```
+
+    ```bash
+    git checkout -b feature/new-infrastructure-component
+    ```
 
 2. **Make Changes**
-   ```bash
-   # Edit Terraform files
-   # Test locally with LocalStack
-   make local-deploy
-   ```
+
+    ```bash
+    # Edit Terraform files
+    # Test locally with LocalStack
+    make local-deploy
+    ```
 
 3. **Validate and Format**
-   ```bash
-   make validate
-   make format
-   make lint
-   ```
+
+    ```bash
+    make validate
+    make format
+    make lint
+    ```
 
 4. **Test in Staging**
-   ```bash
-   make aws-plan-staging
-   make aws-deploy-staging
-   ```
+
+    ```bash
+    make aws-plan-staging
+    make aws-deploy-staging
+    ```
 
 5. **Submit Pull Request**
 
 ### Code Standards
 
-- **Terraform Format**: Use `terraform fmt`
-- **Variable Naming**: Use snake_case
-- **Resource Naming**: Include environment and project prefixes
-- **Documentation**: Update README.md for significant changes
-- **Tagging**: Apply consistent resource tags
+-   **Terraform Format**: Use `terraform fmt`
+-   **Variable Naming**: Use snake_case
+-   **Resource Naming**: Include environment and project prefixes
+-   **Documentation**: Update README.md for significant changes
+-   **Tagging**: Apply consistent resource tags
 
 ### Testing
 
@@ -478,29 +491,7 @@ make aws-deploy-staging
 
 ## 📚 Additional Resources
 
-- [Terraform Best Practices](https://www.terraform-best-practices.com/)
-- [AWS EKS Best Practices](https://aws.github.io/aws-eks-best-practices/)
-- [Kubernetes Security Best Practices](https://kubernetes.io/docs/concepts/security/)
-- [LocalStack Documentation](https://docs.localstack.cloud/)
-
-## 🆘 Support
-
-### Getting Help
-
-1. **Check Documentation**: Review this README and module documentation
-2. **Search Issues**: Check existing GitHub issues
-3. **Debug Locally**: Use LocalStack for safe testing
-4. **Create Issue**: Provide detailed information and logs
-
-### Emergency Contacts
-
-- **Infrastructure Team**: infrastructure@yourcompany.com
-- **DevOps Team**: devops@yourcompany.com
-- **On-Call**: +1-555-ON-CALL
-
----
-
-**Developed by**: FIAP SOAT Team
-**Project**: Smart Mechanical Workshop
-**Version**: 1.0.0
-**Last Updated**: December 2024
+-   [Terraform Best Practices](https://www.terraform-best-practices.com/)
+-   [AWS EKS Best Practices](https://aws.github.io/aws-eks-best-practices/)
+-   [Kubernetes Security Best Practices](https://kubernetes.io/docs/concepts/security/)
+-   [LocalStack Documentation](https://docs.localstack.cloud/)

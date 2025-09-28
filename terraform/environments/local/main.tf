@@ -61,11 +61,24 @@ module "eks" {
   node_instance_types = local.node_instance_types
 }
 
+# Kubernetes namespace
+resource "kubernetes_namespace" "app" {
+  metadata {
+    name = "smart-mechanical-workshop-dev"
+    labels = {
+      environment = local.environment
+      project     = local.project_name
+    }
+  }
+
+  depends_on = [module.eks]
+}
+
 # Kubernetes Secret for Database Connection
 resource "kubernetes_secret" "db_credentials" {
   metadata {
     name      = "smart-mechanical-workshop-secrets"
-    namespace = "smart-mechanical-workshop-dev"
+    namespace = kubernetes_namespace.app.metadata[0].name
   }
 
   data = {
@@ -75,26 +88,27 @@ resource "kubernetes_secret" "db_credentials" {
 
   type = "Opaque"
 
-  depends_on = [module.eks]
+  depends_on = [kubernetes_namespace.app]
 }
 
 # Kubernetes ConfigMap
 resource "kubernetes_config_map" "app_config" {
   metadata {
     name      = "smart-mechanical-workshop-config"
-    namespace = "smart-mechanical-workshop-dev"
+    namespace = kubernetes_namespace.app.metadata[0].name
   }
 
   data = {
-    ASPNETCORE_ENVIRONMENT = "Development"
-    DB_HOST               = split(":", module.rds.db_instance_endpoint)[0]
-    DB_PORT               = "3306"
-    MYSQL_DATABASE        = module.rds.database_name
-    MYSQL_USER            = "workshopuser"
-    BASE_URL              = "http://localhost:5180"
-    SMTP_HOST             = "mailhog-service"
-    SMTP_PORT             = "1025"
+    ASPNETCORE_ENVIRONMENT    = "Development"
+    DB_HOST                  = split(":", module.rds.db_instance_endpoint)[0]
+    DB_PORT                  = "3306"
+    MYSQL_DATABASE           = module.rds.database_name
+    MYSQL_USER               = "workshopuser"
+    BASE_URL                 = "http://localhost:5180"
+    SMTP_HOST                = "mailhog-service"
+    SMTP_PORT                = "1025"
+    DEFAULT_CONNECTION_STRING = "server=${split(":", module.rds.db_instance_endpoint)[0]};port=3306;database=${module.rds.database_name};user=workshopuser;password=${var.db_password};SslMode=none;AllowPublicKeyRetrieval=True;"
   }
 
-  depends_on = [module.eks]
+  depends_on = [kubernetes_namespace.app]
 }
