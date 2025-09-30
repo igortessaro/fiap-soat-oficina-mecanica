@@ -12,8 +12,3 @@ output "secrets_manager_secret_arn" {
   description = "Secrets Manager secret ARN"
   value       = aws_secretsmanager_secret.db_credentials.arn
 }
-
-output "eks_service_account_role_arn" {
-  description = "EKS service account IAM role ARN"
-  value       = aws_iam_role.eks_service_account.arn
-}

@@ -1,6 +1,4 @@
-# terraform/Makefile
-
-.PHONY: help local-deploy local-destroy aws-deploy-staging aws-deploy-production clean lint
+.PHONY: help deploy plan destroy clean lint format validate status output
 
 # Default target
 help: ## Show this help message
@@ -9,91 +7,58 @@ help: ## Show this help message
 	@echo "Available commands:"
 	@awk 'BEGIN {FS = ":.*##"; printf "\n"} /^[a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
 
-##@ Local Development (LocalStack)
-local-deploy: ## Deploy to local LocalStack environment
-	@chmod +x scripts/deploy-local.sh
-	@scripts/deploy-local.sh
+##@ Production Deployment
+deploy: ## Deploy to production
+	@echo "🚀 Deploying to production..."
+	@cd environments/production && \
+		terraform init && \
+		terraform plan -out=tfplan && \
+		terraform apply tfplan && \
+		rm tfplan
+	@echo "✅ Deployment completed!"
 
-local-destroy: ## Destroy local LocalStack environment
-	@chmod +x scripts/destroy-local.sh
-	@scripts/destroy-local.sh
+plan: ## Plan production deployment (dry-run)
+	@echo "📋 Planning production deployment..."
+	@cd environments/production && \
+		terraform init && \
+		terraform plan
 
-local-status: ## Show status of local environment
-	@echo "🔍 Local Environment Status:"
-	@kubectl get all -n smart-mechanical-workshop-dev 2>/dev/null || echo "No resources found"
-
-##@ AWS Deployments
-aws-deploy-staging: ## Deploy to AWS staging environment
-	@chmod +x scripts/deploy-aws.sh
-	@scripts/deploy-aws.sh --environment staging
-
-aws-deploy-production: ## Deploy to AWS production environment
-	@chmod +x scripts/deploy-aws.sh
-	@scripts/deploy-aws.sh --environment production
-
-aws-plan-staging: ## Plan AWS staging deployment (dry-run)
-	@chmod +x scripts/deploy-aws.sh
-	@scripts/deploy-aws.sh --environment staging --dry-run
-
-aws-plan-production: ## Plan AWS production deployment (dry-run)
-	@chmod +x scripts/deploy-aws.sh
-	@scripts/deploy-aws.sh --environment production --dry-run
+destroy: ## Destroy production environment (CAREFUL!)
+	@echo "⚠️  WARNING: This will destroy ALL production resources!"
+	@read -p "Type 'yes' to confirm: " confirm && [ "$$confirm" = "yes" ]
+	@cd environments/production && \
+		terraform destroy
 
 ##@ Utilities
-lint: ## Lint Terraform files
-	@echo "🔍 Linting Terraform files..."
-	@find . -name "*.tf" -exec terraform fmt -check {} \; || (echo "❌ Terraform files need formatting. Run 'make format'" && exit 1)
-	@echo "✅ All Terraform files are properly formatted"
-
 format: ## Format Terraform files
 	@echo "🎨 Formatting Terraform files..."
-	@find . -name "*.tf" -exec terraform fmt {} \;
-	@echo "✅ All Terraform files formatted"
+	@terraform fmt -recursive .
+	@echo "✅ All files formatted"
 
-validate: ## Validate Terraform configurations
-	@echo "🔍 Validating Terraform configurations..."
-	@for dir in environments/*/; do \
-		echo "Validating $$dir..."; \
-		cd $$dir && terraform init -backend=false && terraform validate && cd ../..; \
-	done
-	@echo "✅ All Terraform configurations are valid"
+validate: ## Validate Terraform configuration
+	@echo "🔍 Validating Terraform configuration..."
+	@cd environments/production && \
+		terraform init -backend=false && \
+		terraform validate
+	@echo "✅ Configuration is valid"
+
+lint: ## Lint Terraform files
+	@echo "🔍 Linting Terraform files..."
+	@terraform fmt -check -recursive . || (echo "❌ Files need formatting. Run 'make format'" && exit 1)
+	@echo "✅ All files are properly formatted"
 
 clean: ## Clean up temporary files
-	@echo "🧹 Cleaning up temporary files..."
+	@echo "🧹 Cleaning up..."
 	@find . -name ".terraform" -type d -exec rm -rf {} + 2>/dev/null || true
 	@find . -name "*.tfplan" -delete 2>/dev/null || true
 	@find . -name ".terraform.lock.hcl" -delete 2>/dev/null || true
 	@echo "✅ Cleanup completed"
 
-##@ Documentation
-docs: ## Generate Terraform documentation
-	@echo "📚 Generating Terraform documentation..."
-	@command -v terraform-docs >/dev/null 2>&1 || (echo "❌ terraform-docs is not installed" && exit 1)
-	@for dir in modules/*/; do \
-		echo "Generating docs for $$dir..."; \
-		terraform-docs markdown table $$dir > $$dir/README.md; \
-	done
-	@echo "✅ Documentation generated"
+##@ Info
+status: ## Show production status
+	@echo "📊 Production Status:"
+	@cd environments/production && terraform show 2>/dev/null || echo "No state found"
 
-##@ Debug
-debug-local: ## Debug local environment
-	@echo "🐛 Local Environment Debug Info:"
-	@echo "LocalStack Status:"
-	@curl -s http://localhost:4566/health | jq . 2>/dev/null || echo "LocalStack not accessible"
-	@echo ""
-	@echo "Kubectl Context:"
-	@kubectl config current-context 2>/dev/null || echo "No kubectl context"
-	@echo ""
-	@echo "Kubernetes Resources:"
-	@kubectl get all -n smart-mechanical-workshop-dev 2>/dev/null || echo "No resources found"
-
-debug-aws: ## Debug AWS environment
-	@echo "🐛 AWS Environment Debug Info:"
-	@echo "AWS Identity:"
-	@aws sts get-caller-identity 2>/dev/null || echo "AWS credentials not configured"
-	@echo ""
-	@echo "Kubectl Context:"
-	@kubectl config current-context 2>/dev/null || echo "No kubectl context"
-	@echo ""
-	@echo "EKS Clusters:"
-	@aws eks list-clusters 2>/dev/null || echo "Cannot list EKS clusters"
+output: ## Show Terraform outputs
+	@echo "📤 Production Outputs:"
+	@cd environments/production && terraform output 2>/dev/null || echo "No outputs found"

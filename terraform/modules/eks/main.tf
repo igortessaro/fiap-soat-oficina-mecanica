@@ -1,71 +1,5 @@
-# EKS Cluster IAM Role
-resource "aws_iam_role" "cluster" {
-  name = "${var.project_name}-${var.environment}-cluster-role"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = "sts:AssumeRole"
-        Effect = "Allow"
-        Principal = {
-          Service = "eks.amazonaws.com"
-        }
-      }
-    ]
-  })
-
-  tags = {
-    Name        = "${var.project_name}-${var.environment}-cluster-role"
-    Environment = var.environment
-    Project     = var.project_name
-  }
-}
-
-# Attach policies to cluster role
-resource "aws_iam_role_policy_attachment" "cluster_policy" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
-  role       = aws_iam_role.cluster.name
-}
-
-# EKS Node Group IAM Role
-resource "aws_iam_role" "node_group" {
-  name = "${var.project_name}-${var.environment}-node-group-role"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = "sts:AssumeRole"
-        Effect = "Allow"
-        Principal = {
-          Service = "ec2.amazonaws.com"
-        }
-      }
-    ]
-  })
-
-  tags = {
-    Name        = "${var.project_name}-${var.environment}-node-group-role"
-    Environment = var.environment
-    Project     = var.project_name
-  }
-}
-
-# Attach policies to node group role
-resource "aws_iam_role_policy_attachment" "node_group_policy" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
-  role       = aws_iam_role.node_group.name
-}
-
-resource "aws_iam_role_policy_attachment" "node_group_cni_policy" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
-  role       = aws_iam_role.node_group.name
-}
-
-resource "aws_iam_role_policy_attachment" "node_group_registry_policy" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
-  role       = aws_iam_role.node_group.name
+data "aws_iam_role" "lab_role" {
+  name = "LabRole"
 }
 
 # Security Group for EKS Cluster
@@ -87,10 +21,17 @@ resource "aws_security_group" "cluster" {
   }
 }
 
-# Security Group for Node Group
+# Security Group for EKS Node Group
 resource "aws_security_group" "node_group" {
   name_prefix = "${var.project_name}-${var.environment}-node-group-"
   vpc_id      = var.vpc_id
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 
   ingress {
     from_port = 0
@@ -113,13 +54,6 @@ resource "aws_security_group" "node_group" {
     security_groups = [aws_security_group.cluster.id]
   }
 
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
   tags = {
     Name        = "${var.project_name}-${var.environment}-node-group-sg"
     Environment = var.environment
@@ -127,35 +61,45 @@ resource "aws_security_group" "node_group" {
   }
 }
 
+# Security Group Rule for nodes to access RDS
+resource "aws_security_group_rule" "nodes_to_rds" {
+  type                     = "egress"
+  from_port                = 3306
+  to_port                  = 3306
+  protocol                 = "tcp"
+  source_security_group_id = var.rds_client_security_group_id
+  security_group_id        = aws_security_group.node_group.id
+}
+
 # EKS Cluster
 resource "aws_eks_cluster" "main" {
   name     = "${var.project_name}-${var.environment}"
-  role_arn = aws_iam_role.cluster.arn
+  role_arn = data.aws_iam_role.lab_role.arn
   version  = "1.28"
 
   vpc_config {
     subnet_ids              = concat(var.private_subnet_ids, var.public_subnet_ids)
-    security_group_ids      = [aws_security_group.cluster.id]
     endpoint_private_access = true
     endpoint_public_access  = true
+    security_group_ids      = [aws_security_group.cluster.id]
   }
-
-  depends_on = [
-    aws_iam_role_policy_attachment.cluster_policy
-  ]
 
   tags = {
     Name        = "${var.project_name}-${var.environment}"
     Environment = var.environment
     Project     = var.project_name
   }
+
+  depends_on = [
+    data.aws_iam_role.lab_role
+  ]
 }
 
 # EKS Node Group
 resource "aws_eks_node_group" "main" {
   cluster_name    = aws_eks_cluster.main.name
   node_group_name = "${var.project_name}-${var.environment}-nodes"
-  node_role_arn   = aws_iam_role.node_group.arn
+  node_role_arn   = data.aws_iam_role.lab_role.arn
   subnet_ids      = var.private_subnet_ids
   instance_types  = var.node_instance_types
 
@@ -169,25 +113,13 @@ resource "aws_eks_node_group" "main" {
     max_unavailable = 1
   }
 
-  depends_on = [
-    aws_iam_role_policy_attachment.node_group_policy,
-    aws_iam_role_policy_attachment.node_group_cni_policy,
-    aws_iam_role_policy_attachment.node_group_registry_policy,
-  ]
-
   tags = {
     Name        = "${var.project_name}-${var.environment}-nodes"
     Environment = var.environment
     Project     = var.project_name
   }
-}
 
-# Add nodes to RDS client security group
-resource "aws_security_group_rule" "nodes_to_rds" {
-  type                     = "egress"
-  from_port                = 3306
-  to_port                  = 3306
-  protocol                 = "tcp"
-  source_security_group_id = var.rds_client_security_group_id
-  security_group_id        = aws_security_group.node_group.id
+  depends_on = [
+    data.aws_iam_role.lab_role
+  ]
 }

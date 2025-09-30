@@ -27,13 +27,3 @@ variable "db_allocated_storage" {
   type        = number
   default     = 100
 }
-
-variable "domain_name" {
-  description = "Domain name for the application"
-  type        = string
-}
-
-variable "ssl_certificate_arn" {
-  description = "ARN of the SSL certificate"
-  type        = string
-}

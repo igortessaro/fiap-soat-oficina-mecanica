@@ -41,36 +41,6 @@ resource "aws_secretsmanager_secret" "db_credentials" {
   }
 }
 
-# IAM Role for EKS Service Account (IRSA)
-resource "aws_iam_role" "eks_service_account" {
-  name = "${var.project_name}-${var.environment}-eks-sa-role"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = "sts:AssumeRoleWithWebIdentity"
-        Effect = "Allow"
-        Principal = {
-          Federated = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:oidc-provider/${replace(data.aws_eks_cluster.main.identity[0].oidc[0].issuer, "https://", "")}"
-        }
-        Condition = {
-          StringEquals = {
-            "${replace(data.aws_eks_cluster.main.identity[0].oidc[0].issuer, "https://", "")}:sub" = "system:serviceaccount:smart-mechanical-workshop-prod:smart-mechanical-workshop-api"
-            "${replace(data.aws_eks_cluster.main.identity[0].oidc[0].issuer, "https://", "")}:aud" = "sts.amazonaws.com"
-          }
-        }
-      }
-    ]
-  })
-
-  tags = {
-    Name        = "${var.project_name}-${var.environment}-eks-sa-role"
-    Environment = var.environment
-    Project     = var.project_name
-  }
-}
-
 # Policy for accessing secrets
 resource "aws_iam_policy" "secrets_access" {
   name        = "${var.project_name}-${var.environment}-secrets-access"
@@ -109,13 +79,5 @@ resource "aws_iam_policy" "secrets_access" {
   }
 }
 
-resource "aws_iam_role_policy_attachment" "secrets_access" {
-  role       = aws_iam_role.eks_service_account.name
-  policy_arn = aws_iam_policy.secrets_access.arn
-}
-
 # Data sources
 data "aws_caller_identity" "current" {}
-data "aws_eks_cluster" "main" {
-  name = "${var.project_name}-${var.environment}"
-}

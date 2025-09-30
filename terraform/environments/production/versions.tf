@@ -15,15 +15,6 @@ terraform {
       version = "~> 2.11"
     }
   }
-
-  # Remote backend for production
-  backend "s3" {
-    bucket         = "your-terraform-state-bucket"
-    key            = "smart-mechanical-workshop/production/terraform.tfstate"
-    region         = "us-east-1"
-    encrypt        = true
-    dynamodb_table = "terraform-locks"
-  }
 }
 
 # Provider configuration for AWS
