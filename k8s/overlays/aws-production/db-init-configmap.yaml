@@ -1,0 +1,146 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: db-init-scripts
+  namespace: smart-mechanical-workshop
+data:
+  001_init_database.sql: |
+    create table if not exists __EFMigrationsHistory (
+        MigrationId varchar(150) not null primary key,
+        ProductVersion varchar(32) not null
+    );
+
+    create table if not exists addresses (
+        id char(36) charset ascii not null primary key,
+        street varchar(100) not null,
+        city varchar(60) not null,
+        state varchar(30) not null,
+        zip_code varchar(15) not null,
+        created_at datetime(6) not null,
+        updated_at datetime(6) not null,
+        constraint IX_addresses_street_city_state_zip_code unique (street, city, state, zip_code)
+    );
+
+    create table if not exists available_services (
+        id char(36) charset ascii not null primary key,
+        name varchar(100) not null,
+        price decimal(18, 2) not null,
+        created_at datetime(6) not null,
+        updated_at datetime(6) not null,
+        constraint IX_available_services_name unique (name)
+    );
+
+    create table if not exists clients (
+        id char(36) charset ascii not null primary key,
+        name varchar(100) not null,
+        email varchar(100) not null,
+        phone varchar(20) not null,
+        cpf varchar(14) not null,
+        address_id char(36) charset ascii not null,
+        created_at datetime(6) not null,
+        updated_at datetime(6) not null,
+        constraint FK_clients_addresses_address_id foreign key (address_id) references addresses(id) on delete cascade,
+        constraint IX_clients_cpf unique (cpf),
+        constraint IX_clients_email unique (email)
+    );
+
+    create table if not exists vehicles (
+        id char(36) charset ascii not null primary key,
+        license_plate varchar(10) not null,
+        brand varchar(50) not null,
+        model varchar(50) not null,
+        year int not null,
+        client_id char(36) charset ascii not null,
+        created_at datetime(6) not null,
+        updated_at datetime(6) not null,
+        constraint FK_vehicles_clients_client_id foreign key (client_id) references clients(id) on delete cascade,
+        constraint IX_vehicles_license_plate unique (license_plate)
+    );
+
+    create table if not exists budgets (
+        id char(36) charset ascii not null primary key,
+        client_id char(36) charset ascii not null,
+        vehicle_id char(36) charset ascii not null,
+        total_amount decimal(18, 2) not null,
+        status varchar(20) not null,
+        created_at datetime(6) not null,
+        updated_at datetime(6) not null,
+        constraint FK_budgets_clients_client_id foreign key (client_id) references clients(id) on delete cascade,
+        constraint FK_budgets_vehicles_vehicle_id foreign key (vehicle_id) references vehicles(id) on delete cascade
+    );
+
+    create table if not exists budget_services (
+        id char(36) charset ascii not null primary key,
+        budget_id char(36) charset ascii not null,
+        service_id char(36) charset ascii not null,
+        quantity int not null,
+        unit_price decimal(18, 2) not null,
+        created_at datetime(6) not null,
+        updated_at datetime(6) not null,
+        constraint FK_budget_services_budgets_budget_id foreign key (budget_id) references budgets(id) on delete cascade,
+        constraint FK_budget_services_available_services_service_id foreign key (service_id) references available_services(id) on delete cascade
+    );
+
+    create table if not exists service_orders (
+        id char(36) charset ascii not null primary key,
+        budget_id char(36) charset ascii not null,
+        status varchar(20) not null,
+        start_date datetime(6) not null,
+        completion_date datetime(6) null,
+        created_at datetime(6) not null,
+        updated_at datetime(6) not null,
+        constraint FK_service_orders_budgets_budget_id foreign key (budget_id) references budgets(id) on delete cascade,
+        constraint IX_service_orders_budget_id unique (budget_id)
+    );
+
+    create index IX_addresses_street_city_state_zip_code on addresses (street, city, state, zip_code);
+    create index IX_budget_services_budget_id on budget_services (budget_id);
+    create index IX_budget_services_service_id on budget_services (service_id);
+    create index IX_budgets_client_id on budgets (client_id);
+    create index IX_budgets_vehicle_id on budgets (vehicle_id);
+    create index IX_clients_address_id on clients (address_id);
+    create index IX_service_orders_budget_id on service_orders (budget_id);
+    create index IX_vehicles_client_id on vehicles (client_id);
+
+  010_fill_tables.sql: |
+    -- Preencher addresses
+    insert ignore into addresses (id, street, city, state, zip_code, created_at, updated_at) values
+    (uuid(), 'Rua das Flores, 123', 'Porto Alegre', 'RS', '90000-000', now(), now()),
+    (uuid(), 'Avenida Brasil, 456', 'São Paulo', 'SP', '01000-000', now(), now()),
+    (uuid(), 'Rua XV de Novembro, 789', 'Curitiba', 'PR', '80000-000', now(), now()),
+    (uuid(), 'Rua Sete de Setembro, 321', 'Belo Horizonte', 'MG', '30000-000', now(), now()),
+    (uuid(), 'Rua das Palmeiras, 654', 'Florianópolis', 'SC', '88000-000', now(), now()),
+    (uuid(), 'Rua do Comércio, 987', 'Salvador', 'BA', '40000-000', now(), now()),
+    (uuid(), 'Rua dos Andradas, 159', 'Porto Alegre', 'RS', '90010-000', now(), now()),
+    (uuid(), 'Avenida Independência, 753', 'Recife', 'PE', '50000-000', now(), now()),
+    (uuid(), 'Rua Augusta, 852', 'São Paulo', 'SP', '01300-000', now(), now()),
+    (uuid(), 'Rua das Laranjeiras, 951', 'Rio de Janeiro', 'RJ', '22240-003', now(), now());
+
+    -- Preencher available_services
+    insert ignore into available_services (id, name, price, created_at, updated_at) values
+    (uuid(), 'Troca de Óleo', 120.00, now(), now()),
+    (uuid(), 'Alinhamento e Balanceamento', 150.00, now(), now()),
+    (uuid(), 'Revisão Completa', 350.00, now(), now()),
+    (uuid(), 'Troca de Pastilha de Freio', 180.00, now(), now()),
+    (uuid(), 'Inspeção Veicular', 90.00, now(), now()),
+    (uuid(), 'Troca de Filtro de Ar', 60.00, now(), now()),
+    (uuid(), 'Troca de Velas de Ignição', 95.00, now(), now()),
+    (uuid(), 'Diagnóstico Eletrônico', 80.00, now(), now()),
+    (uuid(), 'Limpeza de Bicos Injetores', 140.00, now(), now()),
+    (uuid(), 'Reparo do Sistema de Ar Condicionado', 250.00, now(), now());
+
+    -- Preencher alguns dados de exemplo
+    -- Inserir mais endereços
+    insert ignore into addresses (id, street, city, state, zip_code, created_at, updated_at) values
+    ('550e8400-e29b-41d4-a716-446655440001', 'Rua Exemplo 1', 'São Paulo', 'SP', '01234-567', now(), now()),
+    ('550e8400-e29b-41d4-a716-446655440002', 'Av Exemplo 2', 'Rio de Janeiro', 'RJ', '20123-456', now(), now());
+
+    -- Inserir clientes de exemplo
+    insert ignore into clients (id, name, email, phone, cpf, address_id, created_at, updated_at) values
+    ('660e8400-e29b-41d4-a716-446655440001', 'João Silva', 'joao@example.com', '(11) 99999-9999', '123.456.789-01', '550e8400-e29b-41d4-a716-446655440001', now(), now()),
+    ('660e8400-e29b-41d4-a716-446655440002', 'Maria Santos', 'maria@example.com', '(21) 88888-8888', '987.654.321-09', '550e8400-e29b-41d4-a716-446655440002', now(), now());
+
+    -- Inserir veículos de exemplo
+    insert ignore into vehicles (id, license_plate, brand, model, year, client_id, created_at, updated_at) values
+    ('770e8400-e29b-41d4-a716-446655440001', 'ABC-1234', 'Toyota', 'Corolla', 2020, '660e8400-e29b-41d4-a716-446655440001', now(), now()),
+    ('770e8400-e29b-41d4-a716-446655440002', 'XYZ-5678', 'Honda', 'Civic', 2019, '660e8400-e29b-41d4-a716-446655440002', now(), now());

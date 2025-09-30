@@ -3,11 +3,20 @@ resource "aws_security_group" "rds" {
   name_prefix = "${var.project_name}-${var.environment}-rds-"
   vpc_id      = var.vpc_id
 
+  # Allow access from RDS client security group
   ingress {
     from_port       = 3306
     to_port         = 3306
     protocol        = "tcp"
     security_groups = [aws_security_group.rds_client.id]
+  }
+
+  # Allow access from VPC CIDR (for EKS nodes)
+  ingress {
+    from_port   = 3306
+    to_port     = 3306
+    protocol    = "tcp"
+    cidr_blocks = [var.vpc_cidr]
   }
 
   egress {
