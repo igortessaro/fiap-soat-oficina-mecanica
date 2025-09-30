@@ -93,13 +93,11 @@ data:
         constraint IX_service_orders_budget_id unique (budget_id)
     );
 
-    create index IX_addresses_street_city_state_zip_code on addresses (street, city, state, zip_code);
     create index IX_budget_services_budget_id on budget_services (budget_id);
     create index IX_budget_services_service_id on budget_services (service_id);
     create index IX_budgets_client_id on budgets (client_id);
     create index IX_budgets_vehicle_id on budgets (vehicle_id);
     create index IX_clients_address_id on clients (address_id);
-    create index IX_service_orders_budget_id on service_orders (budget_id);
     create index IX_vehicles_client_id on vehicles (client_id);
 
   010_fill_tables.sql: |

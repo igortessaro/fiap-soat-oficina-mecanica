@@ -1,0 +1,80 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: db-init-scripts-simple
+  namespace: smart-mechanical-workshop
+data:
+  init.sql: |
+    -- Create database if not exists
+    CREATE DATABASE IF NOT EXISTS workshopdb;
+    USE workshopdb;
+
+    -- Simple tables for testing
+    CREATE TABLE if not exists addresses (
+        id varchar(36) PRIMARY KEY,
+        street varchar(100) NOT NULL,
+        city varchar(60) NOT NULL,
+        state varchar(30) NOT NULL,
+        zip_code varchar(15) NOT NULL,
+        created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+        updated_at timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE if not exists available_services (
+        id varchar(36) PRIMARY KEY,
+        name varchar(100) NOT NULL UNIQUE,
+        price decimal(10,2) NOT NULL,
+        created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+        updated_at timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    );
+
+    CREATE TABLE if not exists clients (
+        id varchar(36) PRIMARY KEY,
+        name varchar(100) NOT NULL,
+        email varchar(100) NOT NULL UNIQUE,
+        phone varchar(20) NOT NULL,
+        cpf varchar(14) NOT NULL UNIQUE,
+        address_id varchar(36),
+        created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+        updated_at timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        FOREIGN KEY (address_id) REFERENCES addresses(id)
+    );
+
+    CREATE TABLE if not exists vehicles (
+        id varchar(36) PRIMARY KEY,
+        license_plate varchar(10) NOT NULL UNIQUE,
+        brand varchar(50) NOT NULL,
+        model varchar(50) NOT NULL,
+        year int NOT NULL,
+        client_id varchar(36),
+        created_at timestamp DEFAULT CURRENT_TIMESTAMP,
+        updated_at timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        FOREIGN KEY (client_id) REFERENCES clients(id)
+    );
+
+  data.sql: |
+    USE workshopdb;
+
+    -- Insert sample addresses
+    INSERT IGNORE INTO addresses (id, street, city, state, zip_code) VALUES
+    ('addr1', 'Rua das Flores, 123', 'São Paulo', 'SP', '01234-567'),
+    ('addr2', 'Av. Brasil, 456', 'Rio de Janeiro', 'RJ', '20123-456'),
+    ('addr3', 'Rua XV de Novembro, 789', 'Curitiba', 'PR', '80000-000');
+
+    -- Insert sample services
+    INSERT IGNORE INTO available_services (id, name, price) VALUES
+    ('svc1', 'Troca de Óleo', 120.00),
+    ('svc2', 'Alinhamento e Balanceamento', 150.00),
+    ('svc3', 'Revisão Completa', 350.00),
+    ('svc4', 'Troca de Pastilha de Freio', 180.00),
+    ('svc5', 'Inspeção Veicular', 90.00);
+
+    -- Insert sample clients
+    INSERT IGNORE INTO clients (id, name, email, phone, cpf, address_id) VALUES
+    ('cli1', 'João Silva', 'joao@example.com', '(11) 99999-9999', '123.456.789-01', 'addr1'),
+    ('cli2', 'Maria Santos', 'maria@example.com', '(21) 88888-8888', '987.654.321-09', 'addr2');
+
+    -- Insert sample vehicles
+    INSERT IGNORE INTO vehicles (id, license_plate, brand, model, year, client_id) VALUES
+    ('veh1', 'ABC-1234', 'Toyota', 'Corolla', 2020, 'cli1'),
+    ('veh2', 'XYZ-5678', 'Honda', 'Civic', 2019, 'cli2');
