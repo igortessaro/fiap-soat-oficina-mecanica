@@ -6,15 +6,15 @@ metadata:
     app.kubernetes.io/name: smart-mechanical-workshop-api
     app.kubernetes.io/component: api
 spec:
-  replicas: 1  # Reduzido para 1 para economizar custos
+  replicas: 1
   template:
     spec:
       containers:
       - name: api
         resources:
           requests:
-            memory: "128Mi"  # Reduzido para economizar custos
+            memory: "128Mi"
             cpu: "100m"
           limits:
-            memory: "256Mi"  # Reduzido para economizar custos
+            memory: "256Mi"
             cpu: "200m"

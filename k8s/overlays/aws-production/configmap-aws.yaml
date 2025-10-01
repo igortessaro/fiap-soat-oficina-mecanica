@@ -8,14 +8,14 @@ metadata:
     app.kubernetes.io/component: config
 data:
   ASPNETCORE_ENVIRONMENT: "Production"
-  DB_HOST: "RDS_ENDPOINT_PLACEHOLDER"  # Será substituído pelo Terraform
+  DB_HOST: "RDS_ENDPOINT_PLACEHOLDER"
   DB_PORT: "3306"
   MYSQL_DATABASE: "workshopdb"
   MYSQL_USER: "workshopuser"
   SMTP_HOST: "mailhog-service"
   SMTP_PORT: "1025"
   BASE_URL: "http://api-service"
-  DEFAULT_CONNECTION_STRING: "server=RDS_ENDPOINT_PLACEHOLDER;port=3306;database=workshopdb;user=workshopuser;password=Academic123;SslMode=none;AllowPublicKeyRetrieval=True;"
+  DEFAULT_CONNECTION_STRING: "server=RDS_ENDPOINT_PLACEHOLDER;port=3306;database=workshopdb;user=workshopuser;password=workshop123;SslMode=none;AllowPublicKeyRetrieval=True;"
   Jwt__Key: "your-very-secure-and-long-key-1234567890"
   Email__SmtpHost: "mailhog-service"
   Email__SmtpPort: "1025"
