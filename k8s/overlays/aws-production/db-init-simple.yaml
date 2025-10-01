@@ -5,6 +5,8 @@ metadata:
   namespace: smart-mechanical-workshop
 data:
   init.sql: |
+    USE workshopdb;
+
     create table if not exists __EFMigrationsHistory (
         MigrationId varchar(150) not null primary key,
         ProductVersion varchar(32) not null

@@ -1,35 +1,22 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-# Base configuration
+# AWS-specific resources
 resources:
-- ../../base
+- ../../base/namespace.yaml
+- ../../base/configmap.yaml
+- ../../base/secrets.yaml
+- ../../base/api-deployment.yaml
+- ../../base/services.yaml
+- ../../base/mailhog-deployment.yaml
+- db-init-simple.yaml
+- db-init-job-simple.yaml
 
-# AWS-specific overrides
-patchesStrategicMerge:
-- services-loadbalancer.yaml
-- configmap-aws.yaml
-- api-deployment-aws.yaml
-
-# Remove MySQL deployment since we use RDS
-patchesJson6902:
-- target:
-    group: apps
-    version: v1
-    kind: Deployment
-    name: mysql-deployment
-  patch: |-
-    - op: remove
-      path: /
-
-- target:
-    group: v1
-    version: v1
-    kind: Service
-    name: mysql-service
-  patch: |-
-    - op: remove
-      path: /
+# AWS-specific patches
+patches:
+- path: services-loadbalancer.yaml
+- path: configmap-aws.yaml
+- path: api-deployment-aws.yaml
 
 # Namespace for AWS deployment
 namespace: smart-mechanical-workshop
