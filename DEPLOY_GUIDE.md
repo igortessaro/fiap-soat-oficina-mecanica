@@ -1,20 +1,49 @@
 # Deploy Guide - Smart Mechanical Workshop
 
-## 📋 Pré-requisitos
+## � Deploy Completo do Zero
 
-### Variáveis de Ambiente Necessárias
+### �📋 Pré-requisitos
+
+#### Ferramentas Necessárias
+- AWS CLI configurado com AWS Academy
+- Terraform >= 1.0
+- kubectl
+- Docker (para build de imagens, se necessário)
+
+#### Variáveis de Ambiente
 ```bash
-export TF_VAR_db_password="Academic123"  # Senha do RDS
+export TF_VAR_db_password="workshop123"  # Senha do RDS
+export AWS_DEFAULT_REGION="us-east-1"
 ```
 
-### Credenciais e Acesso
+### 🏗️ 1. Criar Infraestrutura AWS com Terraform
+
+#### 1.1 Inicializar e Aplicar Terraform
 ```bash
-# 1. Configurar kubectl para acessar o cluster EKS
+# Navegar para diretório do Terraform
+cd terraform/environments/production
+
+# Inicializar Terraform
+terraform init
+
+# Verificar plano
+terraform plan
+
+# Aplicar infraestrutura (isso levará ~15-20 minutos)
+terraform apply -auto-approve
+```
+
+#### 1.2 Configurar kubectl para o EKS
+```bash
+# Configurar kubectl para acessar o cluster EKS recém-criado
 aws eks update-kubeconfig --name smart-mechanical-workshop-production --region us-east-1
 
-# 2. Verificar conectividade
+# Verificar conectividade
 kubectl cluster-info
 kubectl get nodes
+
+# Aguardar nodes ficarem prontos
+kubectl wait --for=condition=Ready nodes --all --timeout=300s
 ```
 
 ## � Deploy Automático (Recomendado)
