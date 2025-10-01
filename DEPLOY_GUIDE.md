@@ -1,5 +1,37 @@
 # Deploy Guide - Smart Mechanical Workshop
 
+## 🚀 Deploy Automático com GitHub Actions (Recomendado)
+
+Para facilitar o deploy, criamos workflows automatizados no GitHub Actions que fazem todo o processo para você.
+
+### 📋 Setup Inicial dos Secrets
+
+1. Vá para **Settings** → **Secrets and variables** → **Actions**
+2. Configure os seguintes secrets:
+   - `AWS_ACCESS_KEY_ID`: Sua Access Key da AWS
+   - `AWS_SECRET_ACCESS_KEY`: Sua Secret Key da AWS
+   - `AWS_SESSION_TOKEN`: Session Token (necessário para AWS Academy)
+
+### 🎯 Como Fazer o Deploy Automático
+
+1. Vá para **Actions** → **Complete Deployment Pipeline**
+2. Clique em **Run workflow**
+3. Configure:
+   - Environment: `production`
+   - Deploy Infrastructure: ✅
+   - Deploy Applications: ✅
+   - Database password: `workshop123`
+4. Aguarde 15-20 minutos
+5. Acesse as URLs fornecidas no resumo
+
+> **💡 Dica:** O workflow automático resolve automaticamente todos os problemas de configuração de endpoints e dependências!
+
+---
+
+## 🛠️ Deploy Manual (Alternativo)
+
+Se preferir fazer o deploy manualmente ou para fins de aprendizado:
+
 ## � Deploy Completo do Zero
 
 ### �📋 Pré-requisitos
@@ -129,19 +161,45 @@ echo "MailHog Web UI: http://$MAILHOG_IP:8025"
 # Os scripts 001_init_database e 010_fill_tables devem ser executados
 ```
 
-## 🧹 5. Limpeza (quando necessário)
+## ❌ Limpeza dos Recursos
 
-### Para remover aplicações
+### Método 1: GitHub Actions (Automático)
+
+1. Vá para **Actions** → **Destroy Infrastructure**
+2. Clique em **Run workflow**
+3. Aguarde a conclusão
+
+### Método 2: Manual
 
 ```bash
-kubectl delete namespace smart-mechanical-workshop
+cd terraform
+terraform destroy
 ```
 
-### Para remover infraestrutura
+---
 
-```bash
-cd terraform/environments/production && terraform destroy
-```
+## 📚 Workflows Disponíveis no GitHub Actions
+
+### 1. **Complete Deployment Pipeline** (`deploy-complete.yml`)
+- Deploy completo de infraestrutura + aplicações
+- Configuração automática de endpoints
+- Inicialização do banco de dados
+- Extração das URLs de acesso
+
+### 2. **Deploy Infrastructure Only** (`deploy-infrastructure.yml`)
+- Apenas criação da infraestrutura AWS (RDS + EKS)
+- Útil para preparar ambiente
+
+### 3. **Deploy Applications Only** (`deploy-applications.yml`)
+- Apenas deploy das aplicações no Kubernetes
+- Requer infraestrutura já criada
+
+### 4. **Destroy Infrastructure** (`destroy-infrastructure.yml`)
+- Remove todos os recursos AWS criados
+- Limpeza completa do ambiente
+
+### 📖 Documentação Completa
+Para mais detalhes sobre os workflows, consulte: `.github/workflows/README.md`
 
 ## � Estrutura de Arquivos
 

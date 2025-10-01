@@ -1,0 +1,99 @@
+name: 💥 Destroy Infrastructure
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to destroy'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+        - production
+      confirm_destroy:
+        description: 'Type "DESTROY" to confirm deletion'
+        required: true
+        type: string
+      db_password:
+        description: 'Database password (required for destroy)'
+        required: true
+        type: string
+        default: 'workshop123'
+
+env:
+  AWS_REGION: us-east-1
+  TF_VAR_db_password: ${{ inputs.db_password }}
+
+jobs:
+  destroy:
+    name: 💥 Destroy Infrastructure
+    runs-on: ubuntu-latest
+    if: inputs.confirm_destroy == 'DESTROY'
+
+    defaults:
+      run:
+        working-directory: terraform/environments/${{ inputs.environment }}
+
+    steps:
+    - name: 📥 Checkout code
+      uses: actions/checkout@v4
+
+    - name: 🔧 Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+        aws-region: ${{ env.AWS_REGION }}
+
+    - name: 🏗️ Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: 1.5.0
+
+    - name: ⚡ Terraform Init
+      run: terraform init
+
+    - name: 📋 Terraform Plan (Destroy)
+      run: terraform plan -destroy -var="db_password=${{ inputs.db_password }}" -out=destroy-plan
+
+    - name: ⚠️ Warning Summary
+      run: |
+        echo "## ⚠️ INFRASTRUCTURE DESTRUCTION PLANNED" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "The following resources will be **PERMANENTLY DELETED**:" >> $GITHUB_STEP_SUMMARY
+        echo "- EKS Cluster: \`smart-mechanical-workshop-${{ inputs.environment }}\`" >> $GITHUB_STEP_SUMMARY
+        echo "- RDS Database: \`smart-mechanical-workshop-${{ inputs.environment }}-db\`" >> $GITHUB_STEP_SUMMARY
+        echo "- VPC and all networking resources" >> $GITHUB_STEP_SUMMARY
+        echo "- LoadBalancers and associated resources" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "**⚠️ THIS ACTION CANNOT BE UNDONE!**" >> $GITHUB_STEP_SUMMARY
+
+    - name: 💥 Terraform Destroy
+      run: terraform apply -auto-approve destroy-plan
+
+    - name: ✅ Destruction Complete
+      run: |
+        echo "## ✅ Infrastructure Destroyed Successfully" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "All AWS resources for the \`${{ inputs.environment }}\` environment have been destroyed." >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "**Note:** Some resources like Load Balancers may take a few minutes to fully terminate." >> $GITHUB_STEP_SUMMARY
+
+  validation-failed:
+    name: ❌ Destroy Validation Failed
+    runs-on: ubuntu-latest
+    if: inputs.confirm_destroy != 'DESTROY'
+
+    steps:
+    - name: ❌ Confirmation Required
+      run: |
+        echo "## ❌ Destroy Confirmation Failed" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "To destroy the infrastructure, you must:" >> $GITHUB_STEP_SUMMARY
+        echo "1. Type exactly **DESTROY** in the confirmation field" >> $GITHUB_STEP_SUMMARY
+        echo "2. Provide the correct database password" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "**Current input:** \`${{ inputs.confirm_destroy }}\`" >> $GITHUB_STEP_SUMMARY
+
+        exit 1
