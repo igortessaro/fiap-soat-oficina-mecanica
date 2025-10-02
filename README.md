@@ -329,3 +329,33 @@ Adicione o header de autorização em todas as requisições:
 curl -X GET "http://localhost:5180/api/v1/serviceorders/search" \
   -H "Authorization: Bearer {seu_token}"
 ```
+
+## 📚 Documentação Adicional
+
+Este projeto conta com documentação detalhada em diferentes áreas. Consulte os arquivos abaixo para informações específicas:
+
+### 🚀 Deploy e Infraestrutura
+
+- **[DEPLOY_GUIDE.md](DEPLOY_GUIDE.md)** - Guia completo de deploy com GitHub Actions e métodos manuais. Inclui configuração de secrets, workflows automáticos e deploy em AWS com EKS.
+
+- **[terraform/README.md](terraform/README.md)** - Documentação da infraestrutura Terraform para AWS. Contém instruções para criação de VPC, EKS, RDS e configuração de ambientes.
+
+### ☸️ Kubernetes
+
+- **[k8s/README.md](k8s/README.md)** - Infraestrutura completa do Kubernetes com Kustomize. Documentação para deploy em múltiplos ambientes (development, staging, production) com auto-scaling e LoadBalancers.
+
+- **[k8s/deploy_instructions.md](k8s/deploy_instructions.md)** - Instruções rápidas de deploy para Kubernetes. Comandos essenciais para fazer deploy nos diferentes ambientes.
+
+### 🤖 GitHub Actions
+
+- **[.github/workflows/README.md](.github/workflows/README.md)** - Documentação completa dos workflows do GitHub Actions. Inclui configuração de secrets AWS, workflows de deploy automático, destruição de infraestrutura e troubleshooting.
+
+### 📋 Resumo por Categoria
+
+| Categoria | Arquivo | Propósito |
+|-----------|---------|-----------|
+| **Deploy Geral** | [DEPLOY_GUIDE.md](DEPLOY_GUIDE.md) | Guia principal de deploy com todas as opções |
+| **Infraestrutura** | [terraform/README.md](terraform/README.md) | Configuração e gestão da infraestrutura AWS |
+| **Kubernetes** | [k8s/README.md](k8s/README.md) | Deploy e configuração completa do Kubernetes |
+| **Kubernetes Rápido** | [k8s/deploy_instructions.md](k8s/deploy_instructions.md) | Comandos rápidos para deploy K8s |
+| **CI/CD** | [.github/workflows/README.md](.github/workflows/README.md) | Automação com GitHub Actions |
