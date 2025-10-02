@@ -1,8 +1,6 @@
 # Deploy Guide - Smart Mechanical Workshop
 
-## 🚀 Deploy Automático com GitHub Actions (Recomendado)
-
-Para facilitar o deploy, criamos workflows automatizados no GitHub Actions que fazem todo o processo para você.
+## 🚀 Deploy Automático com GitHub Actions
 
 ### 📋 Setup Inicial dos Secrets
 
@@ -24,25 +22,23 @@ Para facilitar o deploy, criamos workflows automatizados no GitHub Actions que f
 4. Aguarde 15-20 minutos
 5. Acesse as URLs fornecidas no resumo
 
-> **💡 Dica:** O workflow automático resolve automaticamente todos os problemas de configuração de endpoints e dependências!
-
 ---
 
-## 🛠️ Deploy Manual (Alternativo)
-
-Se preferir fazer o deploy manualmente ou para fins de aprendizado:
+## 🛠️ Deploy Manual
 
 ## � Deploy Completo do Zero
 
 ### �📋 Pré-requisitos
 
 #### Ferramentas Necessárias
+
 - AWS CLI configurado com AWS Academy
 - Terraform >= 1.0
 - kubectl
 - Docker (para build de imagens, se necessário)
 
 #### Variáveis de Ambiente
+
 ```bash
 export TF_VAR_db_password="workshop123"  # Senha do RDS
 export AWS_DEFAULT_REGION="us-east-1"
@@ -51,6 +47,7 @@ export AWS_DEFAULT_REGION="us-east-1"
 ### 🏗️ 1. Criar Infraestrutura AWS com Terraform
 
 #### 1.1 Inicializar e Aplicar Terraform
+
 ```bash
 # Navegar para diretório do Terraform
 cd terraform/environments/production
@@ -66,6 +63,7 @@ terraform apply -auto-approve
 ```
 
 #### 1.2 Configurar kubectl para o EKS
+
 ```bash
 # Configurar kubectl para acessar o cluster EKS recém-criado
 aws eks update-kubeconfig --name smart-mechanical-workshop-production --region us-east-1
@@ -78,15 +76,17 @@ kubectl get nodes
 kubectl wait --for=condition=Ready nodes --all --timeout=300s
 ```
 
-## � Deploy Automático (Recomendado)
+## � Deploy Automático
 
 ### Método 1: Script Automatizado
+
 ```bash
 # Execute o script de deploy automático
 ./k8s/overlays/aws-production/deploy-aws.sh
 ```
 
 ### Método 2: Kustomize Manual
+
 ```bash
 # 1. Obter endpoint do RDS
 cd terraform/environments/production
@@ -104,9 +104,10 @@ kubectl apply -f k8s/overlays/aws-production/configmap-aws.yaml
 kubectl apply -k k8s/overlays/aws-production/
 ```
 
-## � Deploy Manual (Alternativo)
+## � Deploy Manual
 
 ### 1. Configurar dados de conexão do banco
+
 ```bash
 cd terraform/environments/production
 RDS_ENDPOINT=$(terraform output -raw rds_endpoint)
@@ -114,6 +115,7 @@ kubectl create namespace smart-mechanical-workshop --dry-run=client -o yaml | ku
 ```
 
 ### 2. Aplicar manifestos base com patches AWS
+
 ```bash
 # MailHog
 kubectl apply -f k8s/base/mailhog-deployment.yaml
@@ -181,24 +183,29 @@ terraform destroy
 ## 📚 Workflows Disponíveis no GitHub Actions
 
 ### 1. **Complete Deployment Pipeline** (`deploy-complete.yml`)
+
 - Deploy completo de infraestrutura + aplicações
 - Configuração automática de endpoints
 - Inicialização do banco de dados
 - Extração das URLs de acesso
 
 ### 2. **Deploy Infrastructure Only** (`deploy-infrastructure.yml`)
+
 - Apenas criação da infraestrutura AWS (RDS + EKS)
 - Útil para preparar ambiente
 
 ### 3. **Deploy Applications Only** (`deploy-applications.yml`)
+
 - Apenas deploy das aplicações no Kubernetes
 - Requer infraestrutura já criada
 
 ### 4. **Destroy Infrastructure** (`destroy-infrastructure.yml`)
+
 - Remove todos os recursos AWS criados
 - Limpeza completa do ambiente
 
 ### 📖 Documentação Completa
+
 Para mais detalhes sobre os workflows, consulte: `.github/workflows/README.md`
 
 ## � Estrutura de Arquivos
@@ -218,11 +225,3 @@ k8s/
         ├── api-deployment-aws.yaml
         └── deploy-aws.sh     # Script automatizado
 ```
-
-## 📝 Vantagens da Nova Estrutura
-
-- ✅ **Organização**: Arquivos YAML organizados e reutilizáveis
-- ✅ **Kustomize**: Uso de overlays para diferentes ambientes
-- ✅ **Economia**: Recursos otimizados para custos mínimos
-- ✅ **Automação**: Script de deploy automatizado
-- ✅ **Manutenção**: Fácil de manter e versionar
