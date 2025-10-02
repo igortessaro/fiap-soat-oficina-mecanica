@@ -1,20 +1,17 @@
-# Terraform Infrastructure - Smart Mechanical Workshop
+# Infraestrutura Terraform - Smart Mechanical Workshop
 
-Configuração **acadêmica** simplificada e econômica para projeto educacional.
+## 📋 Índice
 
-## 📋 Table of Contents
+- [Visão Geral da Arquitetura](#visão-geral-da-arquitetura)
+- [Pré-requisitos](#pré-requisitos)
+- [Início Rápido](#início-rápido)
+- [Comandos](#comandos)
+- [O que Será Criado](#o-que-será-criado)
+- [Solução de Problemas](#solução-de-problemas)
 
-- [Architecture Overview](#architecture-overview)
-- [Prerequisites](#prerequisites)
-- [Quick Start](#quick-start)
-- [Commands](#commands)
-- [What Will Be Created](#what-will-be-created)
-- [Next Steps](#next-steps)
-- [Troubleshooting](#troubleshooting)
+## 🏗️ Visão Geral da Arquitetura
 
-## 🏗️ Architecture Overview
-
-### Single Production Environment
+### Ambiente de Produção Único
 
 ```text
 ┌─────────────────────────────────────┐
@@ -28,50 +25,50 @@ Configuração **acadêmica** simplificada e econômica para projeto educacional
 └─────────────────────────────────────┘
 ```
 
-### Components
+### Componentes
 
-- **VPC**: Secure network isolation with public and private subnets
-- **EKS**: Managed Kubernetes cluster for container orchestration
-- **RDS**: MySQL database with automated backups and encryption
-- **Security Groups**: Network security rules
-- **IAM**: Roles and policies for EKS and applications
+- **VPC**: Isolamento seguro de rede com subnets públicas e privadas
+- **EKS**: Cluster Kubernetes gerenciado para orquestração de containers
+- **RDS**: Banco de dados MySQL com backups automáticos e criptografia
+- **Security Groups**: Regras de segurança de rede
+- **IAM**: Roles e políticas para EKS e aplicações
 
-## 📁 Directory Structure
+## 📁 Estrutura de Diretórios
 
 ```text
 terraform/
 ├── environments/
-│   └── production/              # AWS production environment
+│   └── production/              # Ambiente AWS de produção
 │       ├── main.tf
 │       ├── variables.tf
 │       ├── terraform.tfvars
 │       └── versions.tf
 ├── modules/
-│   ├── vpc/                     # VPC and networking
-│   ├── rds/                     # RDS MySQL database
-│   ├── eks/                     # EKS cluster and node groups
-│   └── security/                # Security (IAM)
+│   ├── vpc/                     # VPC e networking
+│   ├── rds/                     # Banco de dados RDS MySQL
+│   ├── eks/                     # Cluster EKS e node groups
+│   └── security/                # Segurança (IAM)
 ├── scripts/
-│   └── utils.sh                # Utility functions
-├── Makefile                     # Automated commands
-└── README.md                    # This file
+│   └── utils.sh                # Funções utilitárias
+├── Makefile                     # Comandos automatizados
+└── README.md                    # Este arquivo
 ```
 
-## 🔧 Prerequisites
+## 🔧 Pré-requisitos
 
-### Required Software
+### Software Necessário
 
-| Tool           | Version  | Purpose                       |
-| -------------- | -------- | ----------------------------- |
-| **Terraform**  | >= 1.0   | Infrastructure provisioning   |
-| **AWS CLI**    | >= 2.0   | AWS resource management       |
-| **kubectl**    | >= 1.25  | Kubernetes management         |
-| **jq**         | latest   | JSON processing               |
+| Ferramenta     | Versão   | Propósito                       |
+| -------------- | -------- | ------------------------------- |
+| **Terraform**  | >= 1.0   | Provisionamento de infraestrutura |
+| **AWS CLI**    | >= 2.0   | Gerenciamento de recursos AWS     |
+| **kubectl**    | >= 1.25  | Gerenciamento do Kubernetes       |
+| **jq**         | latest   | Processamento JSON                |
 
-### Installation Commands
+### Comandos de Instalação
 
 ```bash
-# macOS with Homebrew
+# macOS com Homebrew
 brew install terraform awscli kubectl jq
 
 # Ubuntu/Debian
@@ -80,221 +77,187 @@ sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(l
 sudo apt-get update && sudo apt-get install terraform
 ```
 
-### AWS Configuration
+### Configuração AWS
 
 ```bash
-# Configure AWS credentials
+# Configurar credenciais AWS
 aws configure
 
-# Verify access
+# Verificar acesso
 aws sts get-caller-identity
 ```
 
-## 🚀 Quick Start
+## 🚀 Início Rápido
 
-### 1. Configure Database Password
+### 1. Configurar Senha do Banco de Dados
 
 ```bash
-# Generate a secure password
+# Gerar uma senha segura
 export TF_VAR_db_password="$(openssl rand -base64 32)"
 
-# Or set your own password
-export TF_VAR_db_password="your-secure-password"
+# Ou definir sua própria senha
+export TF_VAR_db_password="sua-senha-segura"
 ```
 
-### 2. Plan Deployment (Dry-run)
+### 2. Planejar Deploy (Simulação)
 
 ```bash
-# See what will be created
+# Ver o que será criado
 make plan
 ```
 
-### 3. Deploy to Production
+### 3. Deploy para Produção
 
 ```bash
-# Deploy infrastructure
+# Deploy da infraestrutura
 make deploy
 ```
 
-### 4. Configure kubectl
+### 4. Configurar kubectl
 
 ```bash
-# Update kubeconfig to access the EKS cluster
+# Atualizar kubeconfig para acessar o cluster EKS
 aws eks update-kubeconfig --name smart-mechanical-workshop-production
 ```
 
-### 5. Verify Deployment
+### 5. Verificar Deploy
 
 ```bash
-# Check cluster status
+# Verificar status do cluster
 kubectl cluster-info
 
-# Check nodes
+# Verificar nodes
 kubectl get nodes
 
-# Check production status
+# Verificar status de produção
 make status
 ```
 
-## 📋 Commands
+## 📋 Comandos
 
-All commands are available through the Makefile:
-
-```bash
-make help      # Show available commands
-make plan      # Plan deployment (dry-run)
-make deploy    # Deploy to production
-make status    # Show current status
-make output    # Show Terraform outputs
-make destroy   # Destroy all resources (CAREFUL!)
-make format    # Format Terraform files
-make validate  # Validate configuration
-make lint      # Check code formatting
-make clean     # Clean up temporary files
-```
-
-## 🔧 What Will Be Created
-
-### Network Infrastructure
-
-- **VPC** with CIDR 10.0.0.0/16
-- **Public Subnets** in 2 availability zones (us-east-1a, us-east-1b)
-- **Private Subnets** in 2 availability zones
-- **Internet Gateway** for public internet access
-- **NAT Gateways** for private subnet internet access
-- **Route Tables** and proper routing
-
-### EKS Cluster
-
-- **EKS Cluster** version 1.28
-- **Node Group** with 1-3 t3.small instances (econômico)
-- **Auto Scaling** enabled
-- **IAM Roles** for cluster and nodes
-- **Security Groups** for secure communication
-
-### Database
-
-- **RDS MySQL** db.t3.micro instance (menor disponível)
-- **20GB** allocated storage (suficiente para testes)
-- **Automated backups** disabled (economia)
-- **Single AZ** deployment (mais barato)
-- **Private subnet** placement
-- **Security Groups** restricting access
-
-### Security
-
-- **IAM Roles** with least-privilege access
-- **Security Groups** with minimal required ports
-- **Private networking** for database and worker nodes
-- **Encrypted storage** for all components
-
-## 💰 Estimated Costs (Configuração Acadêmica)
-
-```text
-Monthly costs (approximate):
-- EKS Cluster: ~$75/month
-- EC2 Nodes (1 x t3.small): ~$15/month
-- RDS MySQL (db.t3.micro): ~$15/month
-- Networking (NAT Gateway): ~$45/month
-- Storage (20GB): ~$2/month
-
-Total: ~$150/month
-```
-
-> **💡 Configuração Acadêmica**: Esta configuração prioriza custo baixo sobre alta disponibilidade. Para produção real, considere usar instâncias maiores, multi-AZ, backups automáticos e monitoramento robusto.
-
-## 🎯 Next Steps (Future Versions)
-
-- [ ] Add SSL/TLS certificate and custom domain
-- [ ] Implement Application Load Balancer
-- [ ] Add monitoring with CloudWatch and Prometheus
-- [ ] Create staging environment
-- [ ] Implement automated backups and disaster recovery
-- [ ] Add CI/CD pipeline integration
-- [ ] Implement secrets management with AWS Secrets Manager
-
-## 🔧 Troubleshooting
-
-### Common Issues
-
-#### 1. AWS Authentication Issues
+Todos os comandos estão disponíveis através do Makefile:
 
 ```bash
-# Check your AWS credentials
+make help      # Mostrar comandos disponíveis
+make plan      # Planejar deploy (simulação)
+make deploy    # Deploy para produção
+make status    # Mostrar status atual
+make output    # Mostrar saídas do Terraform
+make destroy   # Destruir todos os recursos (CUIDADO!)
+make format    # Formatar arquivos Terraform
+make validate  # Validar configuração
+make lint      # Verificar formatação do código
+make clean     # Limpar arquivos temporários
+```
+
+## 🔧 O que Será Criado
+
+### Infraestrutura de Rede
+
+- **VPC** com CIDR 10.0.0.0/16
+- **Subnets Públicas** em 2 zonas de disponibilidade (us-east-1a, us-east-1b)
+- **Subnets Privadas** em 2 zonas de disponibilidade
+- **Internet Gateway** para acesso à internet pública
+- **NAT Gateways** para acesso à internet das subnets privadas
+- **Tabelas de Rotas** e roteamento adequado
+
+### Cluster EKS
+
+- **Cluster EKS** versão 1.28
+- **Node Group** com 1-3 instâncias t3.small (econômico)
+- **Auto Scaling** habilitado
+- **IAM Roles** para cluster e nodes
+- **Security Groups** para comunicação segura
+
+### Banco de Dados
+
+- **RDS MySQL** instância db.t3.micro (menor disponível)
+- **20GB** de armazenamento alocado (suficiente para testes)
+- **Backups automatizados** desabilitados (economia)
+- **Deploy Single AZ** (mais barato)
+- **Posicionamento em subnet privada**
+- **Security Groups** restringindo acesso
+
+### Segurança
+
+- **IAM Roles** com acesso de menor privilégio
+- **Security Groups** com portas mínimas necessárias
+- **Rede privada** para banco de dados e worker nodes
+- **Armazenamento criptografado** para todos os componentes
+
+## 🔧 Solução de Problemas
+
+### Problemas Comuns
+
+#### 1. Problemas de Autenticação AWS
+
+```bash
+# Verificar suas credenciais AWS
 aws sts get-caller-identity
 
-# Configure AWS profile if needed
+# Configurar perfil AWS se necessário
 aws configure --profile workshop
 export AWS_PROFILE=workshop
 ```
 
-#### 2. Terraform State Issues
+#### 2. Problemas de State do Terraform
 
 ```bash
-# If you get state locking issues
+# Se tiver problemas de travamento de state
 terraform force-unlock LOCK_ID
 
-# If state is corrupted
+# Se o state estiver corrompido
 rm -rf .terraform terraform.tfstate*
 terraform init
 ```
 
-#### 3. EKS Access Issues
+#### 3. Problemas de Acesso ao EKS
 
 ```bash
-# Update kubeconfig
+# Atualizar kubeconfig
 aws eks update-kubeconfig --name smart-mechanical-workshop-production
 
-# Check cluster status
+# Verificar status do cluster
 kubectl cluster-info
 
-# Debug node issues
+# Debug problemas de nodes
 kubectl describe nodes
 kubectl get events --sort-by='.lastTimestamp'
 ```
 
-#### 4. Database Connection Issues
+#### 4. Problemas de Conexão com o Banco
 
 ```bash
-# Test database connectivity from a pod
+# Testar conectividade do banco a partir de um pod
 kubectl run mysql-test --rm -it --image=mysql:8.0 -- mysql -h <db-endpoint> -u workshopuser -p
 ```
 
-### Debug Commands
+### Comandos de Debug
 
 ```bash
-# Enable Terraform debug logging
+# Habilitar logs de debug do Terraform
 export TF_LOG=DEBUG
 terraform apply
 
-# Check AWS resources
+# Verificar recursos AWS
 aws eks list-clusters
 aws rds describe-db-instances
 aws ec2 describe-vpcs
 ```
 
-### Recovery Procedures
+### Procedimentos de Recuperação
 
 ```bash
-# Backup current state
+# Backup do state atual
 cp terraform.tfstate terraform.tfstate.backup
 
-# Force recreation of specific resource
+# Forçar recriação de recurso específico
 terraform taint aws_instance.example
 terraform apply
 ```
 
-## 📚 Additional Resources
+## 📚 Recursos Adicionais
 
-- [Terraform Best Practices](https://www.terraform-best-practices.com/)
-- [AWS EKS Best Practices](https://aws.github.io/aws-eks-best-practices/)
-- [Kubernetes Documentation](https://kubernetes.io/docs/)
-
----
-
-**Importante**: Esta é uma configuração inicial simplificada. Para ambientes de produção críticos, considere adicionar:
-- Monitoramento e alertas
-- Backup e disaster recovery
-- Múltiplos ambientes (staging/prod)
-- SSL/TLS e domínio personalizado
-- Pipeline de CI/CD
+- [Melhores Práticas do Terraform](https://www.terraform-best-practices.com/)
+- [Melhores Práticas do AWS EKS](https://aws.github.io/aws-eks-best-practices/)
+- [Documentação do Kubernetes](https://kubernetes.io/docs/)
