@@ -1,0 +1,85 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: db-init-job
+  namespace: smart-mechanical-workshop
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: mysql-client
+        image: mysql:8.0
+        command: ["bash"]
+        args:
+        - -c
+        - |
+          set -e  # Exit on any error
+
+          # Extrair host sem porta
+          DB_HOST_CLEAN=$(echo $DB_HOST | cut -d':' -f1)
+          echo "Conectando ao RDS: $DB_HOST_CLEAN"
+
+          # Esperar RDS ficar disponível
+          echo "Aguardando RDS ficar disponível..."
+          until mysql -h $DB_HOST_CLEAN -P 3306 -u $DB_USER -p$DB_PASSWORD -e "SELECT 1;" > /dev/null 2>&1; do
+            echo "RDS não está pronto ainda. Aguardando 5 segundos..."
+            sleep 5
+          done
+
+          echo "RDS está disponível! Criando database se não existir..."
+          mysql -h $DB_HOST_CLEAN -P 3306 -u $DB_USER -p$DB_PASSWORD -e "CREATE DATABASE IF NOT EXISTS $DB_NAME;"
+
+          echo "Executando scripts de inicialização..."
+          if mysql -h $DB_HOST_CLEAN -P 3306 -u $DB_USER -p$DB_PASSWORD $DB_NAME < /scripts/001_init_database.sql; then
+            echo "✅ Scripts de inicialização executados com sucesso!"
+          else
+            echo "❌ Erro ao executar scripts de inicialização"
+            exit 1
+          fi
+
+          echo "Executando scripts de dados..."
+          if mysql -h $DB_HOST_CLEAN -P 3306 -u $DB_USER -p$DB_PASSWORD $DB_NAME < /scripts/010_fill_tables.sql; then
+            echo "✅ Scripts de dados executados com sucesso!"
+          else
+            echo "❌ Erro ao executar scripts de dados"
+            exit 1
+          fi
+
+          echo "🎉 Inicialização do banco concluída com sucesso!"
+        env:
+        - name: DB_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: smart-mechanical-workshop-config
+              key: DB_HOST
+        - name: DB_USER
+          valueFrom:
+            configMapKeyRef:
+              name: smart-mechanical-workshop-config
+              key: MYSQL_USER
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: smart-mechanical-workshop-secrets
+              key: MYSQL_PASSWORD
+        - name: DB_NAME
+          valueFrom:
+            configMapKeyRef:
+              name: smart-mechanical-workshop-config
+              key: MYSQL_DATABASE
+        volumeMounts:
+        - name: init-scripts
+          mountPath: /scripts
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "100m"
+          limits:
+            memory: "128Mi"
+            cpu: "200m"
+      volumes:
+      - name: init-scripts
+        configMap:
+          name: db-init-scripts
+  backoffLimit: 3
