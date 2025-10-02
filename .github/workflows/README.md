@@ -18,8 +18,6 @@ Antes de usar os workflows, configure os seguintes **Secrets** no repositório G
 2. Clique em **New repository secret**
 3. Adicione cada um dos secrets listados acima
 
-> **⚠️ Importante:** Para AWS Academy, você precisa obter novas credenciais a cada sessão e atualizar os secrets.
-
 ## 🛠️ Workflows Disponíveis
 
 ### 1. 🚀 Complete Deployment Pipeline
@@ -34,6 +32,7 @@ Este é o workflow principal que permite fazer o deploy completo da solução:
 - ✅ Testes de saúde da API
 
 **Como usar:**
+
 1. Vá para **Actions** → **Complete Deployment Pipeline**
 2. Clique em **Run workflow**
 3. Configure os parâmetros:
@@ -49,6 +48,7 @@ Este é o workflow principal que permite fazer o deploy completo da solução:
 Deploy apenas da infraestrutura AWS usando Terraform:
 
 **Parâmetros:**
+
 - **Environment**: Ambiente de deploy (`production`)
 - **Action**: `plan`, `apply`, ou `destroy`
 - **Database password**: Senha do banco de dados
@@ -60,6 +60,7 @@ Deploy apenas da infraestrutura AWS usando Terraform:
 Deploy apenas das aplicações Kubernetes (requer infraestrutura já criada):
 
 **Parâmetros:**
+
 - **Environment**: Ambiente de deploy (`production`)
 - **Cluster Name**: Nome do cluster EKS
 - **RDS Endpoint**: Endpoint do banco RDS (com porta)
@@ -71,6 +72,7 @@ Deploy apenas das aplicações Kubernetes (requer infraestrutura já criada):
 Destroi completamente a infraestrutura AWS:
 
 **Parâmetros:**
+
 - **Environment**: Ambiente a ser destruído
 - **Confirm Destroy**: Digite exatamente `DESTROY` para confirmar
 - **Database password**: Senha do banco (necessária para destruição)
@@ -78,28 +80,32 @@ Destroi completamente a infraestrutura AWS:
 ## 🔄 Fluxo de Trabalho Recomendado
 
 ### Deploy Inicial
+
 1. Execute o **Complete Deployment Pipeline** com ambas as opções marcadas
 2. Aguarde a conclusão (15-20 minutos)
 3. Acesse as URLs fornecidas no resumo do workflow
 
 ### Deploy de Atualizações
+
 1. Para mudanças na infraestrutura: Execute **Deploy Infrastructure**
 2. Para mudanças nas aplicações: Execute **Deploy Applications**
 
 ### Limpeza
+
 1. Execute **Destroy Infrastructure** quando quiser remover tudo
-2. ⚠️ **ATENÇÃO**: Esta ação é irreversível!
 
 ## 📊 Outputs dos Workflows
 
 Após a execução bem-sucedida, os workflows fornecem:
 
 ### Infraestrutura
+
 - **Cluster ID**: Nome do cluster EKS criado
 - **RDS Endpoint**: Endpoint do banco de dados
 - **VPC ID**: ID da VPC criada
 
 ### Aplicações
+
 - **API URL**: URL da API REST
 - **API Health**: Endpoint de health check
 - **MailHog URL**: Interface do MailHog para emails
