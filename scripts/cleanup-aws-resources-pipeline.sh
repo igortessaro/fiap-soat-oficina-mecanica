@@ -212,14 +212,43 @@ if [[ "$DRY_RUN" != "true" ]]; then
     sleep 60
 fi
 
-log "🧹 Step 4: Final cleanup of remaining resources..."
+log "🧹 Step 4: Pre-cleanup - Releasing Elastic IPs..."
+
+# Liberar Elastic IPs ANTES da limpeza das VPCs
+EIPS=$(aws ec2 describe-addresses --region $REGION --query 'Addresses[?AssociationId==null].AllocationId' --output text || echo "")
+if [[ -n "$EIPS" ]]; then
+    for eip in $EIPS; do
+        execute_or_dry_run "Release Elastic IP: $eip" \
+            "aws ec2 release-address --allocation-id '$eip' --region $REGION"
+    done
+
+    if [[ "$DRY_RUN" != "true" ]]; then
+        log "Waiting for Elastic IPs to be released..."
+        sleep 30
+    fi
+fi
+
+log "🧹 Step 5: Final cleanup of remaining resources..."
 
 # Cleanup VPC resources
 if [[ -n "$VPCS" ]]; then
     for vpc_id in $VPCS; do
         log "Cleaning up VPC resources for: $vpc_id"
 
-        # Deletar NAT Gateways
+        # 1. Liberar Elastic IPs associados a esta VPC especificamente
+        VPC_EIPS=$(aws ec2 describe-addresses --region $REGION --filters "Name=domain,Values=vpc" --query "Addresses[?NetworkInterfaceId!=null].AllocationId" --output text || echo "")
+        if [[ -n "$VPC_EIPS" ]]; then
+            for eip in $VPC_EIPS; do
+                execute_or_dry_run "Release VPC Elastic IP: $eip" \
+                    "aws ec2 release-address --allocation-id '$eip' --region $REGION"
+            done
+            if [[ "$DRY_RUN" != "true" ]]; then
+                log "Waiting for VPC Elastic IPs to be released..."
+                sleep 30
+            fi
+        fi
+
+        # 2. Deletar NAT Gateways
         NAT_GATEWAYS=$(aws ec2 describe-nat-gateways --region $REGION --filter "Name=vpc-id,Values=$vpc_id" --query 'NatGateways[?State!=`deleted`].NatGatewayId' --output text || echo "")
         if [[ -n "$NAT_GATEWAYS" ]]; then
             for nat_gw in $NAT_GATEWAYS; do
@@ -228,11 +257,33 @@ if [[ -n "$VPCS" ]]; then
             done
             if [[ "$DRY_RUN" != "true" ]]; then
                 log "Waiting for NAT Gateways deletion..."
-                sleep 60
+                sleep 90  # Aumentado o tempo de espera
             fi
         fi
 
-        # Deletar Internet Gateways
+        # 3. Verificar e liberar quaisquer Elastic IPs restantes
+        REMAINING_EIPS=$(aws ec2 describe-addresses --region $REGION --query 'Addresses[?AssociationId==null].AllocationId' --output text || echo "")
+        if [[ -n "$REMAINING_EIPS" ]]; then
+            for eip in $REMAINING_EIPS; do
+                execute_or_dry_run "Release remaining Elastic IP: $eip" \
+                    "aws ec2 release-address --allocation-id '$eip' --region $REGION"
+            done
+            if [[ "$DRY_RUN" != "true" ]]; then
+                log "Waiting for remaining Elastic IPs to be released..."
+                sleep 30
+            fi
+        fi
+
+        # 4. Deletar Network Interfaces não anexadas (se houver)
+        NETWORK_INTERFACES=$(aws ec2 describe-network-interfaces --region $REGION --filters "Name=vpc-id,Values=$vpc_id" "Name=status,Values=available" --query 'NetworkInterfaces[].NetworkInterfaceId' --output text || echo "")
+        if [[ -n "$NETWORK_INTERFACES" ]]; then
+            for ni in $NETWORK_INTERFACES; do
+                execute_or_dry_run "Delete Network Interface: $ni" \
+                    "aws ec2 delete-network-interface --network-interface-id '$ni' --region $REGION"
+            done
+        fi
+
+        # 5. Deletar Internet Gateways (agora deve funcionar)
         IGW=$(aws ec2 describe-internet-gateways --region $REGION --filters "Name=attachment.vpc-id,Values=$vpc_id" --query 'InternetGateways[].InternetGatewayId' --output text || echo "")
         if [[ -n "$IGW" ]]; then
             execute_or_dry_run "Detach Internet Gateway: $IGW" \
@@ -241,7 +292,7 @@ if [[ -n "$VPCS" ]]; then
                 "aws ec2 delete-internet-gateway --internet-gateway-id '$IGW' --region $REGION"
         fi
 
-        # Deletar Security Groups (exceto default)
+        # 6. Deletar Security Groups (exceto default)
         SECURITY_GROUPS=$(aws ec2 describe-security-groups --region $REGION --filters "Name=vpc-id,Values=$vpc_id" --query 'SecurityGroups[?GroupName!=`default`].GroupId' --output text || echo "")
         if [[ -n "$SECURITY_GROUPS" ]]; then
             for sg in $SECURITY_GROUPS; do
@@ -250,7 +301,7 @@ if [[ -n "$VPCS" ]]; then
             done
         fi
 
-        # Deletar Subnets
+        # 7. Deletar Subnets
         SUBNETS=$(aws ec2 describe-subnets --region $REGION --filters "Name=vpc-id,Values=$vpc_id" --query 'Subnets[].SubnetId' --output text || echo "")
         if [[ -n "$SUBNETS" ]]; then
             for subnet in $SUBNETS; do
@@ -259,7 +310,7 @@ if [[ -n "$VPCS" ]]; then
             done
         fi
 
-        # Deletar Route Tables (exceto main)
+        # 8. Deletar Route Tables (exceto main)
         ROUTE_TABLES=$(aws ec2 describe-route-tables --region $REGION --filters "Name=vpc-id,Values=$vpc_id" --query 'RouteTables[?Associations[0].Main!=`true`].RouteTableId' --output text || echo "")
         if [[ -n "$ROUTE_TABLES" ]]; then
             for rt in $ROUTE_TABLES; do
@@ -268,19 +319,9 @@ if [[ -n "$VPCS" ]]; then
             done
         fi
 
-        # Finalmente, deletar a VPC
+        # 9. Finalmente, deletar a VPC
         execute_or_dry_run "Delete VPC: $vpc_id" \
             "aws ec2 delete-vpc --vpc-id '$vpc_id' --region $REGION"
-    done
-fi
-
-# Liberar Elastic IPs
-log "Releasing Elastic IPs..."
-EIPS=$(aws ec2 describe-addresses --region $REGION --query 'Addresses[?AssociationId==null].AllocationId' --output text || echo "")
-if [[ -n "$EIPS" ]]; then
-    for eip in $EIPS; do
-        execute_or_dry_run "Release Elastic IP: $eip" \
-            "aws ec2 release-address --allocation-id '$eip' --region $REGION"
     done
 fi
 
