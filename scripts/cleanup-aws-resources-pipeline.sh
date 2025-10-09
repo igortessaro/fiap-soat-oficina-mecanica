@@ -235,41 +235,33 @@ if [[ -n "$VPCS" ]]; then
     for vpc_id in $VPCS; do
         log "Cleaning up VPC resources for: $vpc_id"
 
-        # 1. Identificar e liberar TODOS os Elastic IPs da VPC
-        log "Finding all Elastic IPs for VPC: $vpc_id"
+        # 1. Abordagem mais agressiva para Elastic IPs
+        log "Finding all Elastic IPs for VPC: $vpc_id (aggressive approach)"
 
-        # Obter todos os Elastic IPs da VPC (associados e não associados)
-        ALL_VPC_EIPS=$(aws ec2 describe-addresses --region $REGION --filters "Name=domain,Values=vpc" --query 'Addresses[].AllocationId' --output text || echo "")
-
-        # Obter Network Interfaces da VPC para verificar associações
-        NI_WITH_EIPS=$(aws ec2 describe-network-interfaces --region $REGION --filters "Name=vpc-id,Values=$vpc_id" --query 'NetworkInterfaces[?Association.PublicIp!=null].[NetworkInterfaceId,Association.AllocationId]' --output text || echo "")
-
-        # Liberar Elastic IPs associados a Network Interfaces desta VPC
-        if [[ -n "$NI_WITH_EIPS" ]]; then
-            echo "$NI_WITH_EIPS" | while read -r ni_id alloc_id; do
-                if [[ -n "$alloc_id" && "$alloc_id" != "None" ]]; then
-                    execute_or_dry_run "Release Elastic IP from NI: $alloc_id ($ni_id)" \
-                        "aws ec2 release-address --allocation-id '$alloc_id' --region $REGION"
-                fi
+        # FORÇA liberação de TODOS os Elastic IPs no account (abordagem agressiva)
+        ALL_EIPS=$(aws ec2 describe-addresses --region $REGION --query 'Addresses[].AllocationId' --output text 2>/dev/null || echo "")
+        if [[ -n "$ALL_EIPS" ]]; then
+            for eip in $ALL_EIPS; do
+                execute_or_dry_run "Force release Elastic IP: $eip" \
+                    "aws ec2 release-address --allocation-id '$eip' --region $REGION"
             done
         fi
 
         # Aguardar liberação
         if [[ "$DRY_RUN" != "true" ]]; then
             log "Waiting for all Elastic IPs to be released..."
-            sleep 45
-        fi
-
-        # 2. Deletar NAT Gateways
-        NAT_GATEWAYS=$(aws ec2 describe-nat-gateways --region $REGION --filter "Name=vpc-id,Values=$vpc_id" --query 'NatGateways[?State!=`deleted`].NatGatewayId' --output text || echo "")
-        if [[ -n "$NAT_GATEWAYS" ]]; then
-            for nat_gw in $NAT_GATEWAYS; do
-                execute_or_dry_run "Delete NAT Gateway: $nat_gw" \
+            sleep 60
+        fi        # 2. Abordagem mais agressiva para NAT Gateways
+        log "Force deleting ALL NAT Gateways in account (aggressive approach)"
+        ALL_NAT_GATEWAYS=$(aws ec2 describe-nat-gateways --region $REGION --query 'NatGateways[?State!=`deleted`].NatGatewayId' --output text 2>/dev/null || echo "")
+        if [[ -n "$ALL_NAT_GATEWAYS" ]]; then
+            for nat_gw in $ALL_NAT_GATEWAYS; do
+                execute_or_dry_run "Force delete NAT Gateway: $nat_gw" \
                     "aws ec2 delete-nat-gateway --nat-gateway-id '$nat_gw' --region $REGION"
             done
             if [[ "$DRY_RUN" != "true" ]]; then
                 log "Waiting for NAT Gateways deletion..."
-                sleep 90  # Aumentado o tempo de espera
+                sleep 120  # Tempo estendido para NAT Gateway cleanup
             fi
         fi
 
@@ -286,7 +278,21 @@ if [[ -n "$VPCS" ]]; then
             fi
         fi
 
-        # 4. Deletar Network Interfaces não anexadas (se houver)
+        # 4. Força terminação de instâncias EC2 na VPC
+        log "Force terminating any EC2 instances in VPC: $vpc_id"
+        EC2_INSTANCES=$(aws ec2 describe-instances --region $REGION --filters "Name=vpc-id,Values=$vpc_id" "Name=instance-state-name,Values=running,stopped,stopping" --query 'Reservations[].Instances[].InstanceId' --output text 2>/dev/null || echo "")
+        if [[ -n "$EC2_INSTANCES" ]]; then
+            for instance in $EC2_INSTANCES; do
+                execute_or_dry_run "Force terminate EC2 instance: $instance" \
+                    "aws ec2 terminate-instances --instance-ids '$instance' --region $REGION"
+            done
+            if [[ "$DRY_RUN" != "true" ]]; then
+                log "Waiting for EC2 instances termination..."
+                sleep 60
+            fi
+        fi
+
+        # Deletar Network Interfaces não anexadas (se houver)
         NETWORK_INTERFACES=$(aws ec2 describe-network-interfaces --region $REGION --filters "Name=vpc-id,Values=$vpc_id" "Name=status,Values=available" --query 'NetworkInterfaces[].NetworkInterfaceId' --output text || echo "")
         if [[ -n "$NETWORK_INTERFACES" ]]; then
             for ni in $NETWORK_INTERFACES; do
