@@ -1,6 +1,7 @@
 using AutoFixture;
 using AutoMapper;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.Adapters.Gateways.Repositories;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.Shared.Services;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.ServiceOrders;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.ServiceOrders.Update;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.DTOs.ServiceOrders;
@@ -15,14 +16,14 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Application.Tests.UseCases.ServiceOr
 public sealed class UpdateServiceOrderStatusHandlerTests
 {
     private readonly IFixture _fixture = new Fixture();
-    private readonly Mock<IMapper> _mapperMock = new();
     private readonly Mock<IServiceOrderRepository> _repositoryMock = new();
     private readonly Mock<IMediator> _mediatorMock = new();
+    private readonly Mock<ITelemetryService> _telemetryMock = new();
     private readonly UpdateServiceOrderStatusHandler _service;
 
     public UpdateServiceOrderStatusHandlerTests()
     {
-        _service = new UpdateServiceOrderStatusHandler(_mapperMock.Object, _mediatorMock.Object, _repositoryMock.Object);
+        _service = new UpdateServiceOrderStatusHandler(_mediatorMock.Object, _repositoryMock.Object, _telemetryMock.Object);
     }
 
     [Fact]

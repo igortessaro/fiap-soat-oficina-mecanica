@@ -1,5 +1,6 @@
 using AutoMapper;
 using Fiap.Soat.SmartMechanicalWorkshop.Application.Adapters.Gateways.Repositories;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.Shared.Services;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 using MediatR;
@@ -12,7 +13,8 @@ public sealed class CreateServiceOrderHandler(
     IServiceOrderRepository serviceOrderRepository,
     IPersonRepository personRepository,
     IAvailableServiceRepository availableServiceRepository,
-    IVehicleRepository vehicleRepository) : IRequestHandler<CreateServiceOrderCommand, Response<ServiceOrder>>
+    IVehicleRepository vehicleRepository,
+    ITelemetryService telemetryService) : IRequestHandler<CreateServiceOrderCommand, Response<ServiceOrder>>
 {
     public async Task<Response<ServiceOrder>> Handle(CreateServiceOrderCommand request, CancellationToken cancellationToken)
     {
@@ -40,6 +42,18 @@ public sealed class CreateServiceOrderHandler(
         }
 
         var createdEntity = await serviceOrderRepository.AddAsync(entity, cancellationToken);
+
+        telemetryService.RecordServiceOrderEvent(
+            createdEntity.Id,
+            createdEntity.ClientId,
+            createdEntity.Status.ToString(),
+            "created",
+            new Dictionary<string, object>
+            {
+                { "vehicleId", createdEntity.VehicleId.ToString() },
+                { "servicesCount", request.ServiceIds.Count }
+            });
+
         return ResponseFactory.Ok(createdEntity, HttpStatusCode.Created);
     }
 }

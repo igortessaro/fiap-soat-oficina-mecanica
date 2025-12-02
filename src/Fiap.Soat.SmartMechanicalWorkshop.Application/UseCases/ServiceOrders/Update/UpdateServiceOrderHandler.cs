@@ -1,4 +1,5 @@
 using Fiap.Soat.SmartMechanicalWorkshop.Application.Adapters.Gateways.Repositories;
+using Fiap.Soat.SmartMechanicalWorkshop.Application.Shared.Services;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Entities;
 using Fiap.Soat.SmartMechanicalWorkshop.Domain.Shared;
 using MediatR;
@@ -8,7 +9,8 @@ namespace Fiap.Soat.SmartMechanicalWorkshop.Application.UseCases.ServiceOrders.U
 
 public sealed class UpdateServiceOrderHandler(
     IServiceOrderRepository serviceOrderRepository,
-    IAvailableServiceRepository availableServiceRepository) : IRequestHandler<UpdateServiceOrderCommand, Response<ServiceOrder>>
+    IAvailableServiceRepository availableServiceRepository,
+    ITelemetryService telemetryService) : IRequestHandler<UpdateServiceOrderCommand, Response<ServiceOrder>>
 {
     public async Task<Response<ServiceOrder>> Handle(UpdateServiceOrderCommand request, CancellationToken cancellationToken)
     {
@@ -32,6 +34,17 @@ public sealed class UpdateServiceOrderHandler(
         }
 
         var updatedEntity = await serviceOrderRepository.UpdateAsync(request.Id, request.Title, request.Description, services, cancellationToken);
+
+        telemetryService.RecordServiceOrderEvent(
+            updatedEntity.Id,
+            updatedEntity.ClientId,
+            updatedEntity.Status.ToString(),
+            "updated",
+            new Dictionary<string, object>
+            {
+                { "servicesCount", services.Count }
+            });
+
         return ResponseFactory.Ok(updatedEntity);
     }
 }
